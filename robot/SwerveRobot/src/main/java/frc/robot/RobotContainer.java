@@ -47,11 +47,13 @@ public class RobotContainer {
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
+        // Right Bumper sets a fixed mid speed limit
         // Right Trigger controls speed
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
+                m_driverController.getRightBumper(),
                 m_driverController.getRightTriggerAxis(),
                 MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.06),
                 MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.06),
@@ -70,10 +72,10 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
+    // new JoystickButton(m_driverController, Button.kR1.value)
+    // .whileTrue(new RunCommand(
+    // () -> m_robotDrive.setX(),
+    // m_robotDrive));
   }
 
   /**
@@ -119,6 +121,6 @@ public class RobotContainer {
     m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, 0, false));
+    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(false, 0, 0, 0, 0, false));
   }
 }

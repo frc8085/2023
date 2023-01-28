@@ -97,32 +97,38 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Method to drive the robot using joystick info.
    *
-   * @param speed        Speed of the robot in the x direction (forward).
+   * @param speedLimit    Whether to fix the speed to a set value
+   * @param speed         Speed of the robot in the x direction (forward).
    * @param rot           Angular rate of the robot.
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
   public void drive(
-    double speed,
-    double forwardDirection,
-    double sidewaysDirection,
-    double rotDirection,
-    boolean fieldRelative) {
+      boolean speedLimit,
+      double inputSpeed,
+      double forwardDirection,
+      double sidewaysDirection,
+      double rotDirection,
+      boolean fieldRelative) {
     // Adjust input based on max speed
 
-    speed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    // If we set the speed limit us a fixed speed
+    // otherwise the speed value with some max
+    double speed = speedLimit ? DriveConstants.kFixedMidSpeedLimit * DriveConstants.kMaxSpeedMetersPerSecond
+        : inputSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+
     rotDirection *= DriveConstants.kMaxAngularSpeed;
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(
-              speed * forwardDirection,
-              speed * sidewaysDirection, 
-              speed * rotDirection, Rotation2d.fromDegrees(m_gyro.getAngle()))
-            : new ChassisSpeeds( 
-              speed * forwardDirection,
-              speed * sidewaysDirection, 
-              speed * rotDirection));
+                speed * forwardDirection,
+                speed * sidewaysDirection,
+                speed * rotDirection, Rotation2d.fromDegrees(m_gyro.getAngle()))
+            : new ChassisSpeeds(
+                speed * forwardDirection,
+                speed * sidewaysDirection,
+                speed * rotDirection));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
