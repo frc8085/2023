@@ -12,7 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+// import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -59,18 +59,23 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
-    SmartDashboard.putNumber("POSE X Meters", m_odometry.getPoseMeters().getX());
-
     // Things to show only in tuninig mode
     if (TUNING_MODE) {
-      SmartDashboard.putNumber("Gyro AccelX", m_gyro.getAccelX());
-      SmartDashboard.putNumber("Gyro AccelY", m_gyro.getAccelY());
-      SmartDashboard.putNumber("Gyro AccelZ", m_gyro.getAccelZ());
+      SmartDashboard.putNumber("POSE X Meters", m_odometry.getPoseMeters().getX());
+      SmartDashboard.putNumber("POSE Y Meters", m_odometry.getPoseMeters().getY());
       SmartDashboard.putNumber("Gyro Angle", m_gyro.getAngle());
-      SmartDashboard.putNumber("Gyro XComplementaryAngle", m_gyro.getXComplementaryAngle());
-      SmartDashboard.putNumber("Gyro XFilteredAccelAngle", m_gyro.getXFilteredAccelAngle());
-      SmartDashboard.putNumber("Gyro YComplementaryAngle", m_gyro.getXComplementaryAngle());
-      SmartDashboard.putNumber("Gyro YFilteredAccelAngle", m_gyro.getXFilteredAccelAngle());
+      // SmartDashboard.putNumber("Gyro AccelX", m_gyro.getAccelX());
+      // SmartDashboard.putNumber("Gyro AccelY", m_gyro.getAccelY());
+      // SmartDashboard.putNumber("Gyro AccelZ", m_gyro.getAccelZ());
+      // SmartDashboard.putNumber("Gyro Angle", m_gyro.getAngle());
+      // SmartDashboard.putNumber("Gyro XComplementaryAngle",
+      // m_gyro.getXComplementaryAngle());
+      // SmartDashboard.putNumber("Gyro XFilteredAccelAngle",
+      // m_gyro.getXFilteredAccelAngle());
+      // SmartDashboard.putNumber("Gyro YComplementaryAngle",
+      // m_gyro.getXComplementaryAngle());
+      // SmartDashboard.putNumber("Gyro YFilteredAccelAngle",
+      // m_gyro.getXFilteredAccelAngle());
     }
   }
 

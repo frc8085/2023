@@ -51,10 +51,11 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    SmartDashboard.putString("TEST DASH", "TESTING");
 
     intakeCover.setDefaultCommand(new OpenIntake(intakeCover));
 
+    // Reset heading before we start
+    m_robotDrive.zeroHeading();
     // Configure default commands
     m_robotDrive.setDefaultCommand(
         // Right Bumper sets a fixed mid speed limit
@@ -68,7 +69,7 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.06),
                 MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.06),
                 MathUtil.applyDeadband(-m_driverController.getRightX(), 0.06),
-                true),
+                false),
             m_robotDrive));
   }
 
