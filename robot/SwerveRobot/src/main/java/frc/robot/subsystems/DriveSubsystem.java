@@ -14,11 +14,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
-  private boolean TUNING_MODE = true;
-
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -53,21 +50,6 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
       });
-
-  /** The log method puts interesting information to the SmartDashboard. */
-  public void log() {
-    // Things to show only in tuninig mode
-    if (TUNING_MODE) {
-      SmartDashboard.putNumber("Gyro AccelX", m_gyro.getAccelX());
-      SmartDashboard.putNumber("Gyro AccelY", m_gyro.getAccelY());
-      SmartDashboard.putNumber("Gyro AccelZ", m_gyro.getAccelZ());
-      SmartDashboard.putNumber("Gyro Angle", m_gyro.getAngle());
-      SmartDashboard.putNumber("Gyro XComplementaryAngle", m_gyro.getXComplementaryAngle());
-      SmartDashboard.putNumber("Gyro XFilteredAccelAngle", m_gyro.getXFilteredAccelAngle());
-      SmartDashboard.putNumber("Gyro YComplementaryAngle", m_gyro.getXComplementaryAngle());
-      SmartDashboard.putNumber("Gyro YFilteredAccelAngle", m_gyro.getXFilteredAccelAngle());
-    }
-  }
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -115,20 +97,26 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Method to drive the robot using joystick info.
    *
+   * @param speedLimit    Whether to fix the speed to a set value
    * @param speed         Speed of the robot in the x direction (forward).
    * @param rot           Angular rate of the robot.
    * @param fieldRelative Whether the provided x and y speeds are relative to the
    *                      field.
    */
   public void drive(
-      double speed,
+      boolean speedLimit,
+      double inputSpeed,
       double forwardDirection,
       double sidewaysDirection,
       double rotDirection,
       boolean fieldRelative) {
     // Adjust input based on max speed
 
-    speed *= DriveConstants.kMaxSpeedMetersPerSecond;
+    // If we set the speed limit us a fixed speed
+    // otherwise the speed value with some max
+    double speed = speedLimit ? DriveConstants.kFixedMidSpeedLimit * DriveConstants.kMaxSpeedMetersPerSecond
+        : inputSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
+
     rotDirection *= DriveConstants.kMaxAngularSpeed;
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
@@ -136,11 +124,11 @@ public class DriveSubsystem extends SubsystemBase {
             ? ChassisSpeeds.fromFieldRelativeSpeeds(
                 speed * forwardDirection,
                 speed * sidewaysDirection,
-                speed * rotDirection, Rotation2d.fromDegrees(m_gyro.getAngle()))
+                speed / 2 * rotDirection, Rotation2d.fromDegrees(m_gyro.getAngle()))
             : new ChassisSpeeds(
                 speed * forwardDirection,
                 speed * sidewaysDirection,
-                speed * rotDirection));
+                speed / 2 * rotDirection));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
