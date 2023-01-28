@@ -47,6 +47,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    SmartDashboard.putString("TEST DASH", "TESTING");
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(

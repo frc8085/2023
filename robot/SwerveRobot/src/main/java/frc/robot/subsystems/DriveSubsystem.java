@@ -56,6 +56,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
+    SmartDashboard.putNumber("POSE X Meters", m_odometry.getPoseMeters().getX());
+
     // Things to show only in tuninig mode
     if (TUNING_MODE) {
       SmartDashboard.putNumber("Gyro AccelX", m_gyro.getAccelX());
@@ -75,6 +77,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    /** Call log method every loop. */
+    log();
+
     // Update the odometry in the periodic block
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
