@@ -26,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
-import frc.robot.commands.OpenIntake;
 
 // Dashboard
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
