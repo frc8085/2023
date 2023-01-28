@@ -43,8 +43,8 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  // private final ADIS16448_IMU m_gyro = new ADIS16470_IMU();
-  private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
+  private final ADIS16448_IMU m_gyro = new ADIS16448_IMU();
+  // private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
