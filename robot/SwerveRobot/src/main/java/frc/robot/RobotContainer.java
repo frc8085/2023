@@ -28,6 +28,9 @@ import java.util.List;
 import frc.robot.subsystems.IntakeCover;
 import frc.robot.commands.OpenIntake;
 
+// Dashboard
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -49,6 +52,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    SmartDashboard.putString("TEST DASH", "TESTING");
 
     intakeCover.setDefaultCommand(new OpenIntake(intakeCover));
 

@@ -16,8 +16,11 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
+  private boolean TUNING_MODE = true;
+
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -54,12 +57,32 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
       });
 
+  /** The log method puts interesting information to the SmartDashboard. */
+  public void log() {
+    SmartDashboard.putNumber("POSE X Meters", m_odometry.getPoseMeters().getX());
+
+    // Things to show only in tuninig mode
+    if (TUNING_MODE) {
+      SmartDashboard.putNumber("Gyro AccelX", m_gyro.getAccelX());
+      SmartDashboard.putNumber("Gyro AccelY", m_gyro.getAccelY());
+      SmartDashboard.putNumber("Gyro AccelZ", m_gyro.getAccelZ());
+      SmartDashboard.putNumber("Gyro Angle", m_gyro.getAngle());
+      SmartDashboard.putNumber("Gyro XComplementaryAngle", m_gyro.getXComplementaryAngle());
+      SmartDashboard.putNumber("Gyro XFilteredAccelAngle", m_gyro.getXFilteredAccelAngle());
+      SmartDashboard.putNumber("Gyro YComplementaryAngle", m_gyro.getXComplementaryAngle());
+      SmartDashboard.putNumber("Gyro YFilteredAccelAngle", m_gyro.getXFilteredAccelAngle());
+    }
+  }
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
   }
 
   @Override
   public void periodic() {
+    /** Call log method every loop. */
+    log();
+
     // Update the odometry in the periodic block
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
