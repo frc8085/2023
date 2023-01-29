@@ -56,6 +56,8 @@ public class RobotContainer {
 
     // Reset heading before we start
     m_robotDrive.zeroHeading();
+    m_robotDrive.calibrate();
+
     // Configure default commands
     m_robotDrive.setDefaultCommand(
         // Right Bumper sets a fixed mid speed limit
@@ -69,7 +71,7 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_driverController.getLeftY(), 0.06),
                 MathUtil.applyDeadband(-m_driverController.getLeftX(), 0.06),
                 MathUtil.applyDeadband(-m_driverController.getRightX(), 0.06),
-                false),
+                true),
             m_robotDrive));
   }
 
