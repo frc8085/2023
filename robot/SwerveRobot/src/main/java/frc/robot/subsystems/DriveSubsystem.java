@@ -43,8 +43,8 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  // private final ADIS16448_IMU m_gyro = new ADIS16448_IMU();
-  private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
+   private final ADIS16448_IMU m_gyro = new ADIS16448_IMU();
+  // private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -59,11 +59,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
-    // Things to show only in tuninig mode
+    // Things to show only in tuning mode
     if (TUNING_MODE) {
       SmartDashboard.putNumber("POSE X Meters", m_odometry.getPoseMeters().getX());
       SmartDashboard.putNumber("POSE Y Meters", m_odometry.getPoseMeters().getY());
-      SmartDashboard.putNumber("Gyro Angle", m_gyro.getAngle());
+//      SmartDashboard.putNumber("Gyro Angle", m_gyro.getAngle());
+      SmartDashboard.putNumber("Gyro Pitch Angle", m_gyro.getGyroAngleX());
+      SmartDashboard.putNumber("Gyro Roll Angle", m_gyro.getGyroAngleY());
+      SmartDashboard.putNumber("Gyro Yaw Angle", m_gyro.getGyroAngleZ());
       // SmartDashboard.putNumber("Gyro AccelX", m_gyro.getAccelX());
       // SmartDashboard.putNumber("Gyro AccelY", m_gyro.getAccelY());
       // SmartDashboard.putNumber("Gyro AccelZ", m_gyro.getAccelZ());
