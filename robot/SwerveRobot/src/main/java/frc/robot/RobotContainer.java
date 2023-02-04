@@ -28,7 +28,7 @@ import java.util.List;
 import frc.robot.subsystems.IntakeCover;
 
 // Dashboard
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
