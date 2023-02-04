@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,6 +46,7 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
    private final ADIS16448_IMU m_gyro = new ADIS16448_IMU();
   // private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
+// private final WPI_PigeonIMU m_gyro = new WPI_PigeonIMU();
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
