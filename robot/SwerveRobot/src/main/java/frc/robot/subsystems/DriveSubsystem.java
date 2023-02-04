@@ -44,9 +44,9 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-   private final ADIS16448_IMU m_gyro = new ADIS16448_IMU();
+  // private final ADIS16448_IMU m_gyro = new ADIS16448_IMU();
   // private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
-// private final WPI_PigeonIMU m_gyro = new WPI_PigeonIMU();
+  private final WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(DriveConstants.kGyroDeviceNumber);
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -65,22 +65,11 @@ public class DriveSubsystem extends SubsystemBase {
     if (TUNING_MODE) {
       SmartDashboard.putNumber("POSE X Meters", m_odometry.getPoseMeters().getX());
       SmartDashboard.putNumber("POSE Y Meters", m_odometry.getPoseMeters().getY());
-//      SmartDashboard.putNumber("Gyro Angle", m_gyro.getAngle());
-      SmartDashboard.putNumber("Gyro Pitch Angle", m_gyro.getGyroAngleX());
-      SmartDashboard.putNumber("Gyro Roll Angle", m_gyro.getGyroAngleY());
-      SmartDashboard.putNumber("Gyro Yaw Angle", m_gyro.getGyroAngleZ());
-      // SmartDashboard.putNumber("Gyro AccelX", m_gyro.getAccelX());
-      // SmartDashboard.putNumber("Gyro AccelY", m_gyro.getAccelY());
-      // SmartDashboard.putNumber("Gyro AccelZ", m_gyro.getAccelZ());
-      // SmartDashboard.putNumber("Gyro Angle", m_gyro.getAngle());
-      // SmartDashboard.putNumber("Gyro XComplementaryAngle",
-      // m_gyro.getXComplementaryAngle());
-      // SmartDashboard.putNumber("Gyro XFilteredAccelAngle",
-      // m_gyro.getXFilteredAccelAngle());
-      // SmartDashboard.putNumber("Gyro YComplementaryAngle",
-      // m_gyro.getXComplementaryAngle());
-      // SmartDashboard.putNumber("Gyro YFilteredAccelAngle",
-      // m_gyro.getXFilteredAccelAngle());
+
+      SmartDashboard.putNumber("Absolute Compass Heading", m_gyro.getAbsoluteCompassHeading());
+      SmartDashboard.putNumber("Compass Heading", m_gyro.getCompassHeading());
+      SmartDashboard.putNumber("Angle", m_gyro.getAngle());
+      SmartDashboard.putNumber("Yaw", m_gyro.getYaw());
     }
   }
 

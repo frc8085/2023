@@ -27,7 +27,6 @@ public final class Constants {
 
   public static final class IntakeCoverConstants {
     public static final int[] kIntakeCoverSolenoidPorts = new int[] { 6, 7 };
-
   }
 
   public static final class DriveConstants {
@@ -65,6 +64,8 @@ public final class Constants {
     public static final int kFrontRightTurningCanId = 10;
     public static final int kRearRightTurningCanId = 11;
 
+    // GYRO CONSTANTS
+    public static final int kGyroDeviceNumber = 5;
     public static final boolean kGyroReversed = false;
   }
 
