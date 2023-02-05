@@ -13,10 +13,11 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 // import edu.wpi.first.wpilibj.ADIS16448_IMU;
 // import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -46,7 +47,7 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   // private final ADIS16448_IMU m_gyro = new ADIS16448_IMU();
   // private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
-  private final WPI_PigeonIMU m_gyro = new WPI_PigeonIMU(DriveConstants.kGyroDeviceNumber);
+  private final WPI_Pigeon2 m_gyro = new WPI_Pigeon2(DriveConstants.kGyroDeviceNumber);
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
@@ -66,11 +67,15 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("POSE X Meters", m_odometry.getPoseMeters().getX());
       SmartDashboard.putNumber("POSE Y Meters", m_odometry.getPoseMeters().getY());
 
+      SmartDashboard.putNumber("Angle", m_gyro.getAngle());
+      SmartDashboard.putNumber("Yaw", m_gyro.getYaw());
+      SmartDashboard.putNumber("Pitch", m_gyro.getPitch());
+      SmartDashboard.putNumber("Roll", m_gyro.getRoll());
+
       SmartDashboard.putNumber("Absolute Compass Heading",
           m_gyro.getAbsoluteCompassHeading());
       SmartDashboard.putNumber("Compass Heading", m_gyro.getCompassHeading());
-      SmartDashboard.putNumber("Angle", m_gyro.getAngle());
-      SmartDashboard.putNumber("Yaw", m_gyro.getYaw());
+
     }
   }
 
