@@ -37,7 +37,7 @@ public final class Constants {
     public static int kElevatorMotorPort = 5;
     public static int kElevatorArmMotorPort = 7;
 
-    public static double kElevatorArmSpeed = 0.05;
+    public static double kElevatorArmSpeed = 0.5;
     public static double kElevatorSpeed = 0.5;
 
     // {kRampRate} = Time in seconds to go from 0 to full throttle.

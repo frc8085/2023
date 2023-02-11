@@ -27,12 +27,12 @@ public class Elevator extends SubsystemBase {
   /** ELEVATOR ARM **/
   // Run the elevator arm motor forward
   public void extendElevatorArm() {
-    m_ElevatorMotor.set(ElevatorConstants.kElevatorArmSpeed);
+    m_ElevatorArmMotor.set(ElevatorConstants.kElevatorArmSpeed);
   }
 
   // Run the elevator arm motor in reverse
   public void retractElevatorArm() {
-    m_ElevatorMotor.set(-ElevatorConstants.kElevatorArmSpeed);
+    m_ElevatorArmMotor.set(-ElevatorConstants.kElevatorArmSpeed);
   }
 
   // Stop the elevator arm
@@ -48,7 +48,7 @@ public class Elevator extends SubsystemBase {
 
   // Run the elevator motor in reverse
   public void lowerElevator() {
-    m_ElevatorMotor.set(ElevatorConstants.kElevatorSpeed/2);
+    m_ElevatorMotor.set(ElevatorConstants.kElevatorSpeed / 2);
   }
 
   // Stop the elevator the elevator

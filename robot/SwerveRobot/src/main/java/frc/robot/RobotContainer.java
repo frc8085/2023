@@ -103,9 +103,13 @@ public class RobotContainer {
 
     armExtendButton.whileTrue(
         new InstantCommand(m_Elevator::extendElevatorArm, m_Elevator));
+    armExtendButton.onFalse(
+        new InstantCommand(m_Elevator::stopArm, m_Elevator));
 
     armRetractButton.whileTrue(
         new InstantCommand(m_Elevator::retractElevatorArm, m_Elevator));
+    armRetractButton.onFalse(
+        new InstantCommand(m_Elevator::stop, m_Elevator));
 
     elevatorRaiseButton.whileTrue(
         new InstantCommand(m_Elevator::raiseElevator, m_Elevator));
