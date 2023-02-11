@@ -24,16 +24,12 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
 import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj.DriverStation;
-
-import frc.robot.commands.MaintainAltitude;
-
 // Dashboard
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -47,7 +43,7 @@ public class RobotContainer {
 
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final Elevator m_elevator = new Elevator();
+  private final Elevator m_Elevator = new Elevator();
   private final IntakeCover intakeCover = new IntakeCover();
 
   // The driver's controller
@@ -66,10 +62,9 @@ public class RobotContainer {
 
     intakeCover.setDefaultCommand(new OpenIntake(intakeCover));
 
-    // Reset encoders and heading before we start
+    // Reset heading before we start
     m_robotDrive.zeroHeading();
     m_robotDrive.calibrate();
-    m_elevator.reset();
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -107,26 +102,24 @@ public class RobotContainer {
     final JoystickButton elevatorLowerButton = new JoystickButton(m_operatorController, Button.kA.value);
 
     armExtendButton.whileTrue(
-        new InstantCommand(m_elevator::extendElevatorArm, m_elevator));
+        new InstantCommand(m_Elevator::extendElevatorArm, m_Elevator));
     armExtendButton.onFalse(
-        new InstantCommand(m_elevator::stopArm, m_elevator));
+        new InstantCommand(m_Elevator::stopArm, m_Elevator));
 
     armRetractButton.whileTrue(
-        new InstantCommand(m_elevator::retractElevatorArm, m_elevator));
+        new InstantCommand(m_Elevator::retractElevatorArm, m_Elevator));
     armRetractButton.onFalse(
-        new InstantCommand(m_elevator::stop, m_elevator));
+        new InstantCommand(m_Elevator::stop, m_Elevator));
 
     elevatorRaiseButton.whileTrue(
-        new InstantCommand(m_elevator::raiseElevator, m_elevator));
+        new InstantCommand(m_Elevator::raiseElevator, m_Elevator));
     elevatorRaiseButton.onFalse(
-        new MaintainAltitude(m_elevator::getCurrentAltitude, m_elevator)
-
-    );
+        new InstantCommand(m_Elevator::stopElevator, m_Elevator));
 
     elevatorLowerButton.whileTrue(
-        new InstantCommand(m_elevator::lowerElevator, m_elevator));
+        new InstantCommand(m_Elevator::lowerElevator, m_Elevator));
     elevatorLowerButton.onFalse(
-        new InstantCommand(m_elevator::stopElevator, m_elevator));
+        new InstantCommand(m_Elevator::stopElevator, m_Elevator));
 
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .whileTrue(new RunCommand(
