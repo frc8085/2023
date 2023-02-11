@@ -101,15 +101,21 @@ public class RobotContainer {
     final JoystickButton elevatorRaiseButton = new JoystickButton(m_operatorController, Button.kY.value);
     final JoystickButton elevatorLowerButton = new JoystickButton(m_operatorController, Button.kA.value);
 
-    armExtendButton.onTrue(
+    armExtendButton.whileTrue(
         new InstantCommand(m_Elevator::extendElevatorArm, m_Elevator));
-    armRetractButton.onTrue(
+
+    armRetractButton.whileTrue(
         new InstantCommand(m_Elevator::retractElevatorArm, m_Elevator));
 
-    elevatorRaiseButton.onTrue(
+    elevatorRaiseButton.whileTrue(
         new InstantCommand(m_Elevator::raiseElevator, m_Elevator));
-    elevatorLowerButton.onTrue(
+    elevatorRaiseButton.onFalse(
+        new InstantCommand(m_Elevator::stopElevator, m_Elevator));
+
+    elevatorLowerButton.whileTrue(
         new InstantCommand(m_Elevator::lowerElevator, m_Elevator));
+    elevatorLowerButton.onFalse(
+        new InstantCommand(m_Elevator::stopElevator, m_Elevator));
 
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .whileTrue(new RunCommand(
