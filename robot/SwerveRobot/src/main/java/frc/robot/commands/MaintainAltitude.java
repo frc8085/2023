@@ -6,6 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import static frc.robot.Constants.ElevatorConstants;
+
+import java.util.function.DoubleSupplier;
+
 import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 
@@ -27,11 +30,11 @@ public class MaintainAltitude extends PIDCommand {
    *
    * @param distance The distance to drive (inches)
    */
-  public MaintainAltitude(double altitude, Elevator elevator) {
+  public MaintainAltitude(DoubleSupplier altitudeValue, Elevator elevator) {
     super(
         new PIDController(kP, kI, kD),
         elevator::getCurrentAltitude,
-        altitude,
+        altitudeValue.getAsDouble(),
         d -> elevator.maintain(d));
 
     m_elevator = elevator;

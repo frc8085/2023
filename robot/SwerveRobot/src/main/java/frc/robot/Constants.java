@@ -44,6 +44,7 @@ public final class Constants {
     public static double kRampRate = 0;
     public static double kElevatorRampRate = 0;
     public static double kArmRampRate = 0;
+    public static double kAltitudePositionTolerance = 10;
 
   }
 
