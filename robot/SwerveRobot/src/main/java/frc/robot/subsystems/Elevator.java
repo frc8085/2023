@@ -5,8 +5,10 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ElevatorConstants;
 
@@ -16,34 +18,60 @@ public class Elevator extends SubsystemBase {
   // Elevator motors
   private final CANSparkMax m_ElevatorMotor = new CANSparkMax(ElevatorConstants.kElevatorMotorPort,
       MotorType.kBrushless);
-  private final CANSparkMax m_ElevatorArmMotor = new CANSparkMax(ElevatorConstants.kElevatorArmMotorPort,
+  private final CANSparkMax m_ArmMotor = new CANSparkMax(ElevatorConstants.kElevatorArmMotorPort,
       MotorType.kBrushless);
+
+  // Encoders
+  private final RelativeEncoder m_ElevatorEncoder = m_ElevatorMotor.getEncoder();
+  private final RelativeEncoder m_ArmEncoder = m_ArmMotor.getEncoder();
 
   public Elevator() {
     m_ElevatorMotor.setOpenLoopRampRate(ElevatorConstants.kElevatorRampRate);
-    m_ElevatorArmMotor.setOpenLoopRampRate(ElevatorConstants.kArmRampRate);
+    m_ArmMotor.setOpenLoopRampRate(ElevatorConstants.kArmRampRate);
+  }
+
+  /** The log method puts interesting information to the SmartDashboard. */
+  public void log() {
+    SmartDashboard.putNumber("ELEVATOR Raw encoder read", m_ElevatorEncoder.getPosition());
+    SmartDashboard.putNumber("ARM Raw encoder read", m_ArmEncoder.getPosition());
+  }
+
+  /** Call log method every loop. */
+  @Override
+  public void periodic() {
+    log();
+  }
+
+  /** Resets the drive encoders to currently read a position of 0. */
+  public void reset() {
+    m_ArmEncoder.setPosition(0);
+    m_ElevatorEncoder.setPosition(0);
   }
 
   /** ELEVATOR ARM **/
   // Run the elevator arm motor forward
   public void extendElevatorArm() {
-    m_ElevatorArmMotor.set(ElevatorConstants.kElevatorArmSpeed);
+    m_ArmMotor.set(ElevatorConstants.kElevatorArmSpeed);
   }
 
   // Run the elevator arm motor in reverse
   public void retractElevatorArm() {
-    m_ElevatorArmMotor.set(-ElevatorConstants.kElevatorArmSpeed);
+    m_ArmMotor.set(-ElevatorConstants.kElevatorArmSpeed);
   }
 
   // Stop the elevator arm
   public void stopArm() {
-    m_ElevatorArmMotor.set(0);
+    m_ArmMotor.set(0);
   }
 
   /** ELEVATOR ALTITUDE **/
   // Run the elevator motor forward
   public void raiseElevator() {
     m_ElevatorMotor.set(-ElevatorConstants.kElevatorSpeed);
+  }
+
+  public void raiseElevator(double speed) {
+    m_ElevatorMotor.set(speed); // TODO : WARNING THIS MAY NEED TO BE NEGATIVE
   }
 
   // Run the elevator motor in reverse
@@ -60,6 +88,16 @@ public class Elevator extends SubsystemBase {
   public void stop() {
     stopArm();
     stopElevator();
+  }
+
+  // Returns the current altitude of the elevator
+  public double getCurrentAltitude() {
+    return m_ElevatorEncoder.getPosition();
+  }
+
+  // Maintain the altitude
+  public void maintain(double altitude) {
+    raiseElevator(altitude);
   }
 
 }
