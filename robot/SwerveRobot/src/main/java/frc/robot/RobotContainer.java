@@ -15,17 +15,20 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.OpenIntake;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
+import frc.robot.subsystems.Elevator;
 
 // Dashboard
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -39,11 +42,12 @@ import frc.robot.subsystems.IntakeCover;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-
+  private final Elevator m_Elevator = new Elevator();
   private final IntakeCover intakeCover = new IntakeCover();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -85,6 +89,24 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    /** MANUAL OPERATION */
+    final JoystickButton armExtendButton = new JoystickButton(m_operatorController, Button.kRightBumper.value);
+    final JoystickButton armRetractButton = new JoystickButton(m_operatorController, Button.kLeftBumper.value);
+
+    final JoystickButton elevatorRaiseButton = new JoystickButton(m_operatorController, Button.kY.value);
+    final JoystickButton elevatorLowerButton = new JoystickButton(m_operatorController, Button.kA.value);
+
+    armExtendButton.onTrue(
+        new InstantCommand(m_Elevator::extendElevatorArm, m_Elevator));
+    armRetractButton.onTrue(
+        new InstantCommand(m_Elevator::retractElevatorArm, m_Elevator));
+
+    elevatorRaiseButton.onTrue(
+        new InstantCommand(m_Elevator::raiseElevator, m_Elevator));
+    elevatorLowerButton.onTrue(
+        new InstantCommand(m_Elevator::lowerElevator, m_Elevator));
+
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.lock(),
