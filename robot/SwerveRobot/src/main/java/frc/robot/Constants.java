@@ -29,6 +29,29 @@ public final class Constants {
     public static final int[] kIntakeCoverSolenoidPorts = new int[] { 6, 7 };
   }
 
+  public static final class IntakeConstants {
+    public static final int kIntakePort = 6;
+    // {kRampRate} = Time in seconds to go from 0 to full throttle.
+    public static double kRampRate = 1;
+    public static double kEjectSpeed = 0.1;
+    public static double kIntakeConeSpeed = 0.1;
+    public static double kIntakeCubeSpeed = 0.2;
+  }
+
+  public static final class ElevatorConstants {
+    public static int kElevatorMotorPort = 5;
+    public static int kElevatorArmMotorPort = 7;
+
+    public static double kElevatorArmSpeed = 0.05;
+    public static double kElevatorSpeed = 0.05;
+
+    // {kRampRate} = Time in seconds to go from 0 to full throttle.
+    public static double kRampRate = 1;
+    public static double kElevatorRampRate = 1;
+    public static double kArmRampRate = 1;
+
+  }
+
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
@@ -126,6 +149,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static int kOperatorControllerPort = 1;
   }
 
   public static final class AutoConstants {

@@ -15,17 +15,22 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.OpenIntake;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
+import frc.robot.utilities.JoystickAxisButton;
+import frc.robot.subsystems.Intake;
 
 // Dashboard
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,10 +45,12 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
-  private final IntakeCover intakeCover = new IntakeCover();
+  private final IntakeCover m_intakeCover = new IntakeCover();
+  private final Intake m_intake = new Intake();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -52,7 +59,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    intakeCover.setDefaultCommand(new OpenIntake(intakeCover));
+    m_intakeCover.setDefaultCommand(new OpenIntake(m_intakeCover));
 
     // Reset heading before we start
     m_robotDrive.zeroHeading();
@@ -85,6 +92,27 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    // Create fake buttons to correspond to right joystick up / down
+    final JoystickAxisButton coneIntakeButton = new JoystickAxisButton("Load CONE",
+        m_operatorController::getRightY, 0.25);
+    final JoystickAxisButton coneEjectButton = new JoystickAxisButton("Eject CONE",
+        m_operatorController::getRightY, -0.25);
+
+    final JoystickAxisButton cubeIntakeButton = new JoystickAxisButton("Load CUBE",
+        m_operatorController::getLeftY, 0.25);
+    final JoystickAxisButton cubeEjectButton = new JoystickAxisButton("Eject CUBE",
+        m_operatorController::getLeftY, -0.25);
+
+    coneIntakeButton.whileTrue(
+        new InstantCommand(m_intake::intakeCone, m_intake));
+    cubeIntakeButton.whileTrue(
+        new InstantCommand(m_intake::intakeCube, m_intake));
+
+    coneEjectButton.whileTrue(
+        new ConditionalCommand(new InstantCommand(
+            m_intake::eject, m_intake), new InstantCommand(), cubeEjectButton));
+
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.lock(),
