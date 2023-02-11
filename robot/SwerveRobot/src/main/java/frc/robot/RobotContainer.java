@@ -105,25 +105,16 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    // Create fake buttons to correspond to right joystick up / down
-    final JoystickAxisButton coneIntakeButton = new JoystickAxisButton("Load CONE",
-        m_operatorController::getRightY, 0.25);
-    final JoystickAxisButton coneEjectButton = new JoystickAxisButton("Eject CONE",
-        m_operatorController::getRightY, -0.25);
-
-    final JoystickAxisButton cubeIntakeButton = new JoystickAxisButton("Load CUBE",
-        m_operatorController::getLeftY, 0.25);
-    final JoystickAxisButton cubeEjectButton = new JoystickAxisButton("Eject CUBE",
-        m_operatorController::getLeftY, -0.25);
+    final JoystickButton coneIntakeButton = new JoystickButton(m_operatorController, Button.kB.value);
+    final JoystickButton ejectButton = new JoystickButton(m_operatorController, Button.kX.value);
 
     coneIntakeButton.whileTrue(
         new InstantCommand(m_intake::intakeCone, m_intake));
-    cubeIntakeButton.whileTrue(
-        new InstantCommand(m_intake::intakeCube, m_intake));
+    coneIntakeButton.onFalse(new InstantCommand(m_intake::stopIntake));
+    ejectButton.whileTrue(
+        new InstantCommand(m_intake::eject, m_intake));
+    ejectButton.onFalse(new InstantCommand(m_intake::stopIntake));
 
-    coneEjectButton.whileTrue(
-        new ConditionalCommand(new InstantCommand(
-            m_intake::eject, m_intake), new InstantCommand(), cubeEjectButton));
     /** MANUAL OPERATION */
     final JoystickButton armExtendButton = new JoystickButton(m_operatorController, Button.kRightBumper.value);
     final JoystickButton armRetractButton = new JoystickButton(m_operatorController, Button.kLeftBumper.value);
