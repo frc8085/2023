@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
 import frc.robot.subsystems.Elevator;
-
+import edu.wpi.first.wpilibj.DriverStation;
 // Dashboard
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -40,6 +40,7 @@ import frc.robot.subsystems.Elevator;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Elevator m_Elevator = new Elevator();
@@ -53,6 +54,9 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    DriverStation.silenceJoystickConnectionWarning(true);
+    System.out.println("FMS? " + DriverStation.isFMSAttached());
+
     // Configure the button bindings
     configureButtonBindings();
 
