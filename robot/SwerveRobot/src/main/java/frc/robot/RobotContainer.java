@@ -25,12 +25,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
 import frc.robot.utilities.JoystickAxisButton;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Elevator;
+import edu.wpi.first.wpilibj.DriverStation;
+
+import frc.robot.commands.MaintainAltitude;
 
 // Dashboard
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -42,11 +47,14 @@ import frc.robot.subsystems.Intake;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
   private final IntakeCover m_intakeCover = new IntakeCover();
   private final Intake m_intake = new Intake();
+  private final Elevator m_elevator = new Elevator();
+  private final IntakeCover intakeCover = new IntakeCover();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -56,14 +64,18 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    DriverStation.silenceJoystickConnectionWarning(true);
+    System.out.println("FMS? " + DriverStation.isFMSAttached());
+
     // Configure the button bindings
     configureButtonBindings();
 
     m_intakeCover.setDefaultCommand(new OpenIntake(m_intakeCover));
 
-    // Reset heading before we start
+    // Reset encoders and heading before we start
     m_robotDrive.zeroHeading();
     m_robotDrive.calibrate();
+    m_elevator.reset();
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
@@ -112,6 +124,34 @@ public class RobotContainer {
     coneEjectButton.whileTrue(
         new ConditionalCommand(new InstantCommand(
             m_intake::eject, m_intake), new InstantCommand(), cubeEjectButton));
+    /** MANUAL OPERATION */
+    final JoystickButton armExtendButton = new JoystickButton(m_operatorController, Button.kRightBumper.value);
+    final JoystickButton armRetractButton = new JoystickButton(m_operatorController, Button.kLeftBumper.value);
+
+    final JoystickButton elevatorRaiseButton = new JoystickButton(m_operatorController, Button.kY.value);
+    final JoystickButton elevatorLowerButton = new JoystickButton(m_operatorController, Button.kA.value);
+
+    armExtendButton.whileTrue(
+        new InstantCommand(m_elevator::extendElevatorArm, m_elevator));
+    armExtendButton.onFalse(
+        new InstantCommand(m_elevator::stopArm, m_elevator));
+
+    armRetractButton.whileTrue(
+        new InstantCommand(m_elevator::retractElevatorArm, m_elevator));
+    armRetractButton.onFalse(
+        new InstantCommand(m_elevator::stop, m_elevator));
+
+    elevatorRaiseButton.whileTrue(
+        new InstantCommand(m_elevator::raiseElevator, m_elevator));
+    elevatorRaiseButton.onFalse(
+        new InstantCommand(m_elevator::stopElevator, m_elevator)
+
+    );
+
+    elevatorLowerButton.whileTrue(
+        new InstantCommand(m_elevator::lowerElevator, m_elevator));
+    elevatorLowerButton.onFalse(
+        new InstantCommand(m_elevator::stopElevator, m_elevator));
 
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .whileTrue(new RunCommand(
