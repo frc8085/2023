@@ -54,7 +54,6 @@ public class RobotContainer {
   private final IntakeCover m_intakeCover = new IntakeCover();
   private final Intake m_intake = new Intake();
   private final Elevator m_elevator = new Elevator();
-  private final IntakeCover intakeCover = new IntakeCover();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
