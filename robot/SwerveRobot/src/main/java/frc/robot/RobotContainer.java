@@ -24,10 +24,12 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
+import pabeles.concurrency.ConcurrencyOps.NewInstance;
 import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj.DriverStation;
 // Dashboard
@@ -113,8 +115,13 @@ public class RobotContainer {
 
     elevatorRaiseButton.whileTrue(
         new InstantCommand(m_Elevator::raiseElevator, m_Elevator));
+
     elevatorRaiseButton.onFalse(
-        new InstantCommand(m_Elevator::stopElevator, m_Elevator));
+        new SequentialCommandGroup(
+            new InstantCommand(m_Elevator::stopElevator, m_Elevator)
+        // new MaintainAltitude(() -> m_elevator.getCurrentAltitude(), m_Elevator)
+
+        ));
 
     elevatorLowerButton.whileTrue(
         new InstantCommand(m_Elevator::lowerElevator, m_Elevator));

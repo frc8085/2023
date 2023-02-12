@@ -5,10 +5,14 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ElevatorConstants;
+import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -16,28 +20,58 @@ public class Elevator extends SubsystemBase {
   // Elevator motors
   private final CANSparkMax m_ElevatorMotor = new CANSparkMax(ElevatorConstants.kElevatorMotorPort,
       MotorType.kBrushless);
-  private final CANSparkMax m_ElevatorArmMotor = new CANSparkMax(ElevatorConstants.kElevatorArmMotorPort,
+  private final CANSparkMax m_ArmMotor = new CANSparkMax(ElevatorConstants.kElevatorArmMotorPort,
       MotorType.kBrushless);
 
+  // Encoders
+  private final RelativeEncoder m_ElevatorEncoder = m_ElevatorMotor.getEncoder();
+  private final RelativeEncoder m_ArmEncoder = m_ArmMotor.getEncoder();
+
   public Elevator() {
+    m_ElevatorMotor.setIdleMode(IdleMode.kBrake);
+    m_ElevatorMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
+
     m_ElevatorMotor.setOpenLoopRampRate(ElevatorConstants.kElevatorRampRate);
-    m_ElevatorArmMotor.setOpenLoopRampRate(ElevatorConstants.kArmRampRate);
+    m_ArmMotor.setOpenLoopRampRate(ElevatorConstants.kArmRampRate);
+
+    // Save the SPARK MAX configurations. If a SPARK MAX browns out during
+    // operation, it will maintain the above configurations.
+    m_ElevatorMotor.burnFlash();
+
+  }
+
+  /** The log method puts interesting information to the SmartDashboard. */
+  public void log() {
+    SmartDashboard.putNumber("ELEVATOR Raw encoder read", m_ElevatorEncoder.getPosition());
+    SmartDashboard.putNumber("ARM Raw encoder read", m_ArmEncoder.getPosition());
+  }
+
+  /** Call log method every loop. */
+  @Override
+  public void periodic() {
+    log();
+  }
+
+  /** Resets the drive encoders to currently read a position of 0. */
+  public void reset() {
+    m_ArmEncoder.setPosition(0);
+    m_ElevatorEncoder.setPosition(0);
   }
 
   /** ELEVATOR ARM **/
   // Run the elevator arm motor forward
   public void extendElevatorArm() {
-    m_ElevatorArmMotor.set(ElevatorConstants.kElevatorArmSpeed);
+    m_ArmMotor.set(ElevatorConstants.kElevatorArmSpeed);
   }
 
   // Run the elevator arm motor in reverse
   public void retractElevatorArm() {
-    m_ElevatorArmMotor.set(-ElevatorConstants.kElevatorArmSpeed);
+    m_ArmMotor.set(-ElevatorConstants.kElevatorArmSpeed);
   }
 
   // Stop the elevator arm
   public void stopArm() {
-    m_ElevatorArmMotor.set(0);
+    m_ArmMotor.set(0);
   }
 
   /** ELEVATOR ALTITUDE **/
@@ -51,15 +85,30 @@ public class Elevator extends SubsystemBase {
     m_ElevatorMotor.set(ElevatorConstants.kElevatorSpeed / 2);
   }
 
-  // Stop the elevator the elevator
+  // Stop the elevator hack
   public void stopElevator() {
-    m_ElevatorMotor.set(0);
+    m_ElevatorMotor.set(-ElevatorConstants.kElevatorStopSpeed);
   }
+
+  // Stop the elevator
+  // public void stopElevator() {
+  // m_ElevatorMotor.set(0);
+  // }
 
   // Stop both the elevator and arm
   public void stop() {
     stopArm();
     stopElevator();
+  }
+
+  // Returns the current altitude of the elevator
+  public double getCurrentAltitude() {
+    return m_ElevatorEncoder.getPosition();
+  }
+
+  // Maintain the altitude
+  public void maintain(double altitude) {
+    m_ElevatorMotor.set(altitude);
   }
 
 }

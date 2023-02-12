@@ -29,6 +29,10 @@ public final class Constants {
     public static final int[] kIntakeCoverSolenoidPorts = new int[] { 6, 7 };
   }
 
+  public static final class SubsystemMotorConstants {
+    public static final int kMotorCurrentLimit = 30;
+  }
+
   public static final class IntakeConstants {
     public static final int kIntakePort = 6;
   }
@@ -37,8 +41,10 @@ public final class Constants {
     public static int kElevatorMotorPort = 5;
     public static int kElevatorArmMotorPort = 7;
 
-    public static double kElevatorArmSpeed = 0.5;
-    public static double kElevatorSpeed = 0.5;
+    public static double kElevatorStopSpeed = .02;
+    public static double kElevatorArmSpeed = 0.30;
+    public static double kElevatorSpeed = 0.05;
+    public static double kAltitudePositionTolerance = 100;
 
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
     public static double kRampRate = 0;
