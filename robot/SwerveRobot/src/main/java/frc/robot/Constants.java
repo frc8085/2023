@@ -35,6 +35,11 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final int kIntakePort = 6;
+    // {kRampRate} = Time in seconds to go from 0 to full throttle.
+    public static double kRampRate = 1;
+    public static double kEjectSpeed = 0.1;
+    public static double kIntakeConeSpeed = 0.1;
+    public static double kIntakeCubeSpeed = 0.2;
   }
 
   public static final class ElevatorConstants {
@@ -47,9 +52,11 @@ public final class Constants {
     public static double kAltitudePositionTolerance = 100;
 
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
+
     public static double kRampRate = 0;
     public static double kElevatorRampRate = 0;
     public static double kArmRampRate = 0;
+    public static double kAltitudePositionTolerance = 10; // TODO: TEST EMPIRICALLY;
 
   }
 

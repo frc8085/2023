@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static frc.robot.Constants.ElevatorConstants;
 
 import java.util.function.DoubleSupplier;
-
 import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 

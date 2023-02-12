@@ -22,6 +22,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.OpenIntake;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -29,7 +30,8 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
-import pabeles.concurrency.ConcurrencyOps.NewInstance;
+import frc.robot.utilities.JoystickAxisButton;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj.DriverStation;
 // Dashboard
@@ -45,8 +47,10 @@ public class RobotContainer {
 
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+
+  private final IntakeCover m_intakeCover = new IntakeCover();
+  private final Intake m_intake = new Intake();
   private final Elevator m_Elevator = new Elevator();
-  private final IntakeCover intakeCover = new IntakeCover();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -62,7 +66,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    intakeCover.setDefaultCommand(new OpenIntake(intakeCover));
+    m_intakeCover.setDefaultCommand(new OpenIntake(m_intakeCover));
 
     // Reset heading before we start
     m_robotDrive.zeroHeading();
@@ -95,6 +99,16 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    final JoystickButton coneIntakeButton = new JoystickButton(m_operatorController, Button.kB.value);
+    final JoystickButton ejectButton = new JoystickButton(m_operatorController, Button.kX.value);
+
+    coneIntakeButton.whileTrue(
+        new InstantCommand(m_intake::intakeCone, m_intake));
+    coneIntakeButton.onFalse(new InstantCommand(m_intake::stopIntake));
+    ejectButton.whileTrue(
+        new InstantCommand(m_intake::eject, m_intake));
+    ejectButton.onFalse(new InstantCommand(m_intake::stopIntake));
 
     /** MANUAL OPERATION */
     final JoystickButton armExtendButton = new JoystickButton(m_operatorController, Button.kRightBumper.value);
