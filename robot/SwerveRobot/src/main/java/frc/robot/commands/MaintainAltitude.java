@@ -5,6 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import static frc.robot.Constants.ElevatorConstants;
 
 import java.util.function.DoubleSupplier;
@@ -34,18 +36,22 @@ public class MaintainAltitude extends PIDCommand {
     super(
         new PIDController(kP, kI, kD),
         elevator::getCurrentAltitude,
-        altitudeValue.getAsDouble(),
+        -0.5,
         d -> elevator.maintain(d));
 
     m_elevator = elevator;
     addRequirements(m_elevator);
-
     getController().setTolerance(ElevatorConstants.kAltitudePositionTolerance);
+
+    // SmartDashboard.putNumber("Altitude to maintain",
+    // altitudeValue.getAsDouble());
+
   }
 
   @Override
   public void execute() {
     super.execute();
+    SmartDashboard.putNumber("Current altitude", m_elevator.getCurrentAltitude());
   }
 
   // Called just before this Command runs the first time

@@ -6,11 +6,13 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ElevatorConstants;
+import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
@@ -26,8 +28,16 @@ public class Elevator extends SubsystemBase {
   private final RelativeEncoder m_ArmEncoder = m_ArmMotor.getEncoder();
 
   public Elevator() {
+    m_ElevatorMotor.setIdleMode(IdleMode.kBrake);
+    m_ElevatorMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
+
     m_ElevatorMotor.setOpenLoopRampRate(ElevatorConstants.kElevatorRampRate);
     m_ArmMotor.setOpenLoopRampRate(ElevatorConstants.kArmRampRate);
+
+    // Save the SPARK MAX configurations. If a SPARK MAX browns out during
+    // operation, it will maintain the above configurations.
+    m_ElevatorMotor.burnFlash();
+
   }
 
   /** The log method puts interesting information to the SmartDashboard. */
@@ -70,19 +80,20 @@ public class Elevator extends SubsystemBase {
     m_ElevatorMotor.set(-ElevatorConstants.kElevatorSpeed);
   }
 
-  public void raiseElevator(double speed) {
-    m_ElevatorMotor.set(speed); // TODO : WARNING THIS MAY NEED TO BE NEGATIVE
-  }
-
   // Run the elevator motor in reverse
   public void lowerElevator() {
     m_ElevatorMotor.set(ElevatorConstants.kElevatorSpeed / 2);
   }
 
-  // Stop the elevator the elevator
+  // Stop the elevator hack
   public void stopElevator() {
-    m_ElevatorMotor.set(0);
+    m_ElevatorMotor.set(-ElevatorConstants.kElevatorStopSpeed);
   }
+
+  // Stop the elevator
+  // public void stopElevator() {
+  // m_ElevatorMotor.set(0);
+  // }
 
   // Stop both the elevator and arm
   public void stop() {
@@ -97,7 +108,7 @@ public class Elevator extends SubsystemBase {
 
   // Maintain the altitude
   public void maintain(double altitude) {
-    raiseElevator(altitude);
+    m_ElevatorMotor.set(altitude);
   }
 
 }

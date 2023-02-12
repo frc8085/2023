@@ -122,8 +122,10 @@ public class RobotContainer {
 
     elevatorRaiseButton.onFalse(
         new SequentialCommandGroup(
-            new InstantCommand(m_elevator::stopElevator, m_elevator),
-            new MaintainAltitude(m_elevator::getCurrentAltitude, m_elevator)));
+            new InstantCommand(m_elevator::stopElevator, m_elevator)
+        // new MaintainAltitude(() -> m_elevator.getCurrentAltitude(), m_elevator)
+
+        ));
 
     elevatorLowerButton.whileTrue(
         new InstantCommand(m_elevator::lowerElevator, m_elevator));
