@@ -66,7 +66,7 @@ public final class Constants {
     // maxSpeedMetersPerSecond default = 4.8
     public static final double kMaxSpeedMetersPerSecond = 3.5;
  // reduced this from 2 * Math.PI to slow down rotation
-    public static final double kMaxAngularSpeed = .5 * Math.PI; // radians per second
+    public static final double kMaxAngularSpeed = 1 * Math.PI; // radians per second
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(24);
