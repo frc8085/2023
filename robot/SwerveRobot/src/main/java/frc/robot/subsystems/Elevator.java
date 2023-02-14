@@ -77,17 +77,17 @@ public class Elevator extends SubsystemBase {
   /** ELEVATOR ALTITUDE **/
   // Run the elevator motor forward
   public void raiseElevator() {
-    m_ElevatorMotor.set(-ElevatorConstants.kElevatorSpeed);
+    m_ElevatorMotor.set(ElevatorConstants.kElevatorSpeed);
   }
 
   // Run the elevator motor in reverse
   public void lowerElevator() {
-    m_ElevatorMotor.set(ElevatorConstants.kElevatorSpeed / 2);
+    m_ElevatorMotor.set(-ElevatorConstants.kElevatorSpeed / 2);
   }
 
   // Stop the elevator hack
   public void stopElevator() {
-    m_ElevatorMotor.set(-ElevatorConstants.kElevatorStopSpeed);
+    m_ElevatorMotor.set(ElevatorConstants.kElevatorStopSpeed);
   }
 
   // Stop the elevator
