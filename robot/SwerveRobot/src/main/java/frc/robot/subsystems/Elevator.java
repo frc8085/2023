@@ -80,6 +80,8 @@ public class Elevator extends SubsystemBase {
     resetArmEncoderAtRetractionLimit();
     resetElevatorEncoderAtTopLimit();
 
+    atElevatorAltitudeIntakePosition();
+
   }
 
   /** Resets the drive encoders to currently read a position of 0. */
@@ -192,6 +194,16 @@ public class Elevator extends SubsystemBase {
     return withinLimits;
   }
 
+  // Determine if Altitude must be lowered or raised for intake position
+
+  public boolean isElevatorAboveIntakePosition() {
+    double altitudeCurrentPosition = m_ElevatorEncoder.getPosition();
+    double setpoint = ElevatorConstants.kElevatorAltitudeIntakePosition;
+
+    boolean abovePosition = (altitudeCurrentPosition > setpoint);
+    return abovePosition;
+  }
+
   // Determine if Altitude is at DropOff Position
   public boolean atElevatorAltitudeDropOffPosition() {
     double altitudeCurrentPosition = m_ElevatorEncoder.getPosition();
@@ -220,5 +232,23 @@ public class Elevator extends SubsystemBase {
     return withinLimits;
 
   }
+
+  // Move Altitude to Intake Position
+  public void elevatorAltitudeIntakePosition() {
+    if (atElevatorAltitudeIntakePosition()) {
+      stopElevator();
+    } else {
+      if (isElevatorAboveIntakePosition()) {
+        lowerElevator();
+      } else {
+        raiseElevator();
+      }
+    }
+  }
+
+  // Maintain the altitude
+  // public void maintain(double altitude) {
+  // m_ElevatorMotor.set(altitude);
+  // }
 
 }
