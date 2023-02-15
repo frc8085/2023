@@ -113,14 +113,6 @@ public class Elevator extends SubsystemBase {
     return m_ArmExtensionLimit.isPressed() == true;
   }
 
-  public boolean isElevatorTopLimitHit() {
-    return m_ElevatorTopLimit.isPressed() == true;
-  }
-
-  public boolean isElevatorBottomLimitHit() {
-    return m_ElevatorBottomLimit.isPressed() == true;
-  }
-
   // Reset the Arm Encoder when the Retraction Limit is pressed
 
   public void resetArmEncoderAtRetractionLimit() {
@@ -133,12 +125,6 @@ public class Elevator extends SubsystemBase {
   // public void resetArmEncoderAtRetractionLimit() {
   // isArmRetractionLimitHit() && m_ArmEncoder.setPosition(0);
   // }
-
-  public void resetElevatorEncoderAtTopLimit() {
-    if (isElevatorTopLimitHit()) {
-      m_ElevatorEncoder.setPosition(0);
-    }
-  };
 
   /** ELEVATOR ALTITUDE **/
   // Run the elevator motor forward
@@ -155,6 +141,20 @@ public class Elevator extends SubsystemBase {
   public void stopElevator() {
     m_ElevatorMotor.set(ElevatorConstants.kElevatorStopSpeed);
   }
+
+  public boolean isElevatorTopLimitHit() {
+    return m_ElevatorTopLimit.isPressed() == true;
+  }
+
+  public boolean isElevatorBottomLimitHit() {
+    return m_ElevatorBottomLimit.isPressed() == true;
+  }
+
+  public void resetElevatorEncoderAtTopLimit() {
+    if (isElevatorTopLimitHit()) {
+      m_ElevatorEncoder.setPosition(0);
+    }
+  };
 
   // Stop the elevator
   // public void stopElevator() {
