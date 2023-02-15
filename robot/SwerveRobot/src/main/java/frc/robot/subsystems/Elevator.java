@@ -41,28 +41,26 @@ public class Elevator extends SubsystemBase {
     m_ElevatorMotor.setOpenLoopRampRate(ElevatorConstants.kElevatorRampRate);
     m_ArmMotor.setOpenLoopRampRate(ElevatorConstants.kArmRampRate);
 
-          /**
-     * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch() or
+    /**
+     * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
+     * or
      * getReverseLimitSwitch() method on an existing CANSparkMax object, depending
      * on which direction you would like to limit
      * 
      * Limit switches can be configured to one of two polarities:
-     *  com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyOpen
-     *  com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyClosed
+     * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyOpen
+     * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyClosed
      */
     m_ArmExtensionLimit = m_ArmMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     m_ArmRetractionLimit = m_ArmMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     m_ElevatorTopLimit = m_ElevatorMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     m_ElevatorBottomLimit = m_ElevatorMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    
 
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.
     m_ElevatorMotor.burnFlash();
 
   }
-
-
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
@@ -106,15 +104,24 @@ public class Elevator extends SubsystemBase {
     m_ArmMotor.set(0);
   }
 
-  // Reset the Arm Encoder when the Retraction Limit is pressed
-  
+  // Determine if Limit Switches are hit
   public boolean isArmRetractionLimitHit() {
     return m_ArmRetractionLimit.isPressed() == true;
   }
 
-  public boolean isElevatorTopLimitHit(){
+  public boolean isArmExtensionLimitHit() {
+    return m_ArmExtensionLimit.isPressed() == true;
+  }
+
+  public boolean isElevatorTopLimitHit() {
     return m_ElevatorTopLimit.isPressed() == true;
   }
+
+  public boolean isElevatorBottomLimitHit() {
+    return m_ElevatorBottomLimit.isPressed() == true;
+  }
+
+  // Reset the Arm Encoder when the Retraction Limit is pressed
 
   public void resetArmEncoderAtRetractionLimit() {
     if (isArmRetractionLimitHit()) {
@@ -122,17 +129,16 @@ public class Elevator extends SubsystemBase {
     }
   }
 
-  // alternate way of writing the above statement  
-// public void resetArmEncoderAtRetractionLimit() { 
-// isArmRetractionLimitHit() && m_ArmEncoder.setPosition(0);
-// }
+  // alternate way of writing the above statement
+  // public void resetArmEncoderAtRetractionLimit() {
+  // isArmRetractionLimitHit() && m_ArmEncoder.setPosition(0);
+  // }
 
   public void resetElevatorEncoderAtTopLimit() {
     if (isElevatorTopLimitHit()) {
       m_ElevatorEncoder.setPosition(0);
     }
   };
-
 
   /** ELEVATOR ALTITUDE **/
   // Run the elevator motor forward
@@ -169,6 +175,50 @@ public class Elevator extends SubsystemBase {
   // Maintain the altitude
   public void maintain(double altitude) {
     m_ElevatorMotor.set(altitude);
+  }
+
+  // Determine if Altitude is at Intake Position
+  public boolean atElevatorAltitudeIntakePosition() {
+    double altitudeCurrentPosition = m_ElevatorEncoder.getPosition();
+    double altitudeTolerance = ElevatorConstants.kAltitudePositionTolerance;
+
+    double setpoint = ElevatorConstants.kElevatorAltitudeIntakePosition;
+    double minLimit = setpoint - altitudeTolerance;
+    double maxLimit = setpoint + altitudeTolerance;
+
+    boolean withinLimits = isElevatorBottomLimitHit() ||
+        (altitudeCurrentPosition >= minLimit
+            && altitudeCurrentPosition <= maxLimit);
+    return withinLimits;
+  }
+
+  // Determine if Altitude is at DropOff Position
+  public boolean atElevatorAltitudeDropOffPosition() {
+    double altitudeCurrentPosition = m_ElevatorEncoder.getPosition();
+    double altitudeTolerance = ElevatorConstants.kAltitudePositionTolerance;
+    double setpoint = ElevatorConstants.kElevatorAltitudeDropOffPosition;
+    double minLimit = setpoint - altitudeTolerance;
+    double maxLimit = setpoint + altitudeTolerance;
+
+    boolean withinLimits = (altitudeCurrentPosition >= minLimit
+        && altitudeCurrentPosition <= maxLimit);
+    return withinLimits;
+
+  }
+
+  // Determine if Altitude is at Travel Position
+  public boolean atElevatorAltitudeTravelPosition() {
+    double altitudeCurrentPosition = m_ElevatorEncoder.getPosition();
+    double altitudeTolerance = ElevatorConstants.kAltitudePositionTolerance;
+    double setpoint = ElevatorConstants.kElevatorAltitudeTravelPosition;
+    double minLimit = setpoint - altitudeTolerance;
+    double maxLimit = setpoint + altitudeTolerance;
+
+    boolean withinLimits = isElevatorTopLimitHit() ||
+        (altitudeCurrentPosition >= minLimit
+            && altitudeCurrentPosition <= maxLimit);
+    return withinLimits;
+
   }
 
 }

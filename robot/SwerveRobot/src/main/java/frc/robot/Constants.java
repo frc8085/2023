@@ -49,7 +49,7 @@ public final class Constants {
     public static double kElevatorStopSpeed = 0;
     public static double kElevatorArmSpeed = 0.50;
     public static double kElevatorSpeed = 0.2;
-    public static double kAltitudePositionTolerance = 100;
+    public static double kAltitudePositionTolerance = 0.1;
 
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
 
@@ -64,14 +64,14 @@ public final class Constants {
     public static double kArmPositionHighDropOff = 135;
 
     // encoder readings of elevator altitude as of 2.14.2023
-     // Encoder at Top Position
+    // Encoder at Top Position
     public static double kElevatorAltitudeTravelPosition = 0;
     // Encoder at Mid Position
     public static double kElevatorAltitudeDropOffPosition = -2.5;
     // Encoder at Bottom Position
     public static double kElevatorAltitudeIntakePosition = -4.75;
 
-  
+    // testing PID constants for Elevator Altitude
   }
 
   public static final class DriveConstants {
@@ -80,7 +80,7 @@ public final class Constants {
     public static final double kFixedMidSpeedLimit = 0.20;
     // maxSpeedMetersPerSecond default = 4.8
     public static final double kMaxSpeedMetersPerSecond = 3.5;
- // reduced this from 2 * Math.PI to slow down rotation
+    // reduced this from 2 * Math.PI to slow down rotation
     public static final double kMaxAngularSpeed = 1 * Math.PI; // radians per second
 
     // Chassis configuration
