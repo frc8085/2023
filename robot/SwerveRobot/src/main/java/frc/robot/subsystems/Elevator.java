@@ -142,7 +142,7 @@ public class Elevator extends SubsystemBase {
 
   // Run the elevator motor in reverse
   public void lowerElevator() {
-    m_ElevatorMotor.set(-ElevatorConstants.kElevatorSpeed / 2);
+    m_ElevatorMotor.set(-ElevatorConstants.kElevatorSpeed);
   }
 
   // Stop the elevator hack

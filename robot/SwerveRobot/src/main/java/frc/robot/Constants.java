@@ -38,7 +38,7 @@ public final class Constants {
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
     public static double kRampRate = 1;
     public static double kEjectSpeed = 0.1;
-    public static double kIntakeConeSpeed = 0.4;
+    public static double kIntakeConeSpeed = 0.8;
     public static double kIntakeCubeSpeed = 0.1;
   }
 
@@ -48,8 +48,8 @@ public final class Constants {
 
     public static double kElevatorStopSpeed = 0;
     public static double kElevatorArmSpeed = 0.50;
-    public static double kElevatorSpeed = 0.2;
-    public static double kAltitudePositionTolerance = 100;
+    public static double kElevatorSpeed = 0.5;
+    public static double kAltitudePositionTolerance = .1;
 
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
 
