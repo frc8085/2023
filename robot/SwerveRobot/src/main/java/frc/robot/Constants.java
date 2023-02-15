@@ -46,8 +46,8 @@ public final class Constants {
     public static int kElevatorMotorPort = 5;
     public static int kElevatorArmMotorPort = 7;
 
-    public static double kElevatorStopSpeed = .02;
-    public static double kElevatorArmSpeed = 0.30;
+    public static double kElevatorStopSpeed = 0;
+    public static double kElevatorArmSpeed = 0.50;
     public static double kElevatorSpeed = 0.2;
     public static double kAltitudePositionTolerance = 100;
 
@@ -57,6 +57,10 @@ public final class Constants {
     public static double kElevatorRampRate = 0;
     public static double kArmRampRate = 0;
 
+    // Elevator Encoder Readings
+    // Encoder at Top Position
+    // Encoder at Mid Position
+    // Encoder at Bottom Position
   }
 
   public static final class DriveConstants {
