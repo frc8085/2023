@@ -115,8 +115,18 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
 
-        final JoystickButton coneIntakeButton = new JoystickButton(m_operatorController, Button.kB.value);
-        final JoystickButton ejectButton = new JoystickButton(m_operatorController, Button.kX.value);
+        // Create fake button to correspond to right trigger pressed
+        final JoystickAxisButton coneIntakeButton = new JoystickAxisButton("Shoot",
+                m_operatorController::getRightTriggerAxis, 0.5);
+
+        // Create fake button to correspond to left trigger pressed
+        final JoystickAxisButton ejectButton = new JoystickAxisButton("Shoot", m_operatorController::getLeftTriggerAxis,
+                0.5);
+
+        // final JoystickButton coneIntakeButton = new
+        // JoystickButton(m_operatorController, Button.kB.value);
+        // final JoystickButton ejectButton = new JoystickButton(m_operatorController,
+        // Button.kX.value);
 
         coneIntakeButton.whileTrue(
                 new InstantCommand(m_intake::intakeCone, m_intake));
