@@ -34,7 +34,17 @@ public class Elevator extends SubsystemBase {
   private SparkMaxLimitSwitch m_ElevatorTopLimit;
   private SparkMaxLimitSwitch m_ElevatorBottomLimit;
 
-  public Elevator() {
+  //Create a condition for when elevator is in travel mode
+  public boolean TravelPosition() {
+    return TravelPosition;
+  } 
+
+public void ElevatorIsInTravelPosition() { 
+  if (isElevatorTopLimitHit() && isElevatorTopLimitHit()) {
+return TravelPosition = true;
+}
+
+public Elevator() {
     m_ElevatorMotor.setIdleMode(IdleMode.kBrake);
     m_ElevatorMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
 

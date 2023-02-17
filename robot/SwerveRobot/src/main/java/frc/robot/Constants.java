@@ -165,9 +165,9 @@ public final class Constants {
     public static int kOperatorControllerPort = 1;
     public static final double kDriveDeadband = 0.05;
     public static final double kMagnitudeDeadband = 0.05;
-    public static final double kDirectionSlewRate = 1.2; // radians per second
-    public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+    public static final double kDirectionSlewRate = 2.4; // radians per second
+    public static final double kMagnitudeSlewRate = 3.6; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 4.0; // percent per second (1 = 100%)
   }
 
   public static final class AutoConstants {
