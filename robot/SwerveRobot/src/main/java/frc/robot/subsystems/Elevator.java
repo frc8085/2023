@@ -43,7 +43,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void ElevatorIsInTravelPosition() {
-    if (isElevatorTopLimitHit() && isElevatorTopLimitHit()) {
+    if (isElevatorTopLimitHit() && isArmRetractionLimitHit()) {
       TravelPosition = true;
     }
   }
