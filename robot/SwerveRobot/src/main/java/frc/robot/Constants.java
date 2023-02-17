@@ -57,10 +57,23 @@ public final class Constants {
     public static double kElevatorRampRate = 0;
     public static double kArmRampRate = 0;
 
-    // Elevator Encoder Readings
+    // encoder readings of arm position as of 2.14.2023
+    public static double kArmPositionFullyRetracted = 0;
+    public static double kArmPositionIntakeOut = 39;
+    public static double kArmPositionMidDropOff = 87;
+    public static double kArmPositionHighDropOff = 135;
+    public static double kArmPositionTolerance = 1;
+
+    // encoder readings of elevator altitude as of 2.14.2023
     // Encoder at Top Position
+    public static double kElevatorAltitudeTravelPosition = 0;
     // Encoder at Mid Position
+    public static double kElevatorAltitudeDropOffPosition = -2.5;
     // Encoder at Bottom Position
+    public static double kElevatorAltitudeIntakePosition = -4.75;
+
+    public static double kElevatorAltitudeError = 0.05;
+
   }
 
   public static final class DriveConstants {
@@ -70,7 +83,7 @@ public final class Constants {
     // maxSpeedMetersPerSecond default = 4.8
     public static final double kMaxSpeedMetersPerSecond = 3.5;
  // reduced this from 2 * Math.PI to slow down rotation
-    public static final double kMaxAngularSpeed = 1 * Math.PI; // radians per second
+    public static final double kMaxAngularSpeed = .5 * Math.PI; // radians per second
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(24);
