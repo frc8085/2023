@@ -34,6 +34,20 @@ public class Elevator extends SubsystemBase {
   private SparkMaxLimitSwitch m_ElevatorTopLimit;
   private SparkMaxLimitSwitch m_ElevatorBottomLimit;
 
+  // Assume robot is not in travel position to start
+  private boolean TravelPosition = false;
+
+  // Create a condition for when elevator is in travel mode
+  public boolean TravelPosition() {
+    return TravelPosition;
+  }
+
+  public void ElevatorIsInTravelPosition() {
+    if (isElevatorTopLimitHit() && isElevatorTopLimitHit()) {
+      TravelPosition = true;
+    }
+  }
+
   public Elevator() {
     m_ElevatorMotor.setIdleMode(IdleMode.kBrake);
     m_ElevatorMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
@@ -80,8 +94,6 @@ public class Elevator extends SubsystemBase {
     resetArmEncoderAtRetractionLimit();
     resetElevatorEncoderAtTopLimit();
 
-    atElevatorAltitudeIntakePosition();
-
   }
 
   /** Resets the drive encoders to currently read a position of 0. */
@@ -106,16 +118,15 @@ public class Elevator extends SubsystemBase {
     m_ArmMotor.set(0);
   }
 
-  // Determine if Limit Switches are hit
+  // Reset the Arm Encoder when the Retraction Limit is pressed
+
   public boolean isArmRetractionLimitHit() {
     return m_ArmRetractionLimit.isPressed() == true;
   }
 
-  public boolean isArmExtensionLimitHit() {
-    return m_ArmExtensionLimit.isPressed() == true;
+  public boolean isElevatorTopLimitHit() {
+    return m_ElevatorTopLimit.isPressed() == true;
   }
-
-  // Reset the Arm Encoder when the Retraction Limit is pressed
 
   public void resetArmEncoderAtRetractionLimit() {
     if (isArmRetractionLimitHit()) {
@@ -128,6 +139,12 @@ public class Elevator extends SubsystemBase {
   // isArmRetractionLimitHit() && m_ArmEncoder.setPosition(0);
   // }
 
+  public void resetElevatorEncoderAtTopLimit() {
+    if (isElevatorTopLimitHit()) {
+      m_ElevatorEncoder.setPosition(0);
+    }
+  };
+
   /** ELEVATOR ALTITUDE **/
   // Run the elevator motor forward
   public void raiseElevator() {
@@ -136,27 +153,13 @@ public class Elevator extends SubsystemBase {
 
   // Run the elevator motor in reverse
   public void lowerElevator() {
-    m_ElevatorMotor.set(-ElevatorConstants.kElevatorSpeed / 2);
+    m_ElevatorMotor.set(-ElevatorConstants.kElevatorSpeed);
   }
 
   // Stop the elevator hack
   public void stopElevator() {
     m_ElevatorMotor.set(ElevatorConstants.kElevatorStopSpeed);
   }
-
-  public boolean isElevatorTopLimitHit() {
-    return m_ElevatorTopLimit.isPressed() == true;
-  }
-
-  public boolean isElevatorBottomLimitHit() {
-    return m_ElevatorBottomLimit.isPressed() == true;
-  }
-
-  public void resetElevatorEncoderAtTopLimit() {
-    if (isElevatorTopLimitHit()) {
-      m_ElevatorEncoder.setPosition(0);
-    }
-  };
 
   // Stop the elevator
   // public void stopElevator() {
@@ -179,76 +182,36 @@ public class Elevator extends SubsystemBase {
     m_ElevatorMotor.set(altitude);
   }
 
-  // Determine if Altitude is at Intake Position
-  public boolean atElevatorAltitudeIntakePosition() {
-    double altitudeCurrentPosition = m_ElevatorEncoder.getPosition();
-    double altitudeTolerance = ElevatorConstants.kAltitudePositionTolerance;
-
-    double setpoint = ElevatorConstants.kElevatorAltitudeIntakePosition;
-    double minLimit = setpoint - altitudeTolerance;
-    double maxLimit = setpoint + altitudeTolerance;
-
-    boolean withinLimits = isElevatorBottomLimitHit() ||
-        (altitudeCurrentPosition >= minLimit
-            && altitudeCurrentPosition <= maxLimit);
-    return withinLimits;
-  }
-
-  // Determine if Altitude must be lowered or raised for intake position
-
-  public boolean isElevatorAboveIntakePosition() {
-    double altitudeCurrentPosition = m_ElevatorEncoder.getPosition();
-    double setpoint = ElevatorConstants.kElevatorAltitudeIntakePosition;
-
-    boolean abovePosition = (altitudeCurrentPosition > setpoint);
-    return abovePosition;
-  }
-
-  // Determine if Altitude is at DropOff Position
-  public boolean atElevatorAltitudeDropOffPosition() {
-    double altitudeCurrentPosition = m_ElevatorEncoder.getPosition();
-    double altitudeTolerance = ElevatorConstants.kAltitudePositionTolerance;
-    double setpoint = ElevatorConstants.kElevatorAltitudeDropOffPosition;
-    double minLimit = setpoint - altitudeTolerance;
-    double maxLimit = setpoint + altitudeTolerance;
-
-    boolean withinLimits = (altitudeCurrentPosition >= minLimit
-        && altitudeCurrentPosition <= maxLimit);
-    return withinLimits;
-
-  }
-
-  // Determine if Altitude is at Travel Position
-  public boolean atElevatorAltitudeTravelPosition() {
-    double altitudeCurrentPosition = m_ElevatorEncoder.getPosition();
-    double altitudeTolerance = ElevatorConstants.kAltitudePositionTolerance;
-    double setpoint = ElevatorConstants.kElevatorAltitudeTravelPosition;
-    double minLimit = setpoint - altitudeTolerance;
-    double maxLimit = setpoint + altitudeTolerance;
-
-    boolean withinLimits = isElevatorTopLimitHit() ||
-        (altitudeCurrentPosition >= minLimit
-            && altitudeCurrentPosition <= maxLimit);
-    return withinLimits;
-
-  }
-
-  // Move Altitude to Intake Position
-  public void elevatorAltitudeIntakePosition() {
-    if (atElevatorAltitudeIntakePosition()) {
-      stopElevator();
+  // Move the elevator altitude to travel position
+  public void MoveElevatorToTravelPosition() {
+    if (m_ElevatorEncoder.getPosition() < ElevatorConstants.kElevatorAltitudeTravelPosition) {
+      raiseElevator();
     } else {
-      if (isElevatorAboveIntakePosition()) {
-        lowerElevator();
-      } else {
-        raiseElevator();
-      }
+      stopElevator();
     }
   }
 
-  // Maintain the altitude
-  // public void maintain(double altitude) {
-  // m_ElevatorMotor.set(altitude);
-  // }
+  public void MoveArmToTravelPosition() {
+    // Retract the elevator arm to travel position
+    if (m_ArmEncoder.getPosition() > ElevatorConstants.kArmPositionFullyRetracted) {
+      retractElevatorArm();
+    } else {
+      stopArm();
+    }
+  }
+
+  // Set elevator arm to intake position - this won't work because it needs
+  // tolerance
+  public void MoveArmToIntakePosition() {
+    if (m_ArmEncoder.getPosition() > ElevatorConstants.kArmPositionIntakeOut) {
+      retractElevatorArm();
+    } else {
+      if (m_ArmEncoder.getPosition() < ElevatorConstants.kArmPositionIntakeOut) {
+        extendElevatorArm();
+      } else {
+        stopElevator();
+      }
+    }
+  }
 
 }

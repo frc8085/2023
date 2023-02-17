@@ -38,7 +38,7 @@ public final class Constants {
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
     public static double kRampRate = 1;
     public static double kEjectSpeed = 0.1;
-    public static double kIntakeConeSpeed = 0.4;
+    public static double kIntakeConeSpeed = 0.8;
     public static double kIntakeCubeSpeed = 0.1;
   }
 
@@ -48,8 +48,8 @@ public final class Constants {
 
     public static double kElevatorStopSpeed = 0;
     public static double kElevatorArmSpeed = 0.50;
-    public static double kElevatorSpeed = 0.2;
-    public static double kAltitudePositionTolerance = 0.1;
+    public static double kElevatorSpeed = 0.5;
+    public static double kAltitudePositionTolerance = .1;
 
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
 
@@ -62,6 +62,7 @@ public final class Constants {
     public static double kArmPositionIntakeOut = 39;
     public static double kArmPositionMidDropOff = 87;
     public static double kArmPositionHighDropOff = 135;
+    public static double kArmPositionTolerance = 1;
 
     // encoder readings of elevator altitude as of 2.14.2023
     // Encoder at Top Position
@@ -71,7 +72,8 @@ public final class Constants {
     // Encoder at Bottom Position
     public static double kElevatorAltitudeIntakePosition = -4.75;
 
-    // testing PID constants for Elevator Altitude
+    public static double kElevatorAltitudeError = 0.05;
+
   }
 
   public static final class DriveConstants {
@@ -80,8 +82,8 @@ public final class Constants {
     public static final double kFixedMidSpeedLimit = 0.20;
     // maxSpeedMetersPerSecond default = 4.8
     public static final double kMaxSpeedMetersPerSecond = 3.5;
-    // reduced this from 2 * Math.PI to slow down rotation
-    public static final double kMaxAngularSpeed = 1 * Math.PI; // radians per second
+ // reduced this from 2 * Math.PI to slow down rotation
+    public static final double kMaxAngularSpeed = .5 * Math.PI; // radians per second
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(24);
@@ -176,9 +178,9 @@ public final class Constants {
     public static int kOperatorControllerPort = 1;
     public static final double kDriveDeadband = 0.05;
     public static final double kMagnitudeDeadband = 0.05;
-    public static final double kDirectionSlewRate = 1.2; // radians per second
-    public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+    public static final double kDirectionSlewRate = 2.4; // radians per second
+    public static final double kMagnitudeSlewRate = 3.6; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 4.0; // percent per second (1 = 100%)
   }
 
   public static final class AutoConstants {
