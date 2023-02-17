@@ -136,11 +136,18 @@ public class RobotContainer {
         ejectButton.onFalse(new InstantCommand(m_intake::stopIntake));
 
         /** MANUAL OPERATION */
+
+        final JoystickButton returnToTravelPositionButton = new JoystickButton(m_operatorController, Button.kB.value);
         final JoystickButton armExtendButton = new JoystickButton(m_operatorController, Button.kRightBumper.value);
         final JoystickButton armRetractButton = new JoystickButton(m_operatorController, Button.kLeftBumper.value);
 
         final JoystickButton elevatorRaiseButton = new JoystickButton(m_operatorController, Button.kY.value);
         final JoystickButton elevatorLowerButton = new JoystickButton(m_operatorController, Button.kA.value);
+
+        // Move elevator to travel position when you press B
+        returnToTravelPositionButton.onTrue(
+                new InstantCommand(m_Elevator::MoveElevatorToTravelPosition, m_Elevator)
+                        .andThen(new InstantCommand(m_Elevator::MoveArmToTravelPosition, m_Elevator)));
 
         armExtendButton.whileTrue(
                 new InstantCommand(m_Elevator::extendElevatorArm, m_Elevator));
