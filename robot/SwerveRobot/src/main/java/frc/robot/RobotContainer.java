@@ -100,7 +100,8 @@ public class RobotContainer {
                                                 / (1.0 - OIConstants.kDriveDeadband))
                                         * Math.signum(-m_driverController.getRightX()),
                                 true,
-                                true),
+                                // rateLimit is true if rightBumper is not pressed, false if it is
+                                !m_driverController.getRightBumper()),
                         m_robotDrive));
     }
 
