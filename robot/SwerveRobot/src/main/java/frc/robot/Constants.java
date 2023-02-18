@@ -81,7 +81,7 @@ public final class Constants {
 
     // estimates of angles for elevator altitude
     public static double kElevatorAltitudeTravelPositionAngle = 0;
-    public static double kElevatorAltitudeDropOffPositionAngle = -50;
+    public static double kElevatorAltitudeDropOffPositionAngle = -45;
     public static double kElevatorAltitudeIntakePositionAngle = -80;
     public static double kElevatorToleranceAngle = 2;
   }
