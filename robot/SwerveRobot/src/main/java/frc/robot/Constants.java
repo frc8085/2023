@@ -37,7 +37,7 @@ public final class Constants {
     public static final int kIntakePort = 6;
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
     public static double kRampRate = 1;
-    public static double kEjectSpeed = 0.1;
+    public static double kEjectSpeed = 0.2;
     public static double kIntakeConeSpeed = 0.8;
     public static double kIntakeCubeSpeed = 0.1;
   }
@@ -52,7 +52,7 @@ public final class Constants {
     // encoder readings of arm position as of 2.14.2023
     public static double kArmPositionFullyRetracted = 0;
     public static double kArmPositionIntakeOut = 39;
-    public static double kArmPositionMidDropOff = 87;
+    public static double kArmPositionMidDropOff = 83;
     public static double kArmPositionHighDropOff = 135;
     public static double kArmPositionTolerance = 1;
 
@@ -62,7 +62,7 @@ public final class Constants {
     public static int kElevatorMotorPort = 5;
 
     public static double kElevatorStopSpeed = 0;
-    public static double kElevatorSpeed = 0.1;
+    public static double kElevatorSpeed = 0.5;
     public static double kAltitudePositionTolerance = .1;
 
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
@@ -75,7 +75,7 @@ public final class Constants {
     // Encoder at Top Position
     public static double kElevatorAltitudeTravelPosition = 0;
     // Encoder at Mid Position
-    public static double kElevatorAltitudeDropOffPosition = -2.5;
+    public static double kElevatorAltitudeDropOffPosition = -2.;
     // Encoder at Bottom Position
     public static double kElevatorAltitudeIntakePosition = -4.75;
 
@@ -83,7 +83,7 @@ public final class Constants {
 
     // estimates of angles for elevator altitude
     public static double kElevatorAltitudeTravelPositionAngle = 0;
-    public static double kElevatorAltitudeDropOffPositionAngle = -45;
+    public static double kElevatorAltitudeDropOffPositionAngle = -40;
     public static double kElevatorAltitudeIntakePositionAngle = -80;
     public static double kElevatorToleranceAngle = 2;
   }
