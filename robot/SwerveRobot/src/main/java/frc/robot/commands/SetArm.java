@@ -50,7 +50,7 @@ public class SetArm extends PIDCommand {
   @Override
   public void execute() {
     super.execute();
-    // SmartDashboard.putNumber("Desired Position", m_Arm.)
+    // SmartDashboard.putNumber("Desired Position", m_arm.)
   }
 
   // Called just before this Command runs the first time

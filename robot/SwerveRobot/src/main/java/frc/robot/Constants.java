@@ -43,9 +43,9 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
-    public static int kElevatorArmMotorPort = 7;
+    public static int kArmMotorPort = 7;
 
-    public static double kElevatorArmSpeed = 0.50;
+    public static double kArmSpeed = 0.50;
     public static double kArmRampRate = 0;
     public static final double kMaxArmSpeedMetersPerSecond = 0.125;
 

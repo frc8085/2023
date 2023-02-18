@@ -21,15 +21,15 @@ public class Elevator extends SubsystemBase {
   private boolean isKeepingAltitude = false;
 
   // Elevator motors
-  private final CANSparkMax m_ElevatorMotor = new CANSparkMax(ElevatorConstants.kElevatorMotorPort,
+  private final CANSparkMax m_elevatorMotor = new CANSparkMax(ElevatorConstants.kElevatorMotorPort,
       MotorType.kBrushless);
 
   // Encoders
-  private final RelativeEncoder m_ElevatorEncoder = m_ElevatorMotor.getEncoder();
+  private final RelativeEncoder m_elevatorEncoder = m_elevatorMotor.getEncoder();
 
   // Limit Switches
-  private SparkMaxLimitSwitch m_ElevatorTopLimit;
-  private SparkMaxLimitSwitch m_ElevatorBottomLimit;
+  private SparkMaxLimitSwitch m_elevatorTopLimit;
+  private SparkMaxLimitSwitch m_elevatorBottomLimit;
 
   public boolean ElevatorIsInTravelPosition() {
     return isElevatorTopLimitHit();
@@ -48,10 +48,9 @@ public class Elevator extends SubsystemBase {
   }
 
   public Elevator() {
-    m_ElevatorMotor.setIdleMode(IdleMode.kBrake);
-    m_ElevatorMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
-
-    m_ElevatorMotor.setOpenLoopRampRate(ElevatorConstants.kElevatorRampRate);
+    m_elevatorMotor.setIdleMode(IdleMode.kBrake);
+    m_elevatorMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
+    m_elevatorMotor.setOpenLoopRampRate(ElevatorConstants.kElevatorRampRate);
 
     /**
      * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
@@ -63,20 +62,20 @@ public class Elevator extends SubsystemBase {
      * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyOpen
      * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyClosed
      */
-    m_ElevatorTopLimit = m_ElevatorMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    m_ElevatorBottomLimit = m_ElevatorMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    m_elevatorTopLimit = m_elevatorMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    m_elevatorBottomLimit = m_elevatorMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
 
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.
-    m_ElevatorMotor.burnFlash();
+    m_elevatorMotor.burnFlash();
 
   }
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
-    SmartDashboard.putNumber("ELEVATOR Raw encoder read", m_ElevatorEncoder.getPosition());
-    SmartDashboard.putBoolean("Elevator at Top Position", m_ElevatorTopLimit.isPressed());
-    SmartDashboard.putBoolean("Elevator at Bottom Position", m_ElevatorBottomLimit.isPressed());
+    SmartDashboard.putNumber("ELEVATOR Raw encoder read", m_elevatorEncoder.getPosition());
+    SmartDashboard.putBoolean("Elevator at Top Position", m_elevatorTopLimit.isPressed());
+    SmartDashboard.putBoolean("Elevator at Bottom Position", m_elevatorBottomLimit.isPressed());
     SmartDashboard.putBoolean("Elevator is in Travel Position", ElevatorIsInTravelPosition());
 
     SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
@@ -98,75 +97,75 @@ public class Elevator extends SubsystemBase {
 
   /** Resets the drive encoders to currently read a position of 0. */
   public void reset() {
-    m_ElevatorEncoder.setPosition(0);
+    m_elevatorEncoder.setPosition(0);
   }
 
   // Reset the Arm Encoder when the Retraction Limit is pressed
 
   public boolean isElevatorTopLimitHit() {
-    return m_ElevatorTopLimit.isPressed() == true;
+    return m_elevatorTopLimit.isPressed() == true;
   }
 
   // alternate way of writing the above statement
   // public void resetArmEncoderAtRetractionLimit() {
-  // isArmRetractionLimitHit() && m_ArmEncoder.setPosition(0);
+  // isArmRetractionLimitHit() && m_armEncoder.setPosition(0);
   // }
 
   public void resetElevatorEncoderAtTopLimit() {
     if (isElevatorTopLimitHit()) {
-      m_ElevatorEncoder.setPosition(0);
+      m_elevatorEncoder.setPosition(0);
     }
   };
 
   /** ELEVATOR ALTITUDE **/
   // Run the elevator motor forward
   public void raiseElevator() {
-    isKeepingAltitude = false;
-    m_ElevatorMotor.set(ElevatorConstants.kElevatorSpeed);
+    stopKeepingAltitude();
+    m_elevatorMotor.set(ElevatorConstants.kElevatorSpeed);
   }
 
   // Run the elevator motor in reverse
   public void lowerElevator() {
-    isKeepingAltitude = false;
-    m_ElevatorMotor.set(-ElevatorConstants.kElevatorSpeed);
+    stopKeepingAltitude();
+    m_elevatorMotor.set(-ElevatorConstants.kElevatorSpeed);
   }
 
   // Stop the elevator hack
   public void stopElevator() {
-    m_ElevatorMotor.set(ElevatorConstants.kElevatorStopSpeed);
+    m_elevatorMotor.set(ElevatorConstants.kElevatorStopSpeed);
   }
 
   // Stop the elevator
   // public void stopElevator() {
-  // m_ElevatorMotor.set(0);
+  // m_elevatorMotor.set(0);
   // }
 
   // Returns the current altitude of the elevator
   public double getCurrentAltitude() {
-    return m_ElevatorEncoder.getPosition();
+    return m_elevatorEncoder.getPosition();
   }
 
   // Returns the current altitude of the elevator in degrees
   public double getCurrentAltitudeAngle() {
-    return (m_ElevatorEncoder.getPosition() / 4.75 * 80);
+    return (m_elevatorEncoder.getPosition() / 4.75 * 80);
   }
 
   // Set a variable speed to move to a position
   public void setElevator(double speed) {
-    isKeepingAltitude = false;
-    m_ElevatorMotor.set(speed * ElevatorConstants.kMaxElevatorAltitudeSpeedMetersPerSecond);
+    stopKeepingAltitude();
+    m_elevatorMotor.set(speed * ElevatorConstants.kMaxElevatorAltitudeSpeedMetersPerSecond);
     SmartDashboard.putNumber("PID Speed Output", speed);
   }
 
   // Set a variable speed to keep altitude
   public void keepElevatorAltitude(double speed) {
-    isKeepingAltitude = true;
+    startKeepingAltitude();
     stopElevator();
   }
 
   // Move the elevator altitude to travel position
   public void MoveElevatorToTravelPosition() {
-    if (m_ElevatorEncoder.getPosition() < ElevatorConstants.kElevatorAltitudeTravelPosition) {
+    if (m_elevatorEncoder.getPosition() < ElevatorConstants.kElevatorAltitudeTravelPosition) {
       raiseElevator();
     } else {
       stopElevator();
@@ -176,7 +175,7 @@ public class Elevator extends SubsystemBase {
   // change altitude encoder readings to degrees angle*4.75/80
   // making assumption that -4.75 is -80 degrees
   public double getElevatorAngle() {
-    return m_ElevatorEncoder.getPosition() / 4.75 * 80;
+    return m_elevatorEncoder.getPosition() / 4.75 * 80;
 
   }
 }

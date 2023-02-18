@@ -6,10 +6,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import static frc.robot.Constants.ElevatorConstants;
 
-import java.util.function.DoubleSupplier;
 import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
@@ -29,27 +27,27 @@ public class KeepAltitude extends PIDCommand {
   static double kI = 0;
   static double kD = 0.001;
 
-  static double m_altitudeToKeep;
+  static double m_altitudeAngleToKeep;
 
   /**
    * Create a new KeepAltitude command.
    *
    * @param distance The distance to move (degrees)
    */
-  public KeepAltitude(double altitudeValue, Elevator elevator) {
+  public KeepAltitude(double altitudeAngle, Elevator elevator) {
     super(
         new PIDController(kP, kI, kD),
         elevator::getCurrentAltitudeAngle,
-        altitudeValue,
+        altitudeAngle,
         output -> elevator.setElevator(output));
 
     m_elevator = elevator;
-    m_altitudeToKeep = altitudeValue;
+    m_altitudeAngleToKeep = altitudeAngle;
     addRequirements(m_elevator);
     getController().setTolerance(ElevatorConstants.kAltitudePositionTolerance);
 
-    // SmartDashboard.putNumber("Altitude to maintain",
-    // altitudeValue.getAsDouble());
+    SmartDashboard.putNumber("Altitude Angle to maintain",
+        altitudeAngle);
 
   }
 
@@ -63,6 +61,7 @@ public class KeepAltitude extends PIDCommand {
   public void initialize() {
     // Get everything in a safe starting state.
     m_elevator.reset();
+    m_elevator.startKeepingAltitude();
     super.initialize();
   }
 
@@ -75,7 +74,7 @@ public class KeepAltitude extends PIDCommand {
     if (resetSetpoint) {
       new SequentialCommandGroup(
           new WaitCommand(0.25),
-          new InstantCommand(() -> getController().setSetpoint(m_altitudeToKeep)));
+          new InstantCommand(() -> getController().setSetpoint(m_altitudeAngleToKeep)));
       return false;
     } else {
       return getController().atSetpoint();

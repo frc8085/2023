@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static frc.robot.Constants.ElevatorConstants;
 
-import java.util.function.DoubleSupplier;
 import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 
@@ -19,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
  * is command is running. The input is the averaged values of the left and right
  * encoders.
  */
-public class SetAltitude extends PIDCommand {
+public class SetElevator extends PIDCommand {
   private final Elevator m_elevator;
 
   static double kP = 0.1;
@@ -27,11 +26,11 @@ public class SetAltitude extends PIDCommand {
   static double kD = 0.001;
 
   /**
-   * Create a new SetAltitude command.
+   * Create a new SetElevator command.
    *
    * @param distance The distance to move (degrees)
    */
-  public SetAltitude(double altitudeValue, Elevator elevator) {
+  public SetElevator(double altitudeValue, Elevator elevator) {
     super(
         new PIDController(kP, kI, kD),
         elevator::getCurrentAltitudeAngle,
@@ -50,7 +49,7 @@ public class SetAltitude extends PIDCommand {
   @Override
   public void execute() {
     super.execute();
-    // SmartDashboard.putNumber("Desired Altitude", m_Elevator.)
+    // SmartDashboard.putNumber("Desired Altitude", m_elevator.)
     SmartDashboard.putNumber("Current desired altitude", m_elevator.getCurrentAltitude());
     SmartDashboard.putNumber("Current desired altitude angle", m_elevator.getCurrentAltitudeAngle());
   }
