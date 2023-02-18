@@ -167,7 +167,7 @@ public class RobotContainer {
                 final JoystickButton elevatorLowerButton = new JoystickButton(m_operatorController, Button.kA.value);
 
                 // Use constants for determining positions
-                final JoystickButton elevatorSetDropOffButton = new JoystickButton(m_operatorController,
+                final JoystickButton prepareDropoffButton = new JoystickButton(m_operatorController,
                                 Button.kStart.value);
 
                 armExtendButton.whileTrue(
@@ -192,7 +192,7 @@ public class RobotContainer {
                 elevatorLowerButton.onFalse(
                                 new KeepAltitude(m_elevator.getCurrentAltitude(), m_elevator));
 
-                elevatorSetDropOffButton.onTrue(new PrepareDropoff(m_arm, m_elevator));
+                prepareDropoffButton.onTrue(new PrepareDropoff(m_arm, m_elevator));
 
                 new JoystickButton(m_driverController, Button.kLeftBumper.value)
                                 .whileTrue(new RunCommand(
