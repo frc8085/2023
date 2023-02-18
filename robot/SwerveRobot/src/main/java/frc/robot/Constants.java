@@ -61,13 +61,14 @@ public final class Constants {
     public static int kElevatorMotorPort = 5;
 
     public static double kElevatorStopSpeed = 0;
-    public static double kElevatorSpeed = 0.5;
+    public static double kElevatorSpeed = 0.1;
     public static double kAltitudePositionTolerance = .1;
 
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
 
     public static double kRampRate = 0;
     public static double kElevatorRampRate = 0;
+    public static final double kMaxElevatorAltitudeSpeedMetersPerSecond = .125;
 
     // encoder readings of elevator altitude as of 2.14.2023
     // Encoder at Top Position

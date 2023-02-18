@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
  * is command is running. The input is the averaged values of the left and right
  * encoders.
  */
-public class MaintainAltitude extends PIDCommand {
+public class SetAltitude extends PIDCommand {
   private final Elevator m_elevator;
 
   static double kP = 0.1;
@@ -27,30 +27,32 @@ public class MaintainAltitude extends PIDCommand {
   static double kD = 0.001;
 
   /**
-   * Create a new MaintainAltitude command.
+   * Create a new SetAltitude command.
    *
    * @param distance The distance to move (degrees)
    */
-  public MaintainAltitude(DoubleSupplier altitudeValue, Elevator elevator) {
+  public SetAltitude(double altitudeValue, Elevator elevator) {
     super(
         new PIDController(kP, kI, kD),
         elevator::getCurrentAltitudeAngle,
-        altitudeValue.getAsDouble(),
+        altitudeValue,
         output -> elevator.setElevator(output));
 
     m_elevator = elevator;
     addRequirements(m_elevator);
     getController().setTolerance(ElevatorConstants.kAltitudePositionTolerance);
 
-    SmartDashboard.putNumber("Altitude to maintain",
-        altitudeValue.getAsDouble());
+    // SmartDashboard.putNumber("Altitude to maintain",
+    // altitudeValue.getAsDouble());
 
   }
 
   @Override
   public void execute() {
     super.execute();
-
+    // SmartDashboard.putNumber("Desired Altitude", m_Elevator.)
+    SmartDashboard.putNumber("Current desired altitude", m_elevator.getCurrentAltitude());
+    SmartDashboard.putNumber("Current desired altitude angle", m_elevator.getCurrentAltitudeAngle());
   }
 
   // Called just before this Command runs the first time

@@ -64,6 +64,10 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putBoolean("Elevator at Top Position", m_ElevatorTopLimit.isPressed());
     SmartDashboard.putBoolean("Elevator at Bottom Position", m_ElevatorBottomLimit.isPressed());
     SmartDashboard.putBoolean("Elevator is in Travel Position", ElevatorIsInTravelPosition());
+
+    SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
+    SmartDashboard.putNumber("Current altitude angle", getCurrentAltitudeAngle());
+
   }
 
   /** Call log method every loop. */
@@ -129,17 +133,10 @@ public class Elevator extends SubsystemBase {
     return (m_ElevatorEncoder.getPosition() / 4.75 * 80);
   }
 
-  // Maintain the altitude
-  public void maintain(double altitude) {
-    if (getCurrentAltitudeAngle() > altitude) {
-      lowerElevator();
-    } else {
-      if (getCurrentAltitudeAngle() < altitude) {
-        raiseElevator();
-      } else {
-        stopElevator();
-      }
-    }
+  // Set a variable speed
+  public void setElevator(double speed) {
+    m_ElevatorMotor.set(speed * ElevatorConstants.kMaxElevatorAltitudeSpeedMetersPerSecond);
+    SmartDashboard.putNumber("PID Speed Output", speed);
   }
 
   // Move the elevator altitude to travel position
