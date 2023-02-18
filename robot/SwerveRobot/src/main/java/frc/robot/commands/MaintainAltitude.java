@@ -29,14 +29,14 @@ public class MaintainAltitude extends PIDCommand {
   /**
    * Create a new MaintainAltitude command.
    *
-   * @param distance The distance to drive (inches)
+   * @param distance The distance to move (degrees)
    */
   public MaintainAltitude(DoubleSupplier altitudeValue, Elevator elevator) {
     super(
         new PIDController(kP, kI, kD),
-        elevator::getCurrentAltitude,
-        -0.5,
-        d -> elevator.maintain(d));
+        elevator::getCurrentAltitudeAngle,
+        altitudeValue,
+        output -> elevator.maintain(output));
 
     m_elevator = elevator;
     addRequirements(m_elevator);
@@ -51,6 +51,7 @@ public class MaintainAltitude extends PIDCommand {
   public void execute() {
     super.execute();
     SmartDashboard.putNumber("Current altitude", m_elevator.getCurrentAltitude());
+    SmartDashboard.putNumber("Current altitude", m_elevator.getCurrentAltitudeAngle());
   }
 
   // Called just before this Command runs the first time

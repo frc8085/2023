@@ -42,19 +42,10 @@ public final class Constants {
     public static double kIntakeCubeSpeed = 0.1;
   }
 
-  public static final class ElevatorConstants {
-    public static int kElevatorMotorPort = 5;
+  public static final class ArmConstants {
     public static int kElevatorArmMotorPort = 7;
 
-    public static double kElevatorStopSpeed = 0;
     public static double kElevatorArmSpeed = 0.50;
-    public static double kElevatorSpeed = 0.5;
-    public static double kAltitudePositionTolerance = .1;
-
-    // {kRampRate} = Time in seconds to go from 0 to full throttle.
-
-    public static double kRampRate = 0;
-    public static double kElevatorRampRate = 0;
     public static double kArmRampRate = 0;
 
     // encoder readings of arm position as of 2.14.2023
@@ -63,6 +54,20 @@ public final class Constants {
     public static double kArmPositionMidDropOff = 87;
     public static double kArmPositionHighDropOff = 135;
     public static double kArmPositionTolerance = 1;
+
+  }
+
+  public static final class ElevatorConstants {
+    public static int kElevatorMotorPort = 5;
+
+    public static double kElevatorStopSpeed = 0;
+    public static double kElevatorSpeed = 0.5;
+    public static double kAltitudePositionTolerance = .1;
+
+    // {kRampRate} = Time in seconds to go from 0 to full throttle.
+
+    public static double kRampRate = 0;
+    public static double kElevatorRampRate = 0;
 
     // encoder readings of elevator altitude as of 2.14.2023
     // Encoder at Top Position
@@ -74,6 +79,11 @@ public final class Constants {
 
     public static double kElevatorAltitudeError = 0.05;
 
+    // estimates of angles for elevator altitude
+    public static double kElevatorAltitudeTravelPositionAngle = 0;
+    public static double kElevatorAltitudeDropOffPositionAngle = -50;
+    public static double kElevatorAltitudeIntakePositionAngle = -80;
+    public static double kElevatorToleranceAngle = 2;
   }
 
   public static final class DriveConstants {
@@ -82,7 +92,7 @@ public final class Constants {
     public static final double kFixedMidSpeedLimit = 0.20;
     // maxSpeedMetersPerSecond default = 4.8
     public static final double kMaxSpeedMetersPerSecond = 3.5;
- // reduced this from 2 * Math.PI to slow down rotation
+    // reduced this from 2 * Math.PI to slow down rotation
     public static final double kMaxAngularSpeed = .5 * Math.PI; // radians per second
 
     // Chassis configuration
