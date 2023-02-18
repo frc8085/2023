@@ -5,11 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import static frc.robot.Constants.ArmConstants;
 
-import java.util.function.DoubleSupplier;
 import frc.robot.subsystems.Arm;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 
