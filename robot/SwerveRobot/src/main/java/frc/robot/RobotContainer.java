@@ -15,7 +15,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
-
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ElevatorConstants;
@@ -23,15 +23,18 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.OpenIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.commands.MaintainAltitude;
 import frc.robot.commands.SetAltitude;
+import frc.robot.commands.SetArm;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+import java.time.Instant;
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
 import frc.robot.utilities.JoystickAxisButton;
@@ -165,21 +168,23 @@ public class RobotContainer {
         new InstantCommand(m_Elevator::raiseElevator, m_Elevator));
 
     elevatorRaiseButton.onFalse(
-        // new SequentialCommandGroup(
-        new InstantCommand(m_Elevator::stopElevator, m_Elevator));
-    // new MaintainAltitude(() -> m_Elevator.getCurrentAltitudeAngle(),
-    // m_Elevator));
+        new SequentialCommandGroup(
+            new InstantCommand(m_Elevator::startKeepingAltitude),
+            new InstantCommand(m_Elevator::stopElevator, m_Elevator)));
 
     elevatorLowerButton.whileTrue(
         new InstantCommand(m_Elevator::lowerElevator, m_Elevator));
 
     elevatorLowerButton.onFalse(
-        new InstantCommand(m_Elevator::stopElevator, m_Elevator));
-    // new MaintainAltitude(() -> m_Elevator.getCurrentAltitudeAngle(),
-    // m_Elevator));
+        new SequentialCommandGroup(
+            new InstantCommand(m_Elevator::startKeepingAltitude),
+            new InstantCommand(m_Elevator::stopElevator, m_Elevator)));
 
     elevatorSetDropOffButton.onTrue(
-        new SetAltitude(ElevatorConstants.kElevatorAltitudeDropOffPositionAngle, m_Elevator));
+        new ParallelCommandGroup(
+            new SetAltitude(ElevatorConstants.kElevatorAltitudeDropOffPositionAngle,
+                m_Elevator),
+            new SetArm(ArmConstants.kArmPositionMidDropOff, m_Arm)));
 
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .whileTrue(new RunCommand(

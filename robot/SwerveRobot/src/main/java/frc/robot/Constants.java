@@ -47,6 +47,7 @@ public final class Constants {
 
     public static double kElevatorArmSpeed = 0.50;
     public static double kArmRampRate = 0;
+    public static final double kMaxArmSpeedMetersPerSecond = 0.125;
 
     // encoder readings of arm position as of 2.14.2023
     public static double kArmPositionFullyRetracted = 0;

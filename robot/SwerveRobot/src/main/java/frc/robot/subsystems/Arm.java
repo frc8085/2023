@@ -29,7 +29,7 @@ public class Arm extends SubsystemBase {
   private SparkMaxLimitSwitch m_ArmRetractionLimit;
 
   public boolean ArmIsInTravelPosition() {
-   return isArmRetractionLimitHit();
+    return isArmRetractionLimitHit();
   }
 
   public Arm() {
@@ -108,26 +108,15 @@ public class Arm extends SubsystemBase {
   // isArmRetractionLimitHit() && m_ArmEncoder.setPosition(0);
   // }
 
-  public void MoveArmToTravelPosition() {
-    // Retract the elevator arm to travel position
-    if (m_ArmEncoder.getPosition() > ArmConstants.kArmPositionFullyRetracted) {
-      retractElevatorArm();
-    } else {
-      stopArm();
-    }
+  // Returns the current position of the arm 
+  public double getCurrentArmPosition() {
+    return (m_ArmEncoder.getPosition());
   }
 
-  // Set elevator arm to intake position - this won't work because it needs
-  // tolerance
-  public void MoveArmToIntakePosition() {
-    if (m_ArmEncoder.getPosition() > ArmConstants.kArmPositionIntakeOut) {
-      retractElevatorArm();
-    } else {
-      if (m_ArmEncoder.getPosition() < ArmConstants.kArmPositionIntakeOut) {
-        extendElevatorArm();
-      } else {
-        stopArm();
-      }
-    }
+ // Set a variable speed
+  public void setArm(double speed) {
+    m_ArmMotor.set(speed * ArmConstants.kMaxArmSpeedMetersPerSecond);
+    SmartDashboard.putNumber("Arm PID Speed Output", speed);
   }
+
 }

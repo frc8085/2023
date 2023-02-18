@@ -18,6 +18,8 @@ import static frc.robot.Constants.SubsystemMotorConstants;
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
 
+  private boolean isKeepingAltitude = false;
+
   // Elevator motors
   private final CANSparkMax m_ElevatorMotor = new CANSparkMax(ElevatorConstants.kElevatorMotorPort,
       MotorType.kBrushless);
@@ -31,6 +33,18 @@ public class Elevator extends SubsystemBase {
 
   public boolean ElevatorIsInTravelPosition() {
     return isElevatorTopLimitHit();
+  }
+
+  public boolean IsElevatorKeepingAltitude() {
+    return isKeepingAltitude;
+  }
+
+  public void startKeepingAltitude() {
+    isKeepingAltitude = true;
+  }
+
+  public void stopKeepingAltitude() {
+    isKeepingAltitude = false;
   }
 
   public Elevator() {
@@ -67,6 +81,8 @@ public class Elevator extends SubsystemBase {
 
     SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
     SmartDashboard.putNumber("Current altitude angle", getCurrentAltitudeAngle());
+
+    SmartDashboard.putBoolean("Is keeping altitude", isKeepingAltitude);
 
   }
 
@@ -105,11 +121,13 @@ public class Elevator extends SubsystemBase {
   /** ELEVATOR ALTITUDE **/
   // Run the elevator motor forward
   public void raiseElevator() {
+    isKeepingAltitude = false;
     m_ElevatorMotor.set(ElevatorConstants.kElevatorSpeed);
   }
 
   // Run the elevator motor in reverse
   public void lowerElevator() {
+    isKeepingAltitude = false;
     m_ElevatorMotor.set(-ElevatorConstants.kElevatorSpeed);
   }
 
@@ -133,10 +151,17 @@ public class Elevator extends SubsystemBase {
     return (m_ElevatorEncoder.getPosition() / 4.75 * 80);
   }
 
-  // Set a variable speed
+  // Set a variable speed to move to a position
   public void setElevator(double speed) {
+    isKeepingAltitude = false;
     m_ElevatorMotor.set(speed * ElevatorConstants.kMaxElevatorAltitudeSpeedMetersPerSecond);
     SmartDashboard.putNumber("PID Speed Output", speed);
+  }
+
+  // Set a variable speed to keep altitude
+  public void keepElevatorAltitude(double speed) {
+    isKeepingAltitude = true;
+    stopElevator();
   }
 
   // Move the elevator altitude to travel position
