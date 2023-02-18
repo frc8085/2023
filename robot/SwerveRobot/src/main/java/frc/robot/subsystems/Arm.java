@@ -28,18 +28,8 @@ public class Arm extends SubsystemBase {
   private SparkMaxLimitSwitch m_ArmExtensionLimit;
   private SparkMaxLimitSwitch m_ArmRetractionLimit;
 
-  // Assume robot is not in travel position to start
-  private boolean TravelPosition = false;
-
-  // Create a condition for when elevator is in travel mode
-  public boolean TravelPosition() {
-    return TravelPosition;
-  }
-
-  public void ElevatorIsInTravelPosition() {
-    if (isArmRetractionLimitHit()) {
-      TravelPosition = true;
-    }
+  public boolean ArmIsInTravelPosition() {
+   return isArmRetractionLimitHit();
   }
 
   public Arm() {
@@ -48,7 +38,6 @@ public class Arm extends SubsystemBase {
     /**
      * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
      * or
-     * getReverseLimitSwitch() method on an existing CANSparkMax object, depending
      * on which direction you would like to limit
      * 
      * Limit switches can be configured to one of two polarities:
@@ -69,6 +58,7 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("ARM Raw encoder read", m_ArmEncoder.getPosition());
     SmartDashboard.putBoolean("Arm Fully Extended", m_ArmExtensionLimit.isPressed());
     SmartDashboard.putBoolean("Arm Fully Retracted", m_ArmRetractionLimit.isPressed());
+    SmartDashboard.putBoolean("Arm Travel Position", ArmIsInTravelPosition());
   }
 
   /** Call log method every loop. */
@@ -76,6 +66,7 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     log();
     resetArmEncoderAtRetractionLimit();
+    ArmIsInTravelPosition();
 
   }
 

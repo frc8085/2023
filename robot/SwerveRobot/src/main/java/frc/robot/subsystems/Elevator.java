@@ -29,18 +29,8 @@ public class Elevator extends SubsystemBase {
   private SparkMaxLimitSwitch m_ElevatorTopLimit;
   private SparkMaxLimitSwitch m_ElevatorBottomLimit;
 
-  // Assume robot is not in travel position to start
-  private boolean TravelPosition = false;
-
-  // Create a condition for when elevator is in travel mode
-  public boolean TravelPosition() {
-    return TravelPosition;
-  }
-
-  public void ElevatorIsInTravelPosition() {
-    if (isElevatorTopLimitHit()) {
-      TravelPosition = true;
-    }
+  public boolean ElevatorIsInTravelPosition() {
+    return isElevatorTopLimitHit();
   }
 
   public Elevator() {
@@ -73,6 +63,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("ELEVATOR Raw encoder read", m_ElevatorEncoder.getPosition());
     SmartDashboard.putBoolean("Elevator at Top Position", m_ElevatorTopLimit.isPressed());
     SmartDashboard.putBoolean("Elevator at Bottom Position", m_ElevatorBottomLimit.isPressed());
+    SmartDashboard.putBoolean("Elevator is in Travel Position", ElevatorIsInTravelPosition());
   }
 
   /** Call log method every loop. */
@@ -81,6 +72,7 @@ public class Elevator extends SubsystemBase {
     log();
 
     resetElevatorEncoderAtTopLimit();
+    ElevatorIsInTravelPosition();
 
   }
 
