@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ElevatorConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
+import javax.swing.text.Position;
+
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
 
@@ -124,14 +126,9 @@ public class Elevator extends SubsystemBase {
     return m_elevatorTopLimit.isPressed() == true;
   }
 
-  // alternate way of writing the above statement
-  // public void resetArmEncoderAtRetractionLimit() {
-  // isArmRetractionLimitHit() && m_armEncoder.setPosition(0);
-  // }
-
   public void resetElevatorEncoderAtTopLimit() {
     if (isElevatorTopLimitHit()) {
-      m_elevatorEncoder.setPosition(0);
+      m_elevatorEncoder.setPosition(-0.1);
     }
   };
 
@@ -147,14 +144,14 @@ public class Elevator extends SubsystemBase {
   }
 
   // Stop the elevator hack
-  public void stopElevator() {
-    m_elevatorMotor.set(ElevatorConstants.kElevatorStopSpeed);
-  }
+  // public void stopElevator() {
+  // m_elevatorMotor.set(ElevatorConstants.kElevatorStopSpeed);
+  // }
 
   // Stop the elevator
-  // public void stopElevator() {
-  // m_elevatorMotor.set(0);
-  // }
+  public void stopElevator() {
+    m_elevatorMotor.set(0);
+  }
 
   // Returns the current altitude of the elevator
   public double getCurrentAltitude() {
@@ -178,7 +175,6 @@ public class Elevator extends SubsystemBase {
     m_elevatorPIDController.setReference(position, ControlType.kPosition);
     SmartDashboard.putNumber("Desired position", position);
     SmartDashboard.putNumber("Encoder position", m_elevatorEncoder.getPosition());
-
   }
 
   // change altitude encoder readings to degrees angle*4.75/80

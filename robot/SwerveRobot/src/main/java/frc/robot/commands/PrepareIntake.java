@@ -13,14 +13,14 @@ import static frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Arm;
 
-public class PrepareDropoff extends SequentialCommandGroup {
-        public PrepareDropoff(
+public class PrepareIntake extends SequentialCommandGroup {
+        public PrepareIntake(
                         Arm m_arm,
                         Elevator m_elevator) {
                 addCommands(new ParallelCommandGroup(
                                 new InstantCommand(() -> m_elevator.keepPosition(
-                                                ElevatorConstants.kElevatorAltitudeDropOffPosition)),
-                                new SetArm(ArmConstants.kArmPositionMidDropOff, m_arm)));
+                                                ElevatorConstants.kElevatorAltitudeIntakePosition)),
+                                new InstantCommand(() -> m_arm.keepPosition(ArmConstants.kArmPositionIntakeOut))));
 
         }
 }

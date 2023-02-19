@@ -17,9 +17,11 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.KeepArmPosition;
 import frc.robot.commands.OpenIntake;
-import frc.robot.commands.PrepareDropoff;
+import frc.robot.commands.PrepareMidDropOff;
+import frc.robot.commands.PrepareHighDropOff;
+import frc.robot.commands.PrepareTravel;
+import frc.robot.commands.PrepareIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -148,9 +150,10 @@ public class RobotContainer {
                 final Trigger armRetractButton = m_operatorController.povRight();
 
                 final Trigger armExtendElevatorLowerButton = m_operatorController.povDownLeft();
+                final Trigger armRetractElevatorRaiseButton = m_operatorController.povUpRight();
 
-                final Trigger elevatorRaiseButton = m_operatorController.y();
-                final Trigger elevatorLowerButton = m_operatorController.a();
+                final Trigger elevatorRaiseButton = m_operatorController.povUp();
+                final Trigger elevatorLowerButton = m_operatorController.povDown();
 
                 coneIntakeButton.whileTrue(new InstantCommand(m_intake::intakeCone, m_intake))
                                 .onFalse(new InstantCommand(m_intake::stopIntake));
@@ -166,13 +169,23 @@ public class RobotContainer {
                                                 new InstantCommand(m_arm::stopArm, m_arm),
                                                 new InstantCommand(m_elevator::stopElevator, m_elevator)));
 
+                armRetractElevatorRaiseButton
+                                .whileTrue(new ParallelCommandGroup(
+                                                new InstantCommand(m_arm::retractArm, m_arm),
+                                                new InstantCommand(m_elevator::raiseElevator, m_elevator)))
+                                .onFalse(new ParallelCommandGroup(
+                                                new InstantCommand(m_arm::stopArm, m_arm),
+                                                new InstantCommand(m_elevator::stopElevator, m_elevator)));
+
                 armExtendButton.whileTrue(new InstantCommand(m_arm::extendArm, m_arm))
                                 // .onFalse(new KeepArmPosition(m_arm.getCurrentArmPosition(), m_arm));
-                                .onFalse(new InstantCommand(m_arm::stopArm, m_arm));
+                                .onFalse(new InstantCommand(
+                                                () -> m_arm.keepPosition(m_arm.getCurrentArmPosition())));
 
                 armRetractButton.whileTrue(new InstantCommand(m_arm::retractArm, m_arm))
                                 // .onFalse(new KeepArmPosition(m_arm.getCurrentArmPosition(), m_arm));
-                                .onFalse(new InstantCommand(m_arm::stopArm, m_arm));
+                                .onFalse(new InstantCommand(
+                                                () -> m_arm.keepPosition(m_arm.getCurrentArmPosition())));
 
                 elevatorRaiseButton
                                 .whileTrue(new InstantCommand(m_elevator::raiseElevator, m_elevator))
@@ -185,9 +198,15 @@ public class RobotContainer {
                                                 () -> m_elevator.keepPosition(m_elevator.getCurrentAltitude())));
 
                 // PRESET POSITIONS
-                final Trigger prepareDropoffButton = m_operatorController.start();
+                final Trigger prepareHighDropOffButton = m_operatorController.b();
+                final Trigger prepareMidDropOffButton = m_operatorController.x();
+                final Trigger prepareTravelButton = m_operatorController.y();
+                final Trigger prepareIntakeButton = m_operatorController.a();
 
-                prepareDropoffButton.onTrue(new PrepareDropoff(m_arm, m_elevator));
+                prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_arm, m_elevator));
+                prepareHighDropOffButton.onTrue(new PrepareHighDropOff(m_arm, m_elevator));
+                prepareTravelButton.onTrue(new PrepareTravel(m_arm, m_elevator));
+                prepareIntakeButton.onTrue(new PrepareIntake(m_arm, m_elevator));
 
         }
 
