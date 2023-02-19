@@ -53,10 +53,10 @@ public class RobotContainer {
 
         private final IntakeCover m_intakeCover = new IntakeCover();
         private final Intake m_intake = new Intake();
-        private final Altitude m_elevator = new Altitude();
+        private final Altitude m_Altitude = new Altitude();
         private final Extension m_Extension = new Extension();
 
-        private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_elevator, m_Extension);
+        private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_Altitude, m_Extension);
 
         // The driver's controller
         XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -149,11 +149,11 @@ public class RobotContainer {
                 final Trigger ExtendButton = m_operatorController.povLeft();
                 final Trigger RetractButton = m_operatorController.povRight();
 
-                final Trigger ExtendElevatorLowerButton = m_operatorController.povDownLeft();
-                final Trigger RetractElevatorRaiseButton = m_operatorController.povUpRight();
+                final Trigger ExtendAndLowerButton = m_operatorController.povDownLeft();
+                final Trigger RetractAndRaiseButton = m_operatorController.povUpRight();
 
-                final Trigger elevatorRaiseButton = m_operatorController.povUp();
-                final Trigger elevatorLowerButton = m_operatorController.povDown();
+                final Trigger RaiseButton = m_operatorController.povUp();
+                final Trigger LowerButton = m_operatorController.povDown();
 
                 coneIntakeButton.whileTrue(new InstantCommand(m_intake::intakeCone, m_intake))
                                 .onFalse(new InstantCommand(m_intake::stopIntake));
@@ -161,21 +161,21 @@ public class RobotContainer {
                 ejectButton.whileTrue(new InstantCommand(m_intake::eject, m_intake))
                                 .onFalse(new InstantCommand(m_intake::stopIntake));
 
-                ExtendElevatorLowerButton
+                ExtendAndLowerButton
                                 .whileTrue(new ParallelCommandGroup(
                                                 new InstantCommand(m_Extension::extendExtension, m_Extension),
-                                                new InstantCommand(m_elevator::lowerElevator, m_elevator)))
+                                                new InstantCommand(m_Altitude::lowerAltitude, m_Altitude)))
                                 .onFalse(new ParallelCommandGroup(
                                                 new InstantCommand(m_Extension::stopExtension, m_Extension),
-                                                new InstantCommand(m_elevator::stopElevator, m_elevator)));
+                                                new InstantCommand(m_Altitude::stopAltitude, m_Altitude)));
 
-                RetractElevatorRaiseButton
+                RetractAndRaiseButton
                                 .whileTrue(new ParallelCommandGroup(
                                                 new InstantCommand(m_Extension::retractExtension, m_Extension),
-                                                new InstantCommand(m_elevator::raiseElevator, m_elevator)))
+                                                new InstantCommand(m_Altitude::raiseAltitude, m_Altitude)))
                                 .onFalse(new ParallelCommandGroup(
                                                 new InstantCommand(m_Extension::stopExtension, m_Extension),
-                                                new InstantCommand(m_elevator::stopElevator, m_elevator)));
+                                                new InstantCommand(m_Altitude::stopAltitude, m_Altitude)));
 
                 ExtendButton.whileTrue(new InstantCommand(m_Extension::extendExtension, m_Extension))
                                 // .onFalse(new KeepExtensionPosition(m_Extension.getCurrentExtensionPosition(),
@@ -191,15 +191,15 @@ public class RobotContainer {
                                                 () -> m_Extension.keepPosition(
                                                                 m_Extension.getCurrentExtensionPosition())));
 
-                elevatorRaiseButton
-                                .whileTrue(new InstantCommand(m_elevator::raiseElevator, m_elevator))
+                RaiseButton
+                                .whileTrue(new InstantCommand(m_Altitude::raiseAltitude, m_Altitude))
                                 .onFalse(new InstantCommand(
-                                                () -> m_elevator.keepPosition(m_elevator.getCurrentAltitude())));
+                                                () -> m_Altitude.keepPosition(m_Altitude.getCurrentAltitude())));
 
-                elevatorLowerButton
-                                .whileTrue(new InstantCommand(m_elevator::lowerElevator, m_elevator))
+                LowerButton
+                                .whileTrue(new InstantCommand(m_Altitude::lowerAltitude, m_Altitude))
                                 .onFalse(new InstantCommand(
-                                                () -> m_elevator.keepPosition(m_elevator.getCurrentAltitude())));
+                                                () -> m_Altitude.keepPosition(m_Altitude.getCurrentAltitude())));
 
                 // PRESET POSITIONS
                 final Trigger prepareHighDropOffButton = m_operatorController.b();
@@ -207,10 +207,10 @@ public class RobotContainer {
                 final Trigger prepareTravelButton = m_operatorController.y();
                 final Trigger prepareIntakeButton = m_operatorController.a();
 
-                prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_Extension, m_elevator));
-                prepareHighDropOffButton.onTrue(new PrepareHighDropOff(m_Extension, m_elevator));
-                prepareTravelButton.onTrue(new PrepareTravel(m_Extension, m_elevator));
-                prepareIntakeButton.onTrue(new PrepareIntake(m_Extension, m_elevator));
+                prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_Extension, m_Altitude));
+                prepareHighDropOffButton.onTrue(new PrepareHighDropOff(m_Extension, m_Altitude));
+                prepareTravelButton.onTrue(new PrepareTravel(m_Extension, m_Altitude));
+                prepareIntakeButton.onTrue(new PrepareIntake(m_Extension, m_Altitude));
 
         }
 

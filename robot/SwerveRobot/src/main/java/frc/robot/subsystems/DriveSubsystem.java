@@ -18,9 +18,9 @@ import edu.wpi.first.util.WPIUtilJNI;
 // import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
-import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.utilities.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,8 +28,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
   private boolean TUNING_MODE = true;
-  private Elevator m_elevator;
-  private Arm m_arm;
+  private Altitude m_Altitude;
+  private Extension m_Extension;
 
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -99,9 +99,9 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem(Elevator elevator, Arm arm) {
-    m_elevator = elevator;
-    m_arm = arm;
+  public DriveSubsystem(Altitude Altitude, Extension Extension) {
+    m_Altitude = Altitude;
+    m_Extension = Extension;
   }
 
   @Override
@@ -147,8 +147,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public boolean isWithinSafeLimits() {
-    return m_elevator.getCurrentAltitude() > ElevatorConstants.kElevatorSafeMin &&
-        m_arm.getCurrentArmPosition() < ArmConstants.kArmSafeMax;
+    return m_Altitude.getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin &&
+        m_Extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
   }
 
   /**

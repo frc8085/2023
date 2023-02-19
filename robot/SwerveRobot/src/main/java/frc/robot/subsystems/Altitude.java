@@ -14,38 +14,38 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.robot.Constants.ElevatorConstants;
+import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 import javax.swing.text.Position;
 
-public class Elevator extends SubsystemBase {
-  /** Creates a new Elevator. */
+public class Altitude extends SubsystemBase {
+  /** Creates a new Altitude. */
 
   private boolean isKeepingAltitude = false;
 
-  // Elevator motors
-  private final CANSparkMax m_elevatorMotor = new CANSparkMax(ElevatorConstants.kElevatorMotorPort,
+  // Altitude motors
+  private final CANSparkMax m_AltitudeMotor = new CANSparkMax(AltitudeConstants.kAltitudeMotorPort,
       MotorType.kBrushless);
 
   // Encoders
-  private final RelativeEncoder m_elevatorEncoder = m_elevatorMotor.getEncoder();
+  private final RelativeEncoder m_AltitudeEncoder = m_AltitudeMotor.getEncoder();
 
   // Limit Switches
-  private SparkMaxLimitSwitch m_elevatorTopLimit;
-  private SparkMaxLimitSwitch m_elevatorBottomLimit;
+  private SparkMaxLimitSwitch m_AltitudeTopLimit;
+  private SparkMaxLimitSwitch m_AltitudeBottomLimit;
 
   // PID
-  private SparkMaxPIDController m_elevatorPIDController = m_elevatorMotor.getPIDController();
+  private SparkMaxPIDController m_AltitudePIDController = m_AltitudeMotor.getPIDController();
   static double kP = 1;
   static double kI = 0;
   static double kD = 0;
 
-  public boolean ElevatorIsInTravelPosition() {
-    return isElevatorTopLimitHit();
+  public boolean AltitudeIsInTravelPosition() {
+    return isAltitudeTopLimitHit();
   }
 
-  public boolean IsElevatorKeepingAltitude() {
+  public boolean IsAltitudeKeepingAltitude() {
     return isKeepingAltitude;
   }
 
@@ -57,20 +57,20 @@ public class Elevator extends SubsystemBase {
     isKeepingAltitude = false;
   }
 
-  public Elevator() {
-    m_elevatorMotor.setIdleMode(IdleMode.kBrake);
-    m_elevatorMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
-    m_elevatorMotor.setOpenLoopRampRate(ElevatorConstants.kElevatorRampRate);
+  public Altitude() {
+    m_AltitudeMotor.setIdleMode(IdleMode.kBrake);
+    m_AltitudeMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
+    m_AltitudeMotor.setOpenLoopRampRate(AltitudeConstants.kAltitudeRampRate);
 
-    m_elevatorPIDController.setFeedbackDevice(m_elevatorEncoder);
-    m_elevatorPIDController.setP(kP, 0);
-    m_elevatorPIDController.setI(kI, 0);
-    m_elevatorPIDController.setD(kD, 0);
-    m_elevatorPIDController.setOutputRange(-0.5, 0.5);
+    m_AltitudePIDController.setFeedbackDevice(m_AltitudeEncoder);
+    m_AltitudePIDController.setP(kP, 0);
+    m_AltitudePIDController.setI(kI, 0);
+    m_AltitudePIDController.setD(kD, 0);
+    m_AltitudePIDController.setOutputRange(-0.5, 0.5);
 
     // TODO. What should these values be?
-    m_elevatorPIDController.setSmartMotionMaxAccel(0.5, 0);
-    m_elevatorPIDController.setSmartMotionMaxVelocity(0.5, 0);
+    m_AltitudePIDController.setSmartMotionMaxAccel(0.5, 0);
+    m_AltitudePIDController.setSmartMotionMaxVelocity(0.5, 0);
 
     /**
      * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
@@ -82,21 +82,21 @@ public class Elevator extends SubsystemBase {
      * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyOpen
      * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyClosed
      */
-    m_elevatorTopLimit = m_elevatorMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    m_elevatorBottomLimit = m_elevatorMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    m_AltitudeTopLimit = m_AltitudeMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    m_AltitudeBottomLimit = m_AltitudeMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
 
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.
-    m_elevatorMotor.burnFlash();
+    m_AltitudeMotor.burnFlash();
 
   }
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
-    SmartDashboard.putNumber("ELEVATOR Raw encoder read", m_elevatorEncoder.getPosition());
-    SmartDashboard.putBoolean("Elevator at Top Position", m_elevatorTopLimit.isPressed());
-    SmartDashboard.putBoolean("Elevator at Bottom Position", m_elevatorBottomLimit.isPressed());
-    SmartDashboard.putBoolean("Elevator is in Travel Position", ElevatorIsInTravelPosition());
+    SmartDashboard.putNumber("Altitude Raw encoder read", m_AltitudeEncoder.getPosition());
+    SmartDashboard.putBoolean("Altitude at Top Position", m_AltitudeTopLimit.isPressed());
+    SmartDashboard.putBoolean("Altitude at Bottom Position", m_AltitudeBottomLimit.isPressed());
+    SmartDashboard.putBoolean("Altitude is in Travel Position", AltitudeIsInTravelPosition());
 
     SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
 
@@ -109,77 +109,77 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     log();
 
-    resetElevatorEncoderAtTopLimit();
-    ElevatorIsInTravelPosition();
+    resetAltitudeEncoderAtTopLimit();
+    AltitudeIsInTravelPosition();
 
   }
 
-  /** Resets the elevator encoder to currently read a position of 0. */
+  /** Resets the Altitude encoder to currently read a position of 0. */
   public void reset() {
-    m_elevatorEncoder.setPosition(0);
+    m_AltitudeEncoder.setPosition(0);
   }
 
   // Reset the Arm Encoder when the Retraction Limit is pressed
 
-  public boolean isElevatorTopLimitHit() {
-    return m_elevatorTopLimit.isPressed() == true;
+  public boolean isAltitudeTopLimitHit() {
+    return m_AltitudeTopLimit.isPressed() == true;
   }
 
-  public void resetElevatorEncoderAtTopLimit() {
-    if (isElevatorTopLimitHit()) {
-      m_elevatorEncoder.setPosition(-0.1);
+  public void resetAltitudeEncoderAtTopLimit() {
+    if (isAltitudeTopLimitHit()) {
+      m_AltitudeEncoder.setPosition(-0.1);
     }
   };
 
-  /** ELEVATOR ALTITUDE **/
-  // Run the elevator motor forward
-  public void raiseElevator() {
-    m_elevatorMotor.set(ElevatorConstants.kElevatorSpeed);
+  /** ALTITUDE **/
+  // Run the Altitude motor forward
+  public void raiseAltitude() {
+    m_AltitudeMotor.set(AltitudeConstants.kAltitudeSpeed);
   }
 
-  // Run the elevator motor in reverse
-  public void lowerElevator() {
-    m_elevatorMotor.set(-ElevatorConstants.kElevatorSpeed);
+  // Run the Altitude motor in reverse
+  public void lowerAltitude() {
+    m_AltitudeMotor.set(-AltitudeConstants.kAltitudeSpeed);
   }
 
-  // Stop the elevator hack
-  // public void stopElevator() {
-  // m_elevatorMotor.set(ElevatorConstants.kElevatorStopSpeed);
+  // Stop the Altitude hack
+  // public void stopAltitude() {
+  // m_AltitudeMotor.set(AltitudeConstants.kAltitudeStopSpeed);
   // }
 
-  // Stop the elevator
-  public void stopElevator() {
-    m_elevatorMotor.set(0);
+  // Stop the Altitude
+  public void stopAltitude() {
+    m_AltitudeMotor.set(0);
   }
 
-  // Returns the current altitude of the elevator
+  // Returns the current altitude
   public double getCurrentAltitude() {
-    return m_elevatorEncoder.getPosition();
+    return m_AltitudeEncoder.getPosition();
   }
 
-  // Returns the current altitude of the elevator in degrees
+  // Returns the current altitude in degrees
   public double getCurrentAltitudeAngle() {
-    return (m_elevatorEncoder.getPosition() / 4.75 * 80);
+    return (m_AltitudeEncoder.getPosition() / 4.75 * 80);
   }
 
   // Set a variable speed to move to a position
-  public void setElevator(double speed) {
+  public void setAltitude(double speed) {
     stopKeepingAltitude();
-    m_elevatorMotor.set(speed * ElevatorConstants.kMaxElevatorAltitudeSpeedMetersPerSecond);
+    m_AltitudeMotor.set(speed * AltitudeConstants.kMaxAltitudeSpeedMetersPerSecond);
     SmartDashboard.putNumber("PID Speed Output", speed);
   }
 
   // Maintain position
   public void keepPosition(double position) {
-    m_elevatorPIDController.setReference(position, ControlType.kPosition);
-    SmartDashboard.putNumber("Desired position", position);
-    SmartDashboard.putNumber("Encoder position", m_elevatorEncoder.getPosition());
+    m_AltitudePIDController.setReference(position, ControlType.kPosition);
+    SmartDashboard.putNumber("Altitude Desired position", position);
+    SmartDashboard.putNumber("Altutude Encoder position", m_AltitudeEncoder.getPosition());
   }
 
   // change altitude encoder readings to degrees angle*4.75/80
   // making assumption that -4.75 is -80 degrees
-  public double getElevatorAngle() {
-    return m_elevatorEncoder.getPosition() / 4.75 * 80;
+  public double getAltitudeAngle() {
+    return m_AltitudeEncoder.getPosition() / 4.75 * 80;
 
   }
 }

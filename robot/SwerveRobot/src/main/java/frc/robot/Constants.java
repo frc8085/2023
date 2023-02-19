@@ -61,38 +61,38 @@ public final class Constants {
 
   }
 
-  public static final class ElevatorConstants {
-    public static int kElevatorMotorPort = 5;
+  public static final class AltitudeConstants {
+    public static int kAltitudeMotorPort = 5;
 
-    public static double kElevatorStopSpeed = 0;
-    public static double kElevatorSpeed = 0.5;
+    public static double kAltitudeStopSpeed = 0;
+    public static double kAltitudeSpeed = 0.5;
     public static double kAltitudePositionTolerance = 1;
 
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
 
     public static double kRampRate = 0;
-    public static double kElevatorRampRate = 0;
-    public static final double kMaxElevatorAltitudeSpeedMetersPerSecond = .125;
+    public static double kAltitudeRampRate = 0;
+    public static final double kMaxAltitudeSpeedMetersPerSecond = .125;
 
-    // encoder readings of elevator altitude as of 2.14.2023
+    // encoder readings of altitude as of 2.14.2023
     // Encoder at Top Position
-    public static double kElevatorAltitudeTravelPosition = -0.15;
+    public static double kAltitudeTravelPosition = -0.15;
 
     // Encoder at Mid Position
-    public static double kElevatorAltitudeDropOffPosition = -2.;
+    public static double kAltitudeDropOffPosition = -2.;
     // Encoder at Bottom Position
-    public static double kElevatorAltitudeIntakePosition = -4.5;
+    public static double kAltitudeIntakePosition = -4.5;
 
-    public static double kElevatorAltitudeError = 0.05;
+    public static double kAltitudeError = 0.05;
 
-    // Range for safe Travel elevator > -0.5
-    public static double kElevatorSafeMin = -0.5;
+    // Range for safe Travel altitude > -0.5
+    public static double kAltitudeSafeMin = -0.5;
 
-    // estimates of angles for elevator altitude
-    public static double kElevatorAltitudeTravelPositionAngle = 0;
-    public static double kElevatorAltitudeDropOffPositionAngle = -40;
-    public static double kElevatorAltitudeIntakePositionAngle = -80;
-    public static double kElevatorToleranceAngle = 2;
+    // estimates of angles for altitude
+    public static double kAltitudeTravelPositionAngle = 0;
+    public static double kAltitudeDropOffPositionAngle = -40;
+    public static double kAltitudeIntakePositionAngle = -80;
+    public static double kAltitudeToleranceAngle = 2;
   }
 
   public static final class DriveConstants {
