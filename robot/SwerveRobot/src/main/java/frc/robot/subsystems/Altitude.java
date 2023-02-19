@@ -17,12 +17,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
-import javax.swing.text.Position;
-
 public class Altitude extends SubsystemBase {
   /** Creates a new Altitude. */
-
-  private boolean isKeepingAltitude = false;
 
   // Altitude motors
   private final CANSparkMax m_AltitudeMotor = new CANSparkMax(AltitudeConstants.kAltitudeMotorPort,
@@ -43,18 +39,6 @@ public class Altitude extends SubsystemBase {
 
   public boolean AltitudeIsInTravelPosition() {
     return isAltitudeTopLimitHit();
-  }
-
-  public boolean IsAltitudeKeepingAltitude() {
-    return isKeepingAltitude;
-  }
-
-  public void startKeepingAltitude() {
-    isKeepingAltitude = true;
-  }
-
-  public void stopKeepingAltitude() {
-    isKeepingAltitude = false;
   }
 
   public Altitude() {
@@ -100,8 +84,6 @@ public class Altitude extends SubsystemBase {
 
     SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
 
-    SmartDashboard.putBoolean("Is keeping altitude", isKeepingAltitude);
-
   }
 
   /** Call log method every loop. */
@@ -120,7 +102,6 @@ public class Altitude extends SubsystemBase {
   }
 
   // Reset the Arm Encoder when the Retraction Limit is pressed
-
   public boolean isAltitudeTopLimitHit() {
     return m_AltitudeTopLimit.isPressed() == true;
   }
@@ -142,11 +123,6 @@ public class Altitude extends SubsystemBase {
     m_AltitudeMotor.set(-AltitudeConstants.kAltitudeSpeed);
   }
 
-  // Stop the Altitude hack
-  // public void stopAltitude() {
-  // m_AltitudeMotor.set(AltitudeConstants.kAltitudeStopSpeed);
-  // }
-
   // Stop the Altitude
   public void stopAltitude() {
     m_AltitudeMotor.set(0);
@@ -158,13 +134,14 @@ public class Altitude extends SubsystemBase {
   }
 
   // Returns the current altitude in degrees
+  // change altitude encoder readings to degrees angle*4.75/80
+  // making assumption that -4.75 is -80 degrees
   public double getCurrentAltitudeAngle() {
     return (m_AltitudeEncoder.getPosition() / 4.75 * 80);
   }
 
   // Set a variable speed to move to a position
   public void setAltitude(double speed) {
-    stopKeepingAltitude();
     m_AltitudeMotor.set(speed * AltitudeConstants.kMaxAltitudeSpeedMetersPerSecond);
     SmartDashboard.putNumber("PID Speed Output", speed);
   }
@@ -174,12 +151,5 @@ public class Altitude extends SubsystemBase {
     m_AltitudePIDController.setReference(position, ControlType.kPosition);
     SmartDashboard.putNumber("Altitude Desired position", position);
     SmartDashboard.putNumber("Altutude Encoder position", m_AltitudeEncoder.getPosition());
-  }
-
-  // change altitude encoder readings to degrees angle*4.75/80
-  // making assumption that -4.75 is -80 degrees
-  public double getAltitudeAngle() {
-    return m_AltitudeEncoder.getPosition() / 4.75 * 80;
-
   }
 }

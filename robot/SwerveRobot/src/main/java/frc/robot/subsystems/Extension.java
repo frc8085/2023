@@ -17,12 +17,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ExtensionConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
-import org.ejml.dense.row.MatrixFeatures_CDRM;
-
 public class Extension extends SubsystemBase {
   /** Creates a new Extension. */
-
-  private boolean isKeepingPosition = false;
 
   // Extension motors
   private final CANSparkMax m_ExtensionMotor = new CANSparkMax(ExtensionConstants.kExtensionMotorPort,
@@ -45,19 +41,8 @@ public class Extension extends SubsystemBase {
     return isRetractionLimitHit();
   }
 
-  public boolean IsExtensionKeepingPosition() {
-    return isKeepingPosition;
-  }
-
-  public void startKeepingPosition() {
-    isKeepingPosition = true;
-  }
-
-  public void stopKeepingPosition() {
-    isKeepingPosition = false;
-  }
-
   public Extension() {
+
     m_ExtensionMotor.setIdleMode(IdleMode.kBrake);
     m_ExtensionMotor.setSmartCurrentLimit((SubsystemMotorConstants.kMotorCurrentLimit));
     m_ExtensionMotor.setOpenLoopRampRate(ExtensionConstants.kExtensionRampRate);
@@ -68,6 +53,7 @@ public class Extension extends SubsystemBase {
     m_ExtensionPIDController.setD(kDExtension, 0);
     m_ExtensionPIDController.setOutputRange(-0.5, 0.5);
 
+    // TODO. What should these values be?
     m_ExtensionPIDController.setSmartMotionMaxAccel(0.5, 0);
     m_ExtensionPIDController.setSmartMotionMaxVelocity(0.5, 0);
 
@@ -87,7 +73,6 @@ public class Extension extends SubsystemBase {
     // operation, it will maintain the above configurations.
 
     m_ExtensionMotor.burnFlash();
-
   }
 
   /** The log method puts interesting information to the SmartDashboard. */
@@ -96,7 +81,6 @@ public class Extension extends SubsystemBase {
     SmartDashboard.putBoolean("Fully Extended", m_ExtensionLimit.isPressed());
     SmartDashboard.putBoolean("Fully Retracted", m_RetractionLimit.isPressed());
     SmartDashboard.putBoolean("Extension Travel Position", ExtensionIsInTravelPosition());
-    SmartDashboard.putBoolean("Is keeping position", isKeepingPosition);
 
     SmartDashboard.putNumber("Current position", getCurrentExtensionPosition());
   }
@@ -105,10 +89,8 @@ public class Extension extends SubsystemBase {
   @Override
   public void periodic() {
     log();
-
     resetExtensionEncoderAtRetractionLimit();
     ExtensionIsInTravelPosition();
-
   }
 
   /** Resets the Extension encoder to currently read a position of 0. */
@@ -117,9 +99,8 @@ public class Extension extends SubsystemBase {
   }
 
   // Reset the Extension Encoder when the Retraction Limit is pressed
-
   public boolean isRetractionLimitHit() {
-    return m_RetractionLimit.isPressed() == true;
+    return m_RetractionLimit.isPressed();
   }
 
   public void resetExtensionEncoderAtRetractionLimit() {
@@ -127,11 +108,6 @@ public class Extension extends SubsystemBase {
       m_ExtensionEncoder.setPosition(1);
     }
   }
-
-  // alternate way of writing the above statement
-  // public void resetExtensionEncoderAtRetractionLimit() {
-  // isRetractionLimitHit() && m_ExtensionEncoder.setPosition(1);
-  // }
 
   /** ELEVATOR Extension **/
   // Run the elevator Extension motor forward
@@ -156,7 +132,6 @@ public class Extension extends SubsystemBase {
 
   // Set a variable speed
   public void setExtension(double speed) {
-    stopKeepingPosition();
     m_ExtensionMotor.set(speed * ExtensionConstants.kMaxExtensionSpeedMetersPerSecond);
     SmartDashboard.putNumber("Extension PID Speed Output", speed);
   }
@@ -165,6 +140,5 @@ public class Extension extends SubsystemBase {
   public void keepPosition(double position) {
     m_ExtensionPIDController.setReference(position, ControlType.kPosition);
     SmartDashboard.putNumber("Desired Extension position", position);
-    SmartDashboard.putNumber("Extension Encoder Position", m_ExtensionEncoder.getPosition());
   }
 }

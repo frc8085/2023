@@ -50,12 +50,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class RobotContainer {
 
         // The robot's subsystems
-
         private final IntakeCover m_intakeCover = new IntakeCover();
         private final Intake m_intake = new Intake();
         private final Altitude m_Altitude = new Altitude();
         private final Extension m_Extension = new Extension();
-
         private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_Altitude, m_Extension);
 
         // The driver's controller
@@ -86,45 +84,41 @@ public class RobotContainer {
                                 // Right Trigger controls speed
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
-                                new RunCommand(
-                                                () -> m_robotDrive.drive(
-                                                                m_driverController.getRightBumper(),
-                                                                m_driverController.getRightTriggerAxis(),
-                                                                // MathUtil.applyDeadband(-m_driverController.getLeftY(),
-                                                                // 0.06),
-                                                                // MathUtil.applyDeadband(-m_driverController.getLeftX(),
-                                                                // 0.06),
-                                                                // MathUtil.applyDeadband(-m_driverController.getRightX(),
-                                                                // 0.06),
+                                new RunCommand(() -> m_robotDrive.drive(
+                                                m_driverController.getRightBumper(),
+                                                m_driverController.getRightTriggerAxis(),
+                                                // MathUtil.applyDeadband(-m_driverController.getLeftY(),
+                                                // 0.06),
+                                                // MathUtil.applyDeadband(-m_driverController.getLeftX(),
+                                                // 0.06),
+                                                // MathUtil.applyDeadband(-m_driverController.getRightX(),
+                                                // 0.06),
 
-                                                                // new stuff from Rev for SlewRate Limiter
-                                                                Math.max(0.0,
-                                                                                (Math.abs(m_driverController.getLeftY())
-                                                                                                - OIConstants.kDriveDeadband)
-                                                                                                / (1.0 - OIConstants.kDriveDeadband))
-                                                                                * Math.signum(-m_driverController
-                                                                                                .getLeftY()),
-                                                                Math.max(0.0,
-                                                                                (Math.abs(m_driverController.getLeftX())
-                                                                                                - OIConstants.kDriveDeadband)
-                                                                                                / (1.0 - OIConstants.kDriveDeadband))
-                                                                                * Math.signum(-m_driverController
-                                                                                                .getLeftX()),
-                                                                Math.max(0.0,
-                                                                                (Math.abs(m_driverController
-                                                                                                .getRightX())
-                                                                                                - OIConstants.kDriveDeadband)
-                                                                                                / (1.0 - OIConstants.kDriveDeadband))
-                                                                                * Math.signum(-m_driverController
-                                                                                                .getRightX()),
-                                                                true,
-                                                                // rateLimit is true if rightBumper is not pressed,
-                                                                // and we are within safe limits
-                                                                // false if it is
-                                                                !m_driverController.getRightBumper()
-                                                                                && m_robotDrive.isWithinSafeLimits()
+                                                // new stuff from Rev for SlewRate Limiter
+                                                Math.max(0.0, (Math.abs(m_driverController.getLeftY())
+                                                                - OIConstants.kDriveDeadband)
+                                                                / (1.0 - OIConstants.kDriveDeadband))
+                                                                * Math.signum(-m_driverController
+                                                                                .getLeftY()),
+                                                Math.max(0.0, (Math.abs(m_driverController.getLeftX())
+                                                                - OIConstants.kDriveDeadband)
+                                                                / (1.0 - OIConstants.kDriveDeadband))
+                                                                * Math.signum(-m_driverController
+                                                                                .getLeftX()),
+                                                Math.max(0.0, (Math.abs(m_driverController
+                                                                .getRightX())
+                                                                - OIConstants.kDriveDeadband)
+                                                                / (1.0 - OIConstants.kDriveDeadband))
+                                                                * Math.signum(-m_driverController
+                                                                                .getRightX()),
+                                                true,
+                                                // rateLimit is true if rightBumper is not pressed,
+                                                // and we are within safe limits
+                                                // false if it is
+                                                !m_driverController.getRightBumper()
+                                                                && m_robotDrive.isWithinSafeLimits()
 
-                                                ),
+                                ),
                                                 m_robotDrive));
         }
 
