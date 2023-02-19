@@ -85,8 +85,8 @@ public final class Constants {
 
     public static double kElevatorAltitudeError = 0.05;
 
-    // Range for safe Travel elevator > -0.1
-    public static double kElevatorSafeMin = -0.1;
+    // Range for safe Travel elevator > -0.5
+    public static double kElevatorSafeMin = -0.5;
 
     // estimates of angles for elevator altitude
     public static double kElevatorAltitudeTravelPositionAngle = 0;
