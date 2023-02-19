@@ -49,6 +49,9 @@ public final class Constants {
     public static double kArmRampRate = 0;
     public static final double kMaxArmSpeedMetersPerSecond = 0.125;
 
+    // Range for safe Travel arm <20
+    public static double kArmSafeMax = 20;
+
     // encoder readings of arm position as of 2.14.2023
     public static double kArmPositionFullyRetracted = 0;
     public static double kArmPositionIntakeOut = 39;
@@ -63,7 +66,7 @@ public final class Constants {
 
     public static double kElevatorStopSpeed = 0;
     public static double kElevatorSpeed = 0.5;
-    public static double kAltitudePositionTolerance = .1;
+    public static double kAltitudePositionTolerance = 1;
 
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
 
@@ -74,12 +77,16 @@ public final class Constants {
     // encoder readings of elevator altitude as of 2.14.2023
     // Encoder at Top Position
     public static double kElevatorAltitudeTravelPosition = 0;
+
     // Encoder at Mid Position
     public static double kElevatorAltitudeDropOffPosition = -2.;
     // Encoder at Bottom Position
     public static double kElevatorAltitudeIntakePosition = -4.75;
 
     public static double kElevatorAltitudeError = 0.05;
+
+    // Range for safe Travel elevator > -0.1
+    public static double kElevatorSafeMin = -0.1;
 
     // estimates of angles for elevator altitude
     public static double kElevatorAltitudeTravelPositionAngle = 0;

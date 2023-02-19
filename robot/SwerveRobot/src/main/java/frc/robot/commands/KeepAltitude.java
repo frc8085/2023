@@ -8,6 +8,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static frc.robot.Constants.ElevatorConstants;
 
+import java.util.function.DoubleSupplier;
+
 import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
@@ -27,54 +29,58 @@ public class KeepAltitude extends PIDCommand {
   static double kI = 0;
   static double kD = 0.001;
 
-  static double m_altitudeAngleToKeep;
-
   /**
    * Create a new KeepAltitude command.
    *
    * @param distance The distance to move (degrees)
    */
-  public KeepAltitude(double altitudeAngle, Elevator elevator) {
+  public KeepAltitude(DoubleSupplier desiredAltitude, Elevator elevator) {
     super(
         new PIDController(kP, kI, kD),
         elevator::getCurrentAltitudeAngle,
-        altitudeAngle,
+        desiredAltitude.getAsDouble(),
         output -> elevator.setElevator(output));
 
     m_elevator = elevator;
-    m_altitudeAngleToKeep = altitudeAngle;
     addRequirements(m_elevator);
     getController().setTolerance(ElevatorConstants.kAltitudePositionTolerance);
 
     SmartDashboard.putNumber("Altitude Angle to maintain",
-        altitudeAngle);
+        desiredAltitude.getAsDouble());
 
   }
 
   @Override
   public void execute() {
+
     super.execute();
+    getController().setSetpoint(m_elevator.getCurrentAltitudeAngle());
+    SmartDashboard.putNumber("Altitude SETPOINT",
+        getController().getSetpoint());
+
   }
 
   // Called just before this Command runs the first time
   @Override
   public void initialize() {
     // Get everything in a safe starting state.
-    m_elevator.reset();
-    m_elevator.startKeepingAltitude();
+    // m_elevator.startKeepingAltitude();
     super.initialize();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
+    // return getController().atSetpoint();
+
     // If we still need to keep altitude, then restart the PID
-    boolean resetSetpoint = getController().atSetpoint() && m_elevator.IsElevatorKeepingAltitude();
+    boolean resetSetpoint = getController().atSetpoint() &&
+        m_elevator.IsElevatorKeepingAltitude();
 
     if (resetSetpoint) {
       new SequentialCommandGroup(
           new WaitCommand(0.25),
-          new InstantCommand(() -> getController().setSetpoint(m_altitudeAngleToKeep)));
+          new InstantCommand(() -> getController().setSetpoint(m_elevator.getCurrentAltitudeAngle())));
       return false;
     } else {
       return getController().atSetpoint();

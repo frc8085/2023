@@ -18,7 +18,9 @@ import edu.wpi.first.util.WPIUtilJNI;
 // import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.utilities.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,6 +28,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
   private boolean TUNING_MODE = true;
+  private Elevator m_elevator;
+  private Arm m_arm;
 
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -93,7 +97,9 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
+  public DriveSubsystem(Elevator elevator, Arm arm) {
+    m_elevator = elevator;
+    m_arm = arm;
   }
 
   @Override
@@ -138,6 +144,11 @@ public class DriveSubsystem extends SubsystemBase {
         pose);
   }
 
+  public boolean isWithinSafeLimits() {
+    return m_elevator.getCurrentAltitude() > ElevatorConstants.kElevatorSafeMin &&
+        m_arm.getCurrentArmPosition() < ArmConstants.kArmSafeMax;
+  }
+
   /**
    * Method to drive the robot using joystick info.
    *
@@ -155,11 +166,13 @@ public class DriveSubsystem extends SubsystemBase {
       double rotDirection,
       boolean fieldRelative,
       boolean rateLimit) {
+
     // Adjust input based on max speed
 
     // If we set the speed limit use a fixed speed
     // otherwise the speed value with some max
-    double speed = speedLimit ? DriveConstants.kFixedMidSpeedLimit * DriveConstants.kMaxSpeedMetersPerSecond
+    double speed = speedLimit || !isWithinSafeLimits()
+        ? DriveConstants.kFixedMidSpeedLimit * DriveConstants.kMaxSpeedMetersPerSecond
         : inputSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
 
     rotDirection *= DriveConstants.kMaxAngularSpeed;

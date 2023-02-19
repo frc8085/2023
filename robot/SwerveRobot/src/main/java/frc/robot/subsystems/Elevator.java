@@ -7,8 +7,10 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,6 +33,12 @@ public class Elevator extends SubsystemBase {
   private SparkMaxLimitSwitch m_elevatorTopLimit;
   private SparkMaxLimitSwitch m_elevatorBottomLimit;
 
+  // PID
+  private SparkMaxPIDController m_elevatorPIDController = m_elevatorMotor.getPIDController();
+  static double kP = 1;
+  static double kI = 0;
+  static double kD = 0;
+
   public boolean ElevatorIsInTravelPosition() {
     return isElevatorTopLimitHit();
   }
@@ -51,6 +59,16 @@ public class Elevator extends SubsystemBase {
     m_elevatorMotor.setIdleMode(IdleMode.kBrake);
     m_elevatorMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
     m_elevatorMotor.setOpenLoopRampRate(ElevatorConstants.kElevatorRampRate);
+
+    m_elevatorPIDController.setFeedbackDevice(m_elevatorEncoder);
+    m_elevatorPIDController.setP(kP, 0);
+    m_elevatorPIDController.setI(kI, 0);
+    m_elevatorPIDController.setD(kD, 0);
+    m_elevatorPIDController.setOutputRange(-0.5, 0.5);
+
+    // TODO. What should these values be?
+    m_elevatorPIDController.setSmartMotionMaxAccel(0.5, 0);
+    m_elevatorPIDController.setSmartMotionMaxVelocity(0.5, 0);
 
     /**
      * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
@@ -120,13 +138,11 @@ public class Elevator extends SubsystemBase {
   /** ELEVATOR ALTITUDE **/
   // Run the elevator motor forward
   public void raiseElevator() {
-    stopKeepingAltitude();
     m_elevatorMotor.set(ElevatorConstants.kElevatorSpeed);
   }
 
   // Run the elevator motor in reverse
   public void lowerElevator() {
-    stopKeepingAltitude();
     m_elevatorMotor.set(-ElevatorConstants.kElevatorSpeed);
   }
 
@@ -157,19 +173,12 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("PID Speed Output", speed);
   }
 
-  // Set a variable speed to keep altitude
-  public void keepElevatorAltitude(double speed) {
-    startKeepingAltitude();
-    stopElevator();
-  }
+  // Maintain position
+  public void keepPosition(double position) {
+    m_elevatorPIDController.setReference(position, ControlType.kPosition);
+    SmartDashboard.putNumber("Desired position", position);
+    SmartDashboard.putNumber("Encoder position", m_elevatorEncoder.getPosition());
 
-  // Move the elevator altitude to travel position
-  public void MoveElevatorToTravelPosition() {
-    if (m_elevatorEncoder.getPosition() < ElevatorConstants.kElevatorAltitudeTravelPosition) {
-      raiseElevator();
-    } else {
-      stopElevator();
-    }
   }
 
   // change altitude encoder readings to degrees angle*4.75/80

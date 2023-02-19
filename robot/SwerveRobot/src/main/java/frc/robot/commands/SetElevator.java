@@ -41,17 +41,14 @@ public class SetElevator extends PIDCommand {
     addRequirements(m_elevator);
     getController().setTolerance(ElevatorConstants.kAltitudePositionTolerance);
 
-    // SmartDashboard.putNumber("Altitude to maintain",
-    // altitudeValue.getAsDouble());
+    SmartDashboard.putNumber("Altitude to GO TO",
+        altitudeValue);
 
   }
 
   @Override
   public void execute() {
     super.execute();
-    // SmartDashboard.putNumber("Desired Altitude", m_elevator.)
-    SmartDashboard.putNumber("Current desired altitude", m_elevator.getCurrentAltitude());
-    SmartDashboard.putNumber("Current desired altitude angle", m_elevator.getCurrentAltitudeAngle());
   }
 
   // Called just before this Command runs the first time
