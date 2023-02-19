@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.KeepAltitude;
 import frc.robot.commands.KeepArmPosition;
 import frc.robot.commands.OpenIntake;
 import frc.robot.commands.PrepareDropoff;
