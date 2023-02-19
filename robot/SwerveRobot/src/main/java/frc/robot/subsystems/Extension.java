@@ -37,9 +37,9 @@ public class Extension extends SubsystemBase {
 
   // PID
   private SparkMaxPIDController m_ExtensionPIDController = m_ExtensionMotor.getPIDController();
-  static double kP = .25;
-  static double kI = 0;
-  static double kD = 0;
+  static double kPExtension = .25;
+  static double kIExtension = 0;
+  static double kDExtension = 0;
 
   public boolean ExtensionIsInTravelPosition() {
     return isRetractionLimitHit();
@@ -63,9 +63,9 @@ public class Extension extends SubsystemBase {
     m_ExtensionMotor.setOpenLoopRampRate(ExtensionConstants.kExtensionRampRate);
 
     m_ExtensionPIDController.setFeedbackDevice(m_ExtensionEncoder);
-    m_ExtensionPIDController.setP(kP, 0);
-    m_ExtensionPIDController.setI(kI, 0);
-    m_ExtensionPIDController.setD(kD, 0);
+    m_ExtensionPIDController.setP(kPExtension, 0);
+    m_ExtensionPIDController.setI(kIExtension, 0);
+    m_ExtensionPIDController.setD(kDExtension, 0);
     m_ExtensionPIDController.setOutputRange(-0.5, 0.5);
 
     m_ExtensionPIDController.setSmartMotionMaxAccel(0.5, 0);

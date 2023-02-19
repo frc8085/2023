@@ -37,9 +37,9 @@ public class Altitude extends SubsystemBase {
 
   // PID
   private SparkMaxPIDController m_AltitudePIDController = m_AltitudeMotor.getPIDController();
-  static double kP = 1;
-  static double kI = 0;
-  static double kD = 0;
+  static double kPAltitude = 1;
+  static double kIAltitude = 0;
+  static double kDAltitude = 0;
 
   public boolean AltitudeIsInTravelPosition() {
     return isAltitudeTopLimitHit();
@@ -63,9 +63,9 @@ public class Altitude extends SubsystemBase {
     m_AltitudeMotor.setOpenLoopRampRate(AltitudeConstants.kAltitudeRampRate);
 
     m_AltitudePIDController.setFeedbackDevice(m_AltitudeEncoder);
-    m_AltitudePIDController.setP(kP, 0);
-    m_AltitudePIDController.setI(kI, 0);
-    m_AltitudePIDController.setD(kD, 0);
+    m_AltitudePIDController.setP(kPAltitude, 0);
+    m_AltitudePIDController.setI(kIAltitude, 0);
+    m_AltitudePIDController.setD(kDAltitude, 0);
     m_AltitudePIDController.setOutputRange(-0.5, 0.5);
 
     // TODO. What should these values be?
