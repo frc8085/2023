@@ -143,13 +143,11 @@ public class Altitude extends SubsystemBase {
   // Set a variable speed to move to a position
   public void setAltitude(double speed) {
     m_AltitudeMotor.set(speed * AltitudeConstants.kMaxAltitudeSpeedMetersPerSecond);
-    SmartDashboard.putNumber("PID Speed Output", speed);
   }
 
   // Maintain position
   public void keepPosition(double position) {
     m_AltitudePIDController.setReference(position, ControlType.kPosition);
     SmartDashboard.putNumber("Altitude Desired position", position);
-    SmartDashboard.putNumber("Altutude Encoder position", m_AltitudeEncoder.getPosition());
   }
 }

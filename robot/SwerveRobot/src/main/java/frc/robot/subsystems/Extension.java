@@ -133,7 +133,6 @@ public class Extension extends SubsystemBase {
   // Set a variable speed
   public void setExtension(double speed) {
     m_ExtensionMotor.set(speed * ExtensionConstants.kMaxExtensionSpeedMetersPerSecond);
-    SmartDashboard.putNumber("Extension PID Speed Output", speed);
   }
 
   // Maintain Position
