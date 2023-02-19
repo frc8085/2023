@@ -42,22 +42,22 @@ public final class Constants {
     public static double kIntakeCubeSpeed = 0.1;
   }
 
-  public static final class ArmConstants {
-    public static int kArmMotorPort = 7;
+  public static final class ExtensionConstants {
+    public static int kExtensionMotorPort = 7;
 
-    public static double kArmSpeed = 0.50;
-    public static double kArmRampRate = 0;
-    public static final double kMaxArmSpeedMetersPerSecond = 0.125;
+    public static double kExtensionSpeed = 0.50;
+    public static double kExtensionRampRate = 0;
+    public static final double kMaxExtensionSpeedMetersPerSecond = 0.125;
 
-    // Range for safe Travel arm <20
-    public static double kArmSafeMax = 20;
+    // Range for safe Travel Extension <20
+    public static double kExtensionSafeMax = 20;
 
-    // encoder readings of arm position as of 2.14.2023
-    public static double kArmPositionFullyRetracted = 1;
-    public static double kArmPositionIntakeOut = 39;
-    public static double kArmPositionMidDropOff = 83;
-    public static double kArmPositionHighDropOff = 135;
-    public static double kArmPositionTolerance = 1;
+    // encoder readings of Extension position as of 2.14.2023
+    public static double kExtensionPositionFullyRetracted = 1;
+    public static double kExtensionPositionIntakeOut = 39;
+    public static double kExtensionPositionMidDropOff = 83;
+    public static double kExtensionPositionHighDropOff = 135;
+    public static double kExtensionPositionTolerance = 1;
 
   }
 

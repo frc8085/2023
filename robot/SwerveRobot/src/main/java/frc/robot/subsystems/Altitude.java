@@ -99,7 +99,6 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putBoolean("Elevator is in Travel Position", ElevatorIsInTravelPosition());
 
     SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
-    SmartDashboard.putNumber("Current altitude angle", getCurrentAltitudeAngle());
 
     SmartDashboard.putBoolean("Is keeping altitude", isKeepingAltitude);
 
@@ -115,7 +114,7 @@ public class Elevator extends SubsystemBase {
 
   }
 
-  /** Resets the drive encoders to currently read a position of 0. */
+  /** Resets the elevator encoder to currently read a position of 0. */
   public void reset() {
     m_elevatorEncoder.setPosition(0);
   }

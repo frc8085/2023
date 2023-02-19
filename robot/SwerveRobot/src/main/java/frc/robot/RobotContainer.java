@@ -22,7 +22,7 @@ import frc.robot.commands.PrepareMidDropOff;
 import frc.robot.commands.PrepareHighDropOff;
 import frc.robot.commands.PrepareTravel;
 import frc.robot.commands.PrepareIntake;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -36,7 +36,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Altitude;
 import edu.wpi.first.wpilibj.DriverStation;
 // Dashboard
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -53,10 +53,10 @@ public class RobotContainer {
 
         private final IntakeCover m_intakeCover = new IntakeCover();
         private final Intake m_intake = new Intake();
-        private final Elevator m_elevator = new Elevator();
-        private final Arm m_arm = new Arm();
+        private final Altitude m_elevator = new Altitude();
+        private final Extension m_Extension = new Extension();
 
-        private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_elevator, m_arm);
+        private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_elevator, m_Extension);
 
         // The driver's controller
         XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -146,11 +146,11 @@ public class RobotContainer {
                 final Trigger coneIntakeButton = m_operatorController.rightTrigger();
                 final Trigger ejectButton = m_operatorController.leftTrigger();
 
-                final Trigger armExtendButton = m_operatorController.povLeft();
-                final Trigger armRetractButton = m_operatorController.povRight();
+                final Trigger ExtendButton = m_operatorController.povLeft();
+                final Trigger RetractButton = m_operatorController.povRight();
 
-                final Trigger armExtendElevatorLowerButton = m_operatorController.povDownLeft();
-                final Trigger armRetractElevatorRaiseButton = m_operatorController.povUpRight();
+                final Trigger ExtendElevatorLowerButton = m_operatorController.povDownLeft();
+                final Trigger RetractElevatorRaiseButton = m_operatorController.povUpRight();
 
                 final Trigger elevatorRaiseButton = m_operatorController.povUp();
                 final Trigger elevatorLowerButton = m_operatorController.povDown();
@@ -161,31 +161,35 @@ public class RobotContainer {
                 ejectButton.whileTrue(new InstantCommand(m_intake::eject, m_intake))
                                 .onFalse(new InstantCommand(m_intake::stopIntake));
 
-                armExtendElevatorLowerButton
+                ExtendElevatorLowerButton
                                 .whileTrue(new ParallelCommandGroup(
-                                                new InstantCommand(m_arm::extendArm, m_arm),
+                                                new InstantCommand(m_Extension::extendExtension, m_Extension),
                                                 new InstantCommand(m_elevator::lowerElevator, m_elevator)))
                                 .onFalse(new ParallelCommandGroup(
-                                                new InstantCommand(m_arm::stopArm, m_arm),
+                                                new InstantCommand(m_Extension::stopExtension, m_Extension),
                                                 new InstantCommand(m_elevator::stopElevator, m_elevator)));
 
-                armRetractElevatorRaiseButton
+                RetractElevatorRaiseButton
                                 .whileTrue(new ParallelCommandGroup(
-                                                new InstantCommand(m_arm::retractArm, m_arm),
+                                                new InstantCommand(m_Extension::retractExtension, m_Extension),
                                                 new InstantCommand(m_elevator::raiseElevator, m_elevator)))
                                 .onFalse(new ParallelCommandGroup(
-                                                new InstantCommand(m_arm::stopArm, m_arm),
+                                                new InstantCommand(m_Extension::stopExtension, m_Extension),
                                                 new InstantCommand(m_elevator::stopElevator, m_elevator)));
 
-                armExtendButton.whileTrue(new InstantCommand(m_arm::extendArm, m_arm))
-                                // .onFalse(new KeepArmPosition(m_arm.getCurrentArmPosition(), m_arm));
+                ExtendButton.whileTrue(new InstantCommand(m_Extension::extendExtension, m_Extension))
+                                // .onFalse(new KeepExtensionPosition(m_Extension.getCurrentExtensionPosition(),
+                                // m_Extension));
                                 .onFalse(new InstantCommand(
-                                                () -> m_arm.keepPosition(m_arm.getCurrentArmPosition())));
+                                                () -> m_Extension.keepPosition(
+                                                                m_Extension.getCurrentExtensionPosition())));
 
-                armRetractButton.whileTrue(new InstantCommand(m_arm::retractArm, m_arm))
-                                // .onFalse(new KeepArmPosition(m_arm.getCurrentArmPosition(), m_arm));
+                RetractButton.whileTrue(new InstantCommand(m_Extension::retractExtension, m_Extension))
+                                // .onFalse(new KeepExtensionPosition(m_Extension.getCurrentExtensionPosition(),
+                                // m_Extension));
                                 .onFalse(new InstantCommand(
-                                                () -> m_arm.keepPosition(m_arm.getCurrentArmPosition())));
+                                                () -> m_Extension.keepPosition(
+                                                                m_Extension.getCurrentExtensionPosition())));
 
                 elevatorRaiseButton
                                 .whileTrue(new InstantCommand(m_elevator::raiseElevator, m_elevator))
@@ -203,10 +207,10 @@ public class RobotContainer {
                 final Trigger prepareTravelButton = m_operatorController.y();
                 final Trigger prepareIntakeButton = m_operatorController.a();
 
-                prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_arm, m_elevator));
-                prepareHighDropOffButton.onTrue(new PrepareHighDropOff(m_arm, m_elevator));
-                prepareTravelButton.onTrue(new PrepareTravel(m_arm, m_elevator));
-                prepareIntakeButton.onTrue(new PrepareIntake(m_arm, m_elevator));
+                prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_Extension, m_elevator));
+                prepareHighDropOffButton.onTrue(new PrepareHighDropOff(m_Extension, m_elevator));
+                prepareTravelButton.onTrue(new PrepareTravel(m_Extension, m_elevator));
+                prepareIntakeButton.onTrue(new PrepareIntake(m_Extension, m_elevator));
 
         }
 
