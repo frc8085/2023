@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import static frc.robot.Constants.ExtensionConstants;
-import static frc.robot.Constants.ElevatorConstants;
+import static frc.robot.Constants.AltitudeConstants;
 
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
@@ -16,10 +16,10 @@ import frc.robot.subsystems.Extension;
 public class PrepareMidDropOff extends SequentialCommandGroup {
         public PrepareMidDropOff(
                         Extension m_Extension,
-                        Altitude m_elevator) {
+                        Altitude m_Altitude) {
                 addCommands(new ParallelCommandGroup(
-                                new InstantCommand(() -> m_elevator.keepPosition(
-                                                ElevatorConstants.kElevatorAltitudeDropOffPosition)),
+                                new InstantCommand(() -> m_Altitude.keepPosition(
+                                                AltitudeConstants.kAltitudeDropOffPosition)),
                                 new InstantCommand(() -> m_Extension
                                                 .keepPosition(ExtensionConstants.kExtensionPositionMidDropOff))));
 
