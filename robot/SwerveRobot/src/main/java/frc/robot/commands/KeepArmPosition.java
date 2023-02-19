@@ -6,9 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import static frc.robot.Constants.ElevatorConstants;
+import static frc.robot.Constants.ArmConstants;
 
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Arm;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -20,34 +20,34 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  * is command is running. The input is the averaged values of the left and right
  * encoders.
  */
-public class KeepAltitude extends PIDCommand {
-  private final Elevator m_elevator;
+public class KeepArmPosition extends PIDCommand {
+  private final Arm m_arm;
 
   static double kP = 0.1;
   static double kI = 0;
   static double kD = 0.001;
 
-  static double m_altitudeAngleToKeep;
+  static double m_armPositionToKeep;
 
   /**
-   * Create a new KeepAltitude command.
+   * Create a new KeepPosition command.
    *
    * @param distance The distance to move (degrees)
    */
-  public KeepAltitude(double altitudeAngle, Elevator elevator) {
+  public KeepArmPosition(double armPosition, Arm arm) {
     super(
         new PIDController(kP, kI, kD),
-        elevator::getCurrentAltitudeAngle,
-        altitudeAngle,
-        output -> elevator.setElevator(output));
+        arm::getCurrentArmPosition,
+        armPosition,
+        output -> arm.setArm(output));
 
-    m_elevator = elevator;
-    m_altitudeAngleToKeep = altitudeAngle;
-    addRequirements(m_elevator);
-    getController().setTolerance(ElevatorConstants.kAltitudePositionTolerance);
+    m_arm = arm;
+    m_armPositionToKeep = armPosition;
+    addRequirements(m_arm);
+    getController().setTolerance(ArmConstants.kArmPositionTolerance);
 
-    SmartDashboard.putNumber("Altitude Angle to maintain",
-        altitudeAngle);
+    SmartDashboard.putNumber("Arm positions  to maintain",
+        armPosition);
 
   }
 
@@ -60,21 +60,20 @@ public class KeepAltitude extends PIDCommand {
   @Override
   public void initialize() {
     // Get everything in a safe starting state.
-    m_elevator.reset();
-    m_elevator.startKeepingAltitude();
+    // m_arm.startKeepingPosition();
     super.initialize();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
-    // If we still need to keep altitude, then restart the PID
-    boolean resetSetpoint = getController().atSetpoint() && m_elevator.IsElevatorKeepingAltitude();
+    // If we still need to keep armPosition, then restart the PID
+    boolean resetSetpoint = getController().atSetpoint() && m_arm.IsArmKeepingPosition();
 
     if (resetSetpoint) {
       new SequentialCommandGroup(
           new WaitCommand(0.25),
-          new InstantCommand(() -> getController().setSetpoint(m_altitudeAngleToKeep)));
+          new InstantCommand(() -> getController().setSetpoint(m_armPositionToKeep)));
       return false;
     } else {
       return getController().atSetpoint();

@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import static frc.robot.Constants.ArmConstants;
@@ -13,13 +14,13 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Arm;
 
 public class PrepareDropoff extends SequentialCommandGroup {
-    public PrepareDropoff(
-            Arm m_arm,
-            Elevator m_elevator) {
-        addCommands(
-                new ParallelCommandGroup(
-                        new SetElevator(ElevatorConstants.kElevatorAltitudeDropOffPositionAngle, m_elevator),
-                        new SetArm(ArmConstants.kArmPositionMidDropOff, m_arm)),
-                new KeepAltitude(m_elevator.getCurrentAltitude(), m_elevator));
-    }
+        public PrepareDropoff(
+                        Arm m_arm,
+                        Elevator m_elevator) {
+                addCommands(new ParallelCommandGroup(
+                                new InstantCommand(() -> m_elevator.keepPosition(
+                                                ElevatorConstants.kElevatorAltitudeDropOffPosition)),
+                                new SetArm(ArmConstants.kArmPositionMidDropOff, m_arm)));
+
+        }
 }

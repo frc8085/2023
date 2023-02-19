@@ -23,6 +23,7 @@ public class Arm extends SubsystemBase {
   // Encoders
   private final RelativeEncoder m_armEncoder = m_armMotor.getEncoder();
 
+  private boolean isKeepingPosition = false;
   // Limit Switches
   private SparkMaxLimitSwitch m_armExtensionLimit;
   private SparkMaxLimitSwitch m_armRetractionLimit;
@@ -58,6 +59,8 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putBoolean("Arm Fully Extended", m_armExtensionLimit.isPressed());
     SmartDashboard.putBoolean("Arm Fully Retracted", m_armRetractionLimit.isPressed());
     SmartDashboard.putBoolean("Arm Travel Position", ArmIsInTravelPosition());
+    SmartDashboard.putBoolean("Is keeping position", isKeepingPosition);
+
   }
 
   /** Call log method every loop. */
@@ -77,17 +80,31 @@ public class Arm extends SubsystemBase {
   /** ELEVATOR ARM **/
   // Run the elevator arm motor forward
   public void extendArm() {
+    stopKeepingPosition();
     m_armMotor.set(ArmConstants.kArmSpeed);
   }
 
   // Run the elevator arm motor in reverse
   public void retractArm() {
+    stopKeepingPosition();
     m_armMotor.set(-ArmConstants.kArmSpeed);
   }
 
   // Stop the elevator arm
   public void stopArm() {
     m_armMotor.set(0);
+  }
+
+  public boolean IsArmKeepingPosition() {
+    return isKeepingPosition;
+  }
+
+  public void startKeepingPosition() {
+    isKeepingPosition = true;
+  }
+
+  public void stopKeepingPosition() {
+    isKeepingPosition = false;
   }
 
   // Reset the Arm Encoder when the Retraction Limit is pressed

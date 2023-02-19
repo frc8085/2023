@@ -5,6 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import static frc.robot.Constants.ArmConstants;
 
 import frc.robot.subsystems.Arm;
@@ -39,8 +41,8 @@ public class SetArm extends PIDCommand {
     addRequirements(m_arm);
     getController().setTolerance(ArmConstants.kArmPositionTolerance);
 
-    // SmartDashboard.putNumber("Altitude to maintain",
-    // armValue.getAsDouble());
+    SmartDashboard.putNumber("POSITION to GO TO",
+        armValue);
 
   }
 

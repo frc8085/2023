@@ -17,16 +17,19 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.KeepAltitude;
+import frc.robot.commands.KeepArmPosition;
 import frc.robot.commands.OpenIntake;
 import frc.robot.commands.PrepareDropoff;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
@@ -45,16 +48,19 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class RobotContainer {
 
         // The robot's subsystems
-        private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
         private final IntakeCover m_intakeCover = new IntakeCover();
         private final Intake m_intake = new Intake();
         private final Elevator m_elevator = new Elevator();
         private final Arm m_arm = new Arm();
 
+        private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_elevator, m_arm);
+
         // The driver's controller
         XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-        XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
+
+        // The operator's controller
+        CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -111,8 +117,12 @@ public class RobotContainer {
                                                                                                 .getRightX()),
                                                                 true,
                                                                 // rateLimit is true if rightBumper is not pressed,
+                                                                // and we are within safe limits
                                                                 // false if it is
-                                                                !m_driverController.getRightBumper()),
+                                                                !m_driverController.getRightBumper()
+                                                                                && m_robotDrive.isWithinSafeLimits()
+
+                                                ),
                                                 m_robotDrive));
         }
 
@@ -126,68 +136,59 @@ public class RobotContainer {
          * {@link JoystickButton}.
          */
         private void configureButtonBindings() {
-
-                // Create fake button to correspond to right trigger pressed
-                // final JoystickAxisButton coneIntakeButton = new JoystickAxisButton("Shoot",
-                // m_operatorController::getRightTriggerAxis, 0.5);
-
-                // Create fake button to correspond to left trigger pressed
-                // final JoystickAxisButton ejectButton = new JoystickAxisButton("Shoot",
-                // m_operatorController::getLeftTriggerAxis,
-                // 0.5);
-
-                final JoystickButton coneIntakeButton = new JoystickButton(m_operatorController, Button.kB.value);
-                final JoystickButton ejectButton = new JoystickButton(m_operatorController,
-                                Button.kX.value);
-
-                coneIntakeButton.whileTrue(
-                                new InstantCommand(m_intake::intakeCone, m_intake));
-                coneIntakeButton.onFalse(new InstantCommand(m_intake::stopIntake));
-                ejectButton.whileTrue(
-                                new InstantCommand(m_intake::eject, m_intake));
-                ejectButton.onFalse(new InstantCommand(m_intake::stopIntake));
+                /** DRIVE LOCK **/
+                new JoystickButton(m_driverController, Button.kLeftBumper.value)
+                                .whileTrue(new RunCommand(() -> m_robotDrive.lock(), m_robotDrive));
 
                 /** MANUAL OPERATION */
-                final JoystickButton armExtendButton = new JoystickButton(m_operatorController,
-                                Button.kRightBumper.value);
-                final JoystickButton armRetractButton = new JoystickButton(m_operatorController,
-                                Button.kLeftBumper.value);
+                final Trigger coneIntakeButton = m_operatorController.rightTrigger();
+                final Trigger ejectButton = m_operatorController.leftTrigger();
 
-                final JoystickButton elevatorRaiseButton = new JoystickButton(m_operatorController, Button.kY.value);
-                final JoystickButton elevatorLowerButton = new JoystickButton(m_operatorController, Button.kA.value);
+                final Trigger armExtendButton = m_operatorController.povLeft();
+                final Trigger armRetractButton = m_operatorController.povRight();
 
-                // Use constants for determining positions
-                final JoystickButton prepareDropoffButton = new JoystickButton(m_operatorController,
-                                Button.kStart.value);
+                final Trigger armExtendElevatorLowerButton = m_operatorController.povDownLeft();
 
-                armExtendButton.whileTrue(
-                                new InstantCommand(m_arm::extendArm, m_arm));
-                armExtendButton.onFalse(
-                                new InstantCommand(m_arm::stopArm, m_arm));
+                final Trigger elevatorRaiseButton = m_operatorController.y();
+                final Trigger elevatorLowerButton = m_operatorController.a();
 
-                armRetractButton.whileTrue(
-                                new InstantCommand(m_arm::retractArm, m_arm));
-                armRetractButton.onFalse(
-                                new InstantCommand(m_arm::stopArm, m_arm));
+                coneIntakeButton.whileTrue(new InstantCommand(m_intake::intakeCone, m_intake))
+                                .onFalse(new InstantCommand(m_intake::stopIntake));
 
-                elevatorRaiseButton.whileTrue(
-                                new InstantCommand(m_elevator::raiseElevator, m_elevator));
+                ejectButton.whileTrue(new InstantCommand(m_intake::eject, m_intake))
+                                .onFalse(new InstantCommand(m_intake::stopIntake));
 
-                elevatorRaiseButton.onFalse(
-                                new KeepAltitude(m_elevator.getCurrentAltitude(), m_elevator));
+                armExtendElevatorLowerButton
+                                .whileTrue(new ParallelCommandGroup(
+                                                new InstantCommand(m_arm::extendArm, m_arm),
+                                                new InstantCommand(m_elevator::lowerElevator, m_elevator)))
+                                .onFalse(new ParallelCommandGroup(
+                                                new InstantCommand(m_arm::stopArm, m_arm),
+                                                new InstantCommand(m_elevator::stopElevator, m_elevator)));
 
-                elevatorLowerButton.whileTrue(
-                                new InstantCommand(m_elevator::lowerElevator, m_elevator));
+                armExtendButton.whileTrue(new InstantCommand(m_arm::extendArm, m_arm))
+                                // .onFalse(new KeepArmPosition(m_arm.getCurrentArmPosition(), m_arm));
+                                .onFalse(new InstantCommand(m_arm::stopArm, m_arm));
 
-                elevatorLowerButton.onFalse(
-                                new KeepAltitude(m_elevator.getCurrentAltitude(), m_elevator));
+                armRetractButton.whileTrue(new InstantCommand(m_arm::retractArm, m_arm))
+                                // .onFalse(new KeepArmPosition(m_arm.getCurrentArmPosition(), m_arm));
+                                .onFalse(new InstantCommand(m_arm::stopArm, m_arm));
+
+                elevatorRaiseButton
+                                .whileTrue(new InstantCommand(m_elevator::raiseElevator, m_elevator))
+                                .onFalse(new InstantCommand(
+                                                () -> m_elevator.keepPosition(m_elevator.getCurrentAltitude())));
+
+                elevatorLowerButton
+                                .whileTrue(new InstantCommand(m_elevator::lowerElevator, m_elevator))
+                                .onFalse(new InstantCommand(
+                                                () -> m_elevator.keepPosition(m_elevator.getCurrentAltitude())));
+
+                // PRESET POSITIONS
+                final Trigger prepareDropoffButton = m_operatorController.start();
 
                 prepareDropoffButton.onTrue(new PrepareDropoff(m_arm, m_elevator));
 
-                new JoystickButton(m_driverController, Button.kLeftBumper.value)
-                                .whileTrue(new RunCommand(
-                                                () -> m_robotDrive.lock(),
-                                                m_robotDrive));
         }
 
         /**
