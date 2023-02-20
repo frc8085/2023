@@ -21,18 +21,18 @@ public class Extension extends SubsystemBase {
   /** Creates a new Extension. */
 
   // Extension motors
-  private final CANSparkMax m_ExtensionMotor = new CANSparkMax(ExtensionConstants.kExtensionMotorPort,
+  private final CANSparkMax m_extensionMotor = new CANSparkMax(ExtensionConstants.kExtensionMotorPort,
       MotorType.kBrushless);
 
   // Encoders
-  private final RelativeEncoder m_ExtensionEncoder = m_ExtensionMotor.getEncoder();
+  private final RelativeEncoder m_extensionEncoder = m_extensionMotor.getEncoder();
 
   // Limit Switches
-  private SparkMaxLimitSwitch m_ExtensionLimit;
-  private SparkMaxLimitSwitch m_RetractionLimit;
+  private SparkMaxLimitSwitch m_extensionLimit;
+  private SparkMaxLimitSwitch m_retractionLimit;
 
   // PID
-  private SparkMaxPIDController m_ExtensionPIDController = m_ExtensionMotor.getPIDController();
+  private SparkMaxPIDController m_extensionPIDController = m_extensionMotor.getPIDController();
   static double kPExtension = .25;
   static double kIExtension = 0;
   static double kDExtension = 0;
@@ -43,19 +43,19 @@ public class Extension extends SubsystemBase {
 
   public Extension() {
 
-    m_ExtensionMotor.setIdleMode(IdleMode.kBrake);
-    m_ExtensionMotor.setSmartCurrentLimit((SubsystemMotorConstants.kMotorCurrentLimit));
-    m_ExtensionMotor.setOpenLoopRampRate(ExtensionConstants.kExtensionRampRate);
+    m_extensionMotor.setIdleMode(IdleMode.kBrake);
+    m_extensionMotor.setSmartCurrentLimit((SubsystemMotorConstants.kMotorCurrentLimit));
+    m_extensionMotor.setOpenLoopRampRate(ExtensionConstants.kExtensionRampRate);
 
-    m_ExtensionPIDController.setFeedbackDevice(m_ExtensionEncoder);
-    m_ExtensionPIDController.setP(kPExtension, 0);
-    m_ExtensionPIDController.setI(kIExtension, 0);
-    m_ExtensionPIDController.setD(kDExtension, 0);
-    m_ExtensionPIDController.setOutputRange(-0.5, 0.5);
+    m_extensionPIDController.setFeedbackDevice(m_extensionEncoder);
+    m_extensionPIDController.setP(kPExtension, 0);
+    m_extensionPIDController.setI(kIExtension, 0);
+    m_extensionPIDController.setD(kDExtension, 0);
+    m_extensionPIDController.setOutputRange(-0.5, 0.5);
 
     // TODO. What should these values be?
-    m_ExtensionPIDController.setSmartMotionMaxAccel(0.5, 0);
-    m_ExtensionPIDController.setSmartMotionMaxVelocity(0.5, 0);
+    m_extensionPIDController.setSmartMotionMaxAccel(0.5, 0);
+    m_extensionPIDController.setSmartMotionMaxVelocity(0.5, 0);
 
     /**
      * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
@@ -66,20 +66,20 @@ public class Extension extends SubsystemBase {
      * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyOpen
      * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyClosed
      */
-    m_ExtensionLimit = m_ExtensionMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    m_RetractionLimit = m_ExtensionMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    m_extensionLimit = m_extensionMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    m_retractionLimit = m_extensionMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
 
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.
 
-    m_ExtensionMotor.burnFlash();
+    m_extensionMotor.burnFlash();
   }
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
-    SmartDashboard.putNumber("Extension Raw encoder read", m_ExtensionEncoder.getPosition());
-    SmartDashboard.putBoolean("Fully Extended", m_ExtensionLimit.isPressed());
-    SmartDashboard.putBoolean("Fully Retracted", m_RetractionLimit.isPressed());
+    SmartDashboard.putNumber("Extension Raw encoder read", m_extensionEncoder.getPosition());
+    SmartDashboard.putBoolean("Fully Extended", m_extensionLimit.isPressed());
+    SmartDashboard.putBoolean("Fully Retracted", m_retractionLimit.isPressed());
     SmartDashboard.putBoolean("Extension Travel Position", ExtensionIsInTravelPosition());
 
     SmartDashboard.putNumber("Current position", getCurrentExtensionPosition());
@@ -95,49 +95,49 @@ public class Extension extends SubsystemBase {
 
   /** Resets the Extension encoder to currently read a position of 0. */
   public void reset() {
-    m_ExtensionEncoder.setPosition(0);
+    m_extensionEncoder.setPosition(0);
   }
 
   // Reset the Extension Encoder when the Retraction Limit is pressed
   public boolean isRetractionLimitHit() {
-    return m_RetractionLimit.isPressed();
+    return m_retractionLimit.isPressed();
   }
 
   public void resetExtensionEncoderAtRetractionLimit() {
     if (isRetractionLimitHit()) {
-      m_ExtensionEncoder.setPosition(1);
+      m_extensionEncoder.setPosition(1);
     }
   }
 
   /** ELEVATOR Extension **/
   // Run the elevator Extension motor forward
   public void extendExtension() {
-    m_ExtensionMotor.set(ExtensionConstants.kExtensionSpeed);
+    m_extensionMotor.set(ExtensionConstants.kExtensionSpeed);
   }
 
   // Run the elevator Extension motor in reverse
   public void retractExtension() {
-    m_ExtensionMotor.set(-ExtensionConstants.kExtensionSpeed);
+    m_extensionMotor.set(-ExtensionConstants.kExtensionSpeed);
   }
 
   // Stop the elevator Extension
   public void stopExtension() {
-    m_ExtensionMotor.set(0);
+    m_extensionMotor.set(0);
   }
 
   // Returns the current position of the Extension
   public double getCurrentExtensionPosition() {
-    return m_ExtensionEncoder.getPosition();
+    return m_extensionEncoder.getPosition();
   }
 
   // Set a variable speed
   public void setExtension(double speed) {
-    m_ExtensionMotor.set(speed * ExtensionConstants.kMaxExtensionSpeedMetersPerSecond);
+    m_extensionMotor.set(speed * ExtensionConstants.kMaxExtensionSpeedMetersPerSecond);
   }
 
   // Maintain Position
   public void keepPosition(double position) {
-    m_ExtensionPIDController.setReference(position, ControlType.kPosition);
+    m_extensionPIDController.setReference(position, ControlType.kPosition);
     SmartDashboard.putNumber("Desired Extension position", position);
   }
 }
