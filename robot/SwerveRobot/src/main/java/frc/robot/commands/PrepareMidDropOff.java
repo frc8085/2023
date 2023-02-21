@@ -22,6 +22,5 @@ public class PrepareMidDropOff extends SequentialCommandGroup {
                                                 AltitudeConstants.kAltitudeDropOffPosition)),
                                 new InstantCommand(() -> m_extension
                                                 .keepPosition(ExtensionConstants.kExtensionPositionMidDropOff))));
-
         }
 }

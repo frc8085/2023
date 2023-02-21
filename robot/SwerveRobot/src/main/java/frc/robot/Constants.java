@@ -44,14 +44,14 @@ public final class Constants {
 
   public static final class ExtensionConstants {
     public static int kExtensionMotorPort = 7;
-    public static double kExtensionSpeed = 0.50;
+    public static double kExtensionSpeed = 0.5;
     public static double kExtensionRampRate = 0;
     public static double kExtensionPositionTolerance = 1;
 
-    public static final double kMaxExtensionSpeedMetersPerSecond = 0.125;
+    public static final double kMaxExtensionSpeedMetersPerSecond = 0.25;
 
     // Range for safe Travel Extension <20
-    public static double kExtensionSafeMax = 20;
+    public static double kExtensionSafeMax = 10;
 
     // encoder readings of Extension position as of 2.14.2023
     public static double kExtensionPositionFullyRetracted = 1;
@@ -64,11 +64,11 @@ public final class Constants {
   public static final class AltitudeConstants {
     public static int kAltitudeMotorPort = 5;
     public static double kAltitudeStopSpeed = 0;
-    public static double kAltitudeSpeed = 0.5;
-    public static double kAltitudeRampRate = 0;
-    public static double kAltitudePositionTolerance = 1;
+    public static double kAltitudeSpeed = 0.2;
+    public static double kAltitudeRampRate = 1;
+    public static double kAltitudePositionTolerance = .2;
 
-    public static final double kMaxAltitudeSpeedMetersPerSecond = .125;
+    public static final double kMaxAltitudeSpeedMetersPerSecond = .05;
 
     // Range for safe Travel altitude > -0.5
     public static double kAltitudeSafeMin = -0.5;
@@ -77,9 +77,9 @@ public final class Constants {
     // Encoder at Top Position
     public static double kAltitudeTravelPosition = -0.15;
     // Encoder at Mid Position
-    public static double kAltitudeDropOffPosition = -2;
+    public static double kAltitudeDropOffPosition = -2.5;
     // Encoder at Bottom Position
-    public static double kAltitudeIntakePosition = -4.5;
+    public static double kAltitudeIntakePosition = -5.2;
     public static double kAltitudeError = 0.05;
 
     // estimates of angles for altitude

@@ -28,8 +28,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSubsystem extends SubsystemBase {
   private boolean TUNING_MODE = true;
-  private Altitude m_Altitude;
-  private Extension m_Extension;
+  private Altitude m_altitude;
+  private Extension m_extension;
 
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -100,8 +100,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(Altitude Altitude, Extension Extension) {
-    m_Altitude = Altitude;
-    m_Extension = Extension;
+    m_altitude = Altitude;
+    m_extension = Extension;
   }
 
   @Override
@@ -147,8 +147,8 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public boolean isWithinSafeLimits() {
-    return m_Altitude.getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin &&
-        m_Extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
+    return m_altitude.getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin &&
+        m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
   }
 
   /**

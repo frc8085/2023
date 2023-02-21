@@ -33,7 +33,7 @@ public class Altitude extends SubsystemBase {
 
   // PID
   private SparkMaxPIDController m_altitudePIDController = m_altitudeMotor.getPIDController();
-  static double kPAltitude = 1;
+  static double kPAltitude = 8;
   static double kIAltitude = 0;
   static double kDAltitude = 0;
 
@@ -50,7 +50,7 @@ public class Altitude extends SubsystemBase {
     m_altitudePIDController.setP(kPAltitude, 0);
     m_altitudePIDController.setI(kIAltitude, 0);
     m_altitudePIDController.setD(kDAltitude, 0);
-    m_altitudePIDController.setOutputRange(-0.5, 0.5);
+    m_altitudePIDController.setOutputRange(-0.25, 0.25);
 
     // TODO. What should these values be?
     m_altitudePIDController.setSmartMotionMaxAccel(0.5, 0);
@@ -101,7 +101,7 @@ public class Altitude extends SubsystemBase {
     m_altitudeEncoder.setPosition(0);
   }
 
-  // Reset the Arm Encoder when the Retraction Limit is pressed
+  // Reset the altitude Encoder when the top limit is pressed
   public boolean isAltitudeTopLimitHit() {
     return m_altitudeTopLimit.isPressed() == true;
   }
