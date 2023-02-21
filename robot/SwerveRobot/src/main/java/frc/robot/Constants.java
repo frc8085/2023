@@ -69,6 +69,7 @@ public final class Constants {
     public static double kAltitudePositionTolerance = .2;
 
     public static final double kMaxAltitudeSpeedMetersPerSecond = .05;
+    public static final double kMaxLimitedAltitudeSpeedMetersPerSecond = .01;
 
     // Range for safe Travel altitude > -0.5
     public static double kAltitudeSafeMin = -0.5;

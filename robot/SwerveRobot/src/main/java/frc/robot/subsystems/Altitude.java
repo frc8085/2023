@@ -14,10 +14,13 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ExtensionConstants;
+
 import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Altitude extends SubsystemBase {
+  private Extension m_extension;
   /** Creates a new Altitude. */
 
   // Altitude motors
@@ -41,7 +44,12 @@ public class Altitude extends SubsystemBase {
     return isAltitudeTopLimitHit();
   }
 
-  public Altitude() {
+  public boolean isWithinSafeExtensionLimit() {
+    return m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
+  }
+
+  public Altitude(Extension Extension) {
+    m_extension = Extension;
     m_altitudeMotor.setIdleMode(IdleMode.kBrake);
     m_altitudeMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
     m_altitudeMotor.setOpenLoopRampRate(AltitudeConstants.kAltitudeRampRate);
@@ -142,7 +150,11 @@ public class Altitude extends SubsystemBase {
 
   // Set a variable speed to move to a position
   public void setAltitude(double speed) {
-    m_altitudeMotor.set(speed * AltitudeConstants.kMaxAltitudeSpeedMetersPerSecond);
+    if (!isWithinSafeExtensionLimit()) {
+      m_altitudeMotor.set(speed * AltitudeConstants.kMaxLimitedAltitudeSpeedMetersPerSecond);
+    } else {
+      m_altitudeMotor.set(speed * AltitudeConstants.kMaxAltitudeSpeedMetersPerSecond);
+    }
   }
 
   // Maintain position
