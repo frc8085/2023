@@ -39,6 +39,10 @@ public class Altitude extends SubsystemBase {
   static double kPAltitude = 8;
   static double kIAltitude = 0;
   static double kDAltitude = 0;
+  static double kIzAltitude = 0;
+  static double kFFAltitude = 0;
+  static double kMaxOutputAltitude = .25;
+  static double kMinOutputAltitude = -.25;
 
   public boolean AltitudeIsInTravelPosition() {
     return isAltitudeTopLimitHit();
@@ -58,7 +62,7 @@ public class Altitude extends SubsystemBase {
     m_altitudePIDController.setP(kPAltitude, 0);
     m_altitudePIDController.setI(kIAltitude, 0);
     m_altitudePIDController.setD(kDAltitude, 0);
-    m_altitudePIDController.setOutputRange(-0.25, 0.25);
+    m_altitudePIDController.setOutputRange(kMinOutputAltitude, kMaxOutputAltitude);
 
     // TODO. What should these values be?
     m_altitudePIDController.setSmartMotionMaxAccel(0.5, 0);
@@ -92,6 +96,15 @@ public class Altitude extends SubsystemBase {
 
     SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
 
+    SmartDashboard.putNumber("Altitude P Gain", kPAltitude);
+    SmartDashboard.putNumber("Altitude I Gain", kIAltitude);
+    SmartDashboard.putNumber("Altitude D Gain", kDAltitude);
+    SmartDashboard.putNumber("Altitude I Zone", kIzAltitude);
+    SmartDashboard.putNumber("Altitude Feed Forward", kFFAltitude);
+    SmartDashboard.putNumber("Altitude Max Output", kMaxOutputAltitude);
+    SmartDashboard.putNumber("Altitude Min Output", kMinOutputAltitude);
+    SmartDashboard.putNumber("Altitude Set Rotations", 0);
+
   }
 
   /** Call log method every loop. */
@@ -101,6 +114,44 @@ public class Altitude extends SubsystemBase {
 
     resetAltitudeEncoderAtTopLimit();
     AltitudeIsInTravelPosition();
+
+    // Read PID Coefficients from SmartDashboard
+    double pAltitude = SmartDashboard.getNumber("Altitude P Gain", 0);
+    double iAltitude = SmartDashboard.getNumber("Altitude I Gain", 0);
+    double dAltitude = SmartDashboard.getNumber("Altitude D Gain", 0);
+    double izAltitude = SmartDashboard.getNumber("Altitude I Zone", 0);
+    double ffAltitude = SmartDashboard.getNumber("Altitude Feed Forward", 0);
+    double maxAltitude = SmartDashboard.getNumber("Altitude Max Output", 0);
+    double minAltitude = SmartDashboard.getNumber("Altitude Min Output", 0);
+    double positionAltitude = SmartDashboard.getNumber("Set Position", 0);
+
+    // if PID coefficients on SmartDashboard have changed, write new values to
+    // controller
+    if ((pAltitude != kPAltitude)) {
+      m_altitudePIDController.setP(pAltitude);
+      kPAltitude = pAltitude;
+    }
+    if ((iAltitude != kIAltitude)) {
+      m_altitudePIDController.setI(iAltitude);
+      kIAltitude = iAltitude;
+    }
+    if ((dAltitude != kDAltitude)) {
+      m_altitudePIDController.setD(dAltitude);
+      kDAltitude = dAltitude;
+    }
+    if ((izAltitude != kIzAltitude)) {
+      m_altitudePIDController.setIZone(izAltitude);
+      kIzAltitude = izAltitude;
+    }
+    if ((ffAltitude != kFFAltitude)) {
+      m_altitudePIDController.setFF(ffAltitude);
+      kFFAltitude = ffAltitude;
+    }
+    if ((maxAltitude != kMaxOutputAltitude) || (minAltitude != kMinOutputAltitude)) {
+      m_altitudePIDController.setOutputRange(minAltitude, maxAltitude);
+      kMinOutputAltitude = minAltitude;
+      kMaxOutputAltitude = maxAltitude;
+    }
 
   }
 
@@ -158,8 +209,8 @@ public class Altitude extends SubsystemBase {
   }
 
   // Maintain position
-  public void keepPosition(double position) {
-    m_altitudePIDController.setReference(position, ControlType.kPosition);
-    SmartDashboard.putNumber("Altitude Desired position", position);
+  public void keepPosition(double positionAltitude) {
+    m_altitudePIDController.setReference(positionAltitude, ControlType.kPosition);
+    SmartDashboard.putNumber("Altitude Desired position", positionAltitude);
   }
 }
