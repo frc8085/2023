@@ -45,7 +45,7 @@ public class Altitude extends SubsystemBase {
   }
 
   public boolean isWithinSafeExtensionLimit() {
-    return m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
+    return m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionPositionIntakeOut;
   }
 
   public Altitude(Extension Extension) {
