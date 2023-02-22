@@ -44,10 +44,6 @@ public class Altitude extends SubsystemBase {
   static double kMaxOutputAltitude = .25;
   static double kMinOutputAltitude = -.25;
 
-  public boolean AltitudeIsInTravelPosition() {
-    return isAltitudeTopLimitHit();
-  }
-
   public boolean isWithinSafeExtensionLimit() {
     return m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionPositionIntakeOut;
   }
@@ -213,4 +209,23 @@ public class Altitude extends SubsystemBase {
     m_altitudePIDController.setReference(positionAltitude, ControlType.kPosition);
     SmartDashboard.putNumber("Altitude Desired position", positionAltitude);
   }
+
+  // Tell Us if Altitude as At Positions
+  public boolean AltitudeIsInTravelPosition() {
+    return m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeTravelPosition
+        - AltitudeConstants.kAltitudePositionTolerance;
+  }
+
+  public boolean AltitudeIsInIntakePosition() {
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeIntakePosition
+        + AltitudeConstants.kAltitudePositionTolerance;
+  }
+
+  public boolean AltitudeIsInScoringPosition() {
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeDropOffPosition
+        + AltitudeConstants.kAltitudePositionTolerance &&
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeDropOffPosition
+            - AltitudeConstants.kAltitudePositionTolerance;
+  };
+
 }

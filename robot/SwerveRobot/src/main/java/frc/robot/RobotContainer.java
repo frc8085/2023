@@ -52,8 +52,8 @@ public class RobotContainer {
         // The robot's subsystems
         private final IntakeCover m_intakeCover = new IntakeCover();
         private final Intake m_intake = new Intake();
-        private final Altitude m_altitude = new Altitude();
         private final Extension m_extension = new Extension();
+        private final Altitude m_altitude = new Altitude(m_extension);
         private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_altitude, m_extension);
 
         // The driver's controller
