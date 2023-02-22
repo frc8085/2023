@@ -43,14 +43,14 @@ public class Intake extends SubsystemBase {
     return m_intakeEncoder.getPosition();
   }
 
+  public boolean altitudeIntakeRunPosition() {
+    return m_altitude.getCurrentAltitude() < AltitudeConstants.kAltitudeIntakePosition
+        + AltitudeConstants.kAltitudePositionTolerance;
+  }
+
   public Intake(Altitude Altitude) {
     m_altitude = Altitude;
 
-    public boolean altitudeIntakeRunPosition() {
-      return m_altitude.getCurrentAltitude() < AltitudeConstants.kAltitudeIntakePosition
-          + AltitudeConstants.kAltitudePositionTolerance;
-    }
-  
     m_intakeMotor.setOpenLoopRampRate(IntakeConstants.kRampRate);
 
     m_intakePIDController.setFeedbackDevice(m_intakeEncoder);
