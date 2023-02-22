@@ -31,6 +31,7 @@ public final class Constants {
 
   public static final class SubsystemMotorConstants {
     public static final int kMotorCurrentLimit = 30;
+    public static final int kMotorCurrentLimit550 = 20;
   }
 
   public static final class IntakeConstants {

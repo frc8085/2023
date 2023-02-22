@@ -5,39 +5,47 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.SubsystemMotorConstants;
+
 import static frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
 
   // Intake motor
-  private final CANSparkMax m_IntakeMotor = new CANSparkMax(IntakeConstants.kIntakePort, MotorType.kBrushless);
+  private final CANSparkMax m_intakeMotor = new CANSparkMax(IntakeConstants.kIntakePort, MotorType.kBrushless);
 
   public Intake() {
-    m_IntakeMotor.setOpenLoopRampRate(IntakeConstants.kRampRate);
+    m_intakeMotor.setOpenLoopRampRate(IntakeConstants.kRampRate);
+    m_intakeMotor.setIdleMode(IdleMode.kBrake);
+    m_intakeMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit550);
+
+    m_intakeMotor.burnFlash();
+
   }
 
   // Run the intake forward at the CONE speed
   public void intakeCone() {
-    m_IntakeMotor.set(IntakeConstants.kIntakeConeSpeed);
+    m_intakeMotor.set(IntakeConstants.kIntakeConeSpeed);
   }
 
   // Run the intake forward at the CUBE speed
   public void intakeCube() {
-    m_IntakeMotor.set(IntakeConstants.kIntakeCubeSpeed);
+    m_intakeMotor.set(IntakeConstants.kIntakeCubeSpeed);
   }
 
   // Run the intake reverse to eject cargo
   public void eject() {
-    m_IntakeMotor.set(-IntakeConstants.kEjectSpeed);
+    m_intakeMotor.set(-IntakeConstants.kEjectSpeed);
   }
 
   // Stop the intake
   public void stopIntake() {
-    m_IntakeMotor.set(0);
+    m_intakeMotor.set(0);
   }
 
 }
