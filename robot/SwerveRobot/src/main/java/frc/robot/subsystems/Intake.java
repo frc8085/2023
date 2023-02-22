@@ -17,6 +17,7 @@ import frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
+  private Altitude m_altitude;
 
   /** Creates a new Intake. */
 
@@ -42,7 +43,14 @@ public class Intake extends SubsystemBase {
     return m_intakeEncoder.getPosition();
   }
 
-  public Intake() {
+  public Intake(Altitude Altitude) {
+    m_altitude = Altitude;
+
+    public boolean altitudeIntakeRunPosition() {
+      return m_altitude.getCurrentAltitude() < AltitudeConstants.kAltitudeIntakePosition
+          + AltitudeConstants.kAltitudePositionTolerance;
+    }
+  
     m_intakeMotor.setOpenLoopRampRate(IntakeConstants.kRampRate);
 
     m_intakePIDController.setFeedbackDevice(m_intakeEncoder);
