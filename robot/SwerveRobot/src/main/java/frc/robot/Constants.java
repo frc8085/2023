@@ -37,10 +37,10 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int kIntakePort = 6;
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
-    public static double kRampRate = 1;
+    public static double kRampRate = 0;
     public static double kEjectSpeed = 0.2;
     public static double kIntakeConeSpeed = 0.8;
-    public static double kIntakeCubeSpeed = 0.1;
+    public static double kIntakeCubeSpeed = 0.8;
   }
 
   public static final class ExtensionConstants {

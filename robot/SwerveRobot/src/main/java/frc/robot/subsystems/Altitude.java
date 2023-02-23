@@ -41,8 +41,8 @@ public class Altitude extends SubsystemBase {
   static double kDAltitude = 0;
   static double kIzAltitude = 0;
   static double kFFAltitude = 0;
-  static double kMaxOutputAltitude = .25;
-  static double kMinOutputAltitude = -.25;
+  static double kMaxOutputAltitude = .4;
+  static double kMinOutputAltitude = -.4;
 
   public boolean AltitudeIsInTravelPosition() {
     return isAltitudeTopLimitHit();
