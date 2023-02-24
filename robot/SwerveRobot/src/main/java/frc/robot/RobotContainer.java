@@ -18,6 +18,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.OpenIntake;
+import frc.robot.commands.PrepareAndRunIntake;
 import frc.robot.commands.PrepareMidDropOff;
 import frc.robot.commands.PrepareHighDropOff;
 import frc.robot.commands.PrepareTravel;
@@ -35,7 +36,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeNoPID;
 import frc.robot.subsystems.Altitude;
 import edu.wpi.first.wpilibj.DriverStation;
 // Dashboard
@@ -51,7 +52,7 @@ public class RobotContainer {
 
         // The robot's subsystems
         private final IntakeCover m_intakeCover = new IntakeCover();
-        private final Intake m_intake = new Intake();
+        private final IntakeNoPID m_intake = new IntakeNoPID();
         private final Extension m_extension = new Extension();
         private final Altitude m_altitude = new Altitude(m_extension);
         private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_altitude, m_extension);
@@ -137,8 +138,9 @@ public class RobotContainer {
                                 .whileTrue(new RunCommand(() -> m_robotDrive.lock(), m_robotDrive));
 
                 /** MANUAL OPERATION */
-                final Trigger coneIntakeButton = m_operatorController.rightTrigger();
+                final Trigger intakeButton = m_operatorController.rightTrigger();
                 final Trigger ejectButton = m_operatorController.leftTrigger();
+                final Trigger setCubeModeButton = m_operatorController.rightBumper();
 
                 final Trigger ExtendButton = m_operatorController.povLeft();
                 final Trigger RetractButton = m_operatorController.povRight();
@@ -149,10 +151,20 @@ public class RobotContainer {
                 final Trigger RaiseButton = m_operatorController.povUp();
                 final Trigger LowerButton = m_operatorController.povDown();
 
-                coneIntakeButton.whileTrue(new InstantCommand(m_intake::intakeCone, m_intake))
+                intakeButton.whileTrue(new InstantCommand(m_intake::intakeCone, m_intake))
                                 .onFalse(new InstantCommand(m_intake::stopIntake));
 
-                ejectButton.whileTrue(new InstantCommand(m_intake::eject, m_intake))
+                // If intake button and cube mode button (right Bumper) are both pressed, run
+                // cube intake
+                intakeButton.and(setCubeModeButton).whileTrue(new InstantCommand(m_intake::intakeCube, m_intake))
+                                .onFalse(new InstantCommand(m_intake::stopIntake));
+
+                ejectButton.whileTrue(new InstantCommand(m_intake::ejectCone, m_intake))
+                                .onFalse(new InstantCommand(m_intake::stopIntake));
+
+                // If eject button and cube mode button (right Bumper) are both pressed, run
+                // cube eject
+                ejectButton.and(setCubeModeButton).whileTrue(new InstantCommand(m_intake::ejectCube, m_intake))
                                 .onFalse(new InstantCommand(m_intake::stopIntake));
 
                 ExtendAndLowerButton
@@ -199,12 +211,13 @@ public class RobotContainer {
                 final Trigger prepareHighDropOffButton = m_operatorController.b();
                 final Trigger prepareMidDropOffButton = m_operatorController.x();
                 final Trigger prepareTravelButton = m_operatorController.y();
-                final Trigger prepareIntakeButton = m_operatorController.a();
+                final Trigger prepareAndRunIntakeButton = m_operatorController.a();
 
                 prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_extension, m_altitude));
                 prepareHighDropOffButton.onTrue(new PrepareHighDropOff(m_extension, m_altitude));
                 prepareTravelButton.onTrue(new PrepareTravel(m_extension, m_altitude));
-                prepareIntakeButton.onTrue(new PrepareIntake(m_extension, m_altitude));
+                prepareAndRunIntakeButton.onTrue(
+                                new PrepareAndRunIntake(m_extension, m_altitude, m_intake));
 
         }
 
