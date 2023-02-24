@@ -233,10 +233,12 @@ public class Altitude extends SubsystemBase {
 
   // Tell Us if Altitude as At Positions
   public boolean AltitudeIsInTravelPosition() {
-    return m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeTravelPosition
-        - AltitudeConstants.kAltitudePositionTolerance;
+    return m_altitudeEncoder
+        .getPosition() > (AltitudeConstants.kAltitudeTravelPosition
+            - AltitudeConstants.kAltitudePositionTolerance);
   }
 
+  // TODO : Test this
   public boolean AltitudeIsInIntakePosition() {
     return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeIntakePosition
         + AltitudeConstants.kAltitudePositionTolerance;
