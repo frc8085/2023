@@ -72,7 +72,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void ejectObject() {
-    m_intakePIDController.setReference(IntakeConstants.kEjectSpeed, ControlType.kVelocity);
+    m_intakePIDController.setReference(IntakeConstants.kEjectConeSpeed, ControlType.kVelocity);
   }
 
   private boolean bumpObject = false;
@@ -89,7 +89,7 @@ public class Intake extends SubsystemBase {
 
   // Run the intake reverse to eject cargo
   public void eject() {
-    m_intakeMotor.set(-IntakeConstants.kEjectSpeed);
+    m_intakeMotor.set(-IntakeConstants.kEjectConeSpeed);
   }
 
   // Stop the intake
