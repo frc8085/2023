@@ -109,6 +109,20 @@ public class Extension extends SubsystemBase {
     }
   }
 
+  private boolean startingPositionRetractionTravelLimit = false;
+
+  public void moveToStartingPosition() {
+    if (!isRetractionLimitHit()) {
+      retractExtension();
+    } else
+      stopExtension();
+    startingPositionRetractionTravelLimit = true;
+  }
+
+  public boolean startingPositionRetractionTravelLimit() {
+    return startingPositionRetractionTravelLimit;
+  }
+
   /** ELEVATOR Extension **/
   // Run the elevator Extension motor forward
   public void extendExtension() {

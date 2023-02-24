@@ -171,6 +171,23 @@ public class Altitude extends SubsystemBase {
     }
   };
 
+  // Starting position isn't set when robot enabled, use this to move it there
+  // when robot is turned on
+  private boolean startingPositionAltitudeTravelLimit = false;
+
+  public void moveToStartingPosition() {
+    if (!isAltitudeTopLimitHit()) {
+      raiseAltitude();
+    } else {
+      stopAltitude();
+      startingPositionAltitudeTravelLimit = true;
+    }
+  }
+
+  public boolean startingPositionAltitudeTravelLimit() {
+    return startingPositionAltitudeTravelLimit;
+  }
+
   /** ALTITUDE **/
   // Run the Altitude motor forward
   public void raiseAltitude() {
