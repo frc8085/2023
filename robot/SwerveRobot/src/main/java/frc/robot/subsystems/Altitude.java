@@ -39,8 +39,8 @@ public class Altitude extends SubsystemBase {
   static double kPAltitude = 8;
   static double kIAltitude = 0;
   static double kDAltitude = 0;
-  static double kIzAltitude = 0;
-  static double kFFAltitude = 0;
+  // static double kIzAltitude = 0;
+  // static double kFFAltitude = 0;
   static double kMaxOutputAltitude = .6;
   static double kMinOutputAltitude = -.6;
 
@@ -99,8 +99,8 @@ public class Altitude extends SubsystemBase {
     SmartDashboard.putNumber("Altitude P Gain", kPAltitude);
     SmartDashboard.putNumber("Altitude I Gain", kIAltitude);
     SmartDashboard.putNumber("Altitude D Gain", kDAltitude);
-    SmartDashboard.putNumber("Altitude I Zone", kIzAltitude);
-    SmartDashboard.putNumber("Altitude Feed Forward", kFFAltitude);
+    // SmartDashboard.putNumber("Altitude I Zone", kIzAltitude);
+    // SmartDashboard.putNumber("Altitude Feed Forward", kFFAltitude);
     SmartDashboard.putNumber("Altitude Max Output", kMaxOutputAltitude);
     SmartDashboard.putNumber("Altitude Min Output", kMinOutputAltitude);
     SmartDashboard.putNumber("Altitude Set Rotations", 0);
@@ -119,8 +119,8 @@ public class Altitude extends SubsystemBase {
     double pAltitude = SmartDashboard.getNumber("Altitude P Gain", 0);
     double iAltitude = SmartDashboard.getNumber("Altitude I Gain", 0);
     double dAltitude = SmartDashboard.getNumber("Altitude D Gain", 0);
-    double izAltitude = SmartDashboard.getNumber("Altitude I Zone", 0);
-    double ffAltitude = SmartDashboard.getNumber("Altitude Feed Forward", 0);
+    // double izAltitude = SmartDashboard.getNumber("Altitude I Zone", 0);
+    // double ffAltitude = SmartDashboard.getNumber("Altitude Feed Forward", 0);
     double maxAltitude = SmartDashboard.getNumber("Altitude Max Output", 0);
     double minAltitude = SmartDashboard.getNumber("Altitude Min Output", 0);
     double positionAltitude = SmartDashboard.getNumber("Set Position", 0);
@@ -139,14 +139,18 @@ public class Altitude extends SubsystemBase {
       m_altitudePIDController.setD(dAltitude);
       kDAltitude = dAltitude;
     }
-    if ((izAltitude != kIzAltitude)) {
-      m_altitudePIDController.setIZone(izAltitude);
-      kIzAltitude = izAltitude;
-    }
-    if ((ffAltitude != kFFAltitude)) {
-      m_altitudePIDController.setFF(ffAltitude);
-      kFFAltitude = ffAltitude;
-    }
+
+    /**
+     * if ((izAltitude != kIzAltitude)) {
+     * m_altitudePIDController.setIZone(izAltitude);
+     * kIzAltitude = izAltitude;
+     * }
+     * if ((ffAltitude != kFFAltitude)) {
+     * m_altitudePIDController.setFF(ffAltitude);
+     * kFFAltitude = ffAltitude;
+     * }
+     **/
+
     if ((maxAltitude != kMaxOutputAltitude) || (minAltitude != kMinOutputAltitude)) {
       m_altitudePIDController.setOutputRange(minAltitude, maxAltitude);
       kMinOutputAltitude = minAltitude;
