@@ -20,7 +20,6 @@ import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Altitude extends SubsystemBase {
-  private boolean TUNING_MODE = false;
   private Extension m_extension;
   /** Creates a new Altitude. */
 
@@ -82,22 +81,6 @@ public class Altitude extends SubsystemBase {
     // operation, it will maintain the above configurations.
     m_altitudeMotor.burnFlash();
 
-    // If we're fine-tuning PID Constants, the display them on the dashboard
-    if (TUNING_MODE) {
-      addPIDToDashboard();
-    }
-
-  }
-
-  private void addPIDToDashboard() {
-    SmartDashboard.putNumber("Altitude P Gain", kPAltitude);
-    SmartDashboard.putNumber("Altitude I Gain", kIAltitude);
-    SmartDashboard.putNumber("Altitude D Gain", kDAltitude);
-    // SmartDashboard.putNumber("Altitude I Zone", kIzAltitude);
-    // SmartDashboard.putNumber("Altitude Feed Forward", kFFAltitude);
-    SmartDashboard.putNumber("Altitude Max Output", kMaxOutputAltitude);
-    SmartDashboard.putNumber("Altitude Min Output", kMinOutputAltitude);
-    SmartDashboard.putNumber("Altitude Set Rotations", 0);
   }
 
   /** The log method puts interesting information to the SmartDashboard. */
@@ -109,10 +92,25 @@ public class Altitude extends SubsystemBase {
 
     SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
 
+    SmartDashboard.putNumber("Altitude P Gain", kPAltitude);
+    SmartDashboard.putNumber("Altitude I Gain", kIAltitude);
+    SmartDashboard.putNumber("Altitude D Gain", kDAltitude);
+    // SmartDashboard.putNumber("Altitude I Zone", kIzAltitude);
+    // SmartDashboard.putNumber("Altitude Feed Forward", kFFAltitude);
+    SmartDashboard.putNumber("Altitude Max Output", kMaxOutputAltitude);
+    SmartDashboard.putNumber("Altitude Min Output", kMinOutputAltitude);
+    SmartDashboard.putNumber("Altitude Set Rotations", 0);
+
   }
 
-  // TODO: Test tunable PID in dashboard
-  private void readPIDTuningFromDashboard() {
+  /** Call log method every loop. */
+  @Override
+  public void periodic() {
+    log();
+
+    resetAltitudeEncoderAtTopLimit();
+    AltitudeIsInTravelPosition();
+
     // Read PID Coefficients from SmartDashboard
     double pAltitude = SmartDashboard.getNumber("Altitude P Gain", 0);
     double iAltitude = SmartDashboard.getNumber("Altitude I Gain", 0);
@@ -154,20 +152,6 @@ public class Altitude extends SubsystemBase {
       kMinOutputAltitude = minAltitude;
       kMaxOutputAltitude = maxAltitude;
     }
-
-  }
-
-  /** Call log method every loop. */
-  @Override
-  public void periodic() {
-    log();
-
-    if (TUNING_MODE) {
-      readPIDTuningFromDashboard();
-    }
-
-    resetAltitudeEncoderAtTopLimit();
-    AltitudeIsInTravelPosition();
 
   }
 

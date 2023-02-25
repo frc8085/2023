@@ -22,9 +22,6 @@ import frc.robot.commands.OpenIntake;
 import frc.robot.commands.PrepareMidDropOff;
 import frc.robot.commands.PrepareHighDropOff;
 import frc.robot.commands.PrepareTravel;
-import frc.robot.commands.SetStartingAltitudePosition;
-import frc.robot.commands.SetStartingExtensionPosition;
-import frc.robot.commands.SetStartingPosition;
 import frc.robot.commands.PrepareIntake;
 import frc.robot.commands.RunIntakeCone;
 import frc.robot.commands.RunIntakeCube;
@@ -75,6 +72,7 @@ public class RobotContainer {
          */
         public RobotContainer() {
                 DriverStation.silenceJoystickConnectionWarning(true);
+                System.out.println("FMS? " + DriverStation.isFMSAttached());
 
                 // Configure the button bindings
                 configureButtonBindings();
@@ -84,11 +82,6 @@ public class RobotContainer {
                 // Reset heading before we start
                 m_robotDrive.zeroHeading();
                 m_robotDrive.calibrate();
-
-                // Move altitude and extension to starting positions which will reset encoders
-                // TODO: make sure that altitude and extension move slowly to travel position
-                m_extension.setDefaultCommand(new SetStartingExtensionPosition(m_extension));
-                m_altitude.setDefaultCommand(new SetStartingAltitudePosition(m_altitude));
 
                 // Configure default commands
                 m_robotDrive.setDefaultCommand(
