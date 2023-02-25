@@ -33,9 +33,10 @@ public class Extension extends SubsystemBase {
 
   // PID
   private SparkMaxPIDController m_extensionPIDController = m_extensionMotor.getPIDController();
-  static double kPExtension = .25;
+  static double kPExtension = .05;
   static double kIExtension = 0;
   static double kDExtension = 0;
+  static double kFFExtension = 0;
 
   public boolean ExtensionIsInTravelPosition() {
     return isRetractionLimitHit();
@@ -51,7 +52,8 @@ public class Extension extends SubsystemBase {
     m_extensionPIDController.setP(kPExtension, 0);
     m_extensionPIDController.setI(kIExtension, 0);
     m_extensionPIDController.setD(kDExtension, 0);
-    m_extensionPIDController.setOutputRange(-0.5, 0.5);
+    m_extensionPIDController.setFF(kFFExtension, 0);
+    m_extensionPIDController.setOutputRange(-0.85, 0.85);
 
     // TODO. What should these values be?
     m_extensionPIDController.setSmartMotionMaxAccel(0.5, 0);
@@ -145,9 +147,10 @@ public class Extension extends SubsystemBase {
   }
 
   // Set a variable speed
-  public void setExtension(double speed) {
-    m_extensionMotor.set(speed * ExtensionConstants.kMaxExtensionSpeedMetersPerSecond);
-  }
+  // public void setExtension(double speed) {
+  // m_extensionMotor.set(speed *
+  // ExtensionConstants.kMaxExtensionSpeedMetersPerSecond);
+  // }
 
   // Maintain Position
   public void keepPosition(double position) {

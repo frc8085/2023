@@ -19,10 +19,10 @@ public class PrepareTravel extends SequentialCommandGroup {
                         Extension m_extension,
                         Altitude m_altitude) {
                 addCommands(new InstantCommand(
-                                () -> m_altitude.keepPosition(AltitudeConstants.kAltitudeTravelPosition)),
-                                new WaitCommand(.25)
-                                                .andThen(new InstantCommand(() -> m_extension.keepPosition(
-                                                                ExtensionConstants.kExtensionPositionFullyRetracted))));
+                                () -> m_extension.keepPosition(ExtensionConstants.kExtensionPositionFullyRetracted)),
+                                new WaitCommand(1)
+                                                .andThen(new InstantCommand(() -> m_altitude.keepPosition(
+                                                                AltitudeConstants.kAltitudeTravelPosition))));
 
         }
 }

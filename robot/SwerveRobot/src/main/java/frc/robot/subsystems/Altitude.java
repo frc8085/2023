@@ -36,13 +36,13 @@ public class Altitude extends SubsystemBase {
 
   // PID
   private SparkMaxPIDController m_altitudePIDController = m_altitudeMotor.getPIDController();
-  static double kPAltitude = 8;
-  static double kIAltitude = 0;
-  static double kDAltitude = 0;
+  static double kPAltitude = 1;
+  static double kIAltitude = 0.0001;
+  static double kDAltitude = 0.1;
   // static double kIzAltitude = 0;
-  // static double kFFAltitude = 0;
-  static double kMaxOutputAltitude = .6;
-  static double kMinOutputAltitude = -.6;
+  static double kFFAltitude = 0;
+  static double kMaxOutputAltitude = 9;
+  static double kMinOutputAltitude = -.9;
 
   public boolean isWithinSafeExtensionLimit() {
     return m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionPositionIntakeOut;
@@ -58,6 +58,7 @@ public class Altitude extends SubsystemBase {
     m_altitudePIDController.setP(kPAltitude, 0);
     m_altitudePIDController.setI(kIAltitude, 0);
     m_altitudePIDController.setD(kDAltitude, 0);
+    m_altitudePIDController.setFF(kFFAltitude, 0);
     m_altitudePIDController.setOutputRange(kMinOutputAltitude, kMaxOutputAltitude);
 
     // TODO. What should these values be?
@@ -119,7 +120,6 @@ public class Altitude extends SubsystemBase {
     // double ffAltitude = SmartDashboard.getNumber("Altitude Feed Forward", 0);
     double maxAltitude = SmartDashboard.getNumber("Altitude Max Output", 0);
     double minAltitude = SmartDashboard.getNumber("Altitude Min Output", 0);
-    double positionAltitude = SmartDashboard.getNumber("Set Position", 0);
 
     // if PID coefficients on SmartDashboard have changed, write new values to
     // controller
@@ -212,18 +212,18 @@ public class Altitude extends SubsystemBase {
   // Returns the current altitude in degrees
   // change altitude encoder readings to degrees angle*4.75/80
   // making assumption that -4.75 is -80 degrees
-  public double getCurrentAltitudeAngle() {
-    return (m_altitudeEncoder.getPosition() / 4.75 * 80);
-  }
+  // public double getCurrentAltitudeAngle() {
+  // return (m_altitudeEncoder.getPosition() / 4.75 * 80);
+  // }
 
   // Set a variable speed to move to a position
-  public void setAltitude(double speed) {
-    if (!isWithinSafeExtensionLimit()) {
-      m_altitudeMotor.set(speed * AltitudeConstants.kMaxLimitedAltitudeSpeedMetersPerSecond);
-    } else {
-      m_altitudeMotor.set(speed * AltitudeConstants.kMaxAltitudeSpeedMetersPerSecond);
-    }
-  }
+  // public void setAltitude(double speed) {
+  // if (!isWithinSafeExtensionLimit()) {
+  // m_altitudeMotor.set(speed);
+  // } else {
+  // m_altitudeMotor.set(speed);
+  // }
+  // }
 
   // Maintain position
   public void keepPosition(double positionAltitude) {
