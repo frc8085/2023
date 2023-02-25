@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 import static frc.robot.Constants.ExtensionConstants;
 import static frc.robot.Constants.AltitudeConstants;
@@ -20,9 +21,9 @@ public class PrepareTravel extends SequentialCommandGroup {
                         Altitude m_altitude) {
                 addCommands(new InstantCommand(
                                 () -> m_extension.keepPosition(ExtensionConstants.kExtensionPositionFullyRetracted)),
-                                new WaitCommand(1)
-                                                .andThen(new InstantCommand(() -> m_altitude.keepPosition(
-                                                                AltitudeConstants.kAltitudeTravelPosition))));
+                                new WaitUntilCommand(() -> m_extension.ExtensionIsInIntakePosition()),
+                                new InstantCommand(() -> m_altitude
+                                                .keepPosition(AltitudeConstants.kAltitudeTravelPosition)));
 
         }
 }

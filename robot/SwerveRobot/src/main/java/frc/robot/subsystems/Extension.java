@@ -38,7 +38,7 @@ public class Extension extends SubsystemBase {
   static double kDExtension = 0;
   static double kFFExtension = 0;
 
-  public boolean ExtensionIsInTravelPosition() {
+  public boolean ExtensionRetractionLimitHit() {
     return isRetractionLimitHit();
   }
 
@@ -92,7 +92,7 @@ public class Extension extends SubsystemBase {
   public void periodic() {
     log();
     resetExtensionEncoderAtRetractionLimit();
-    ExtensionIsInTravelPosition();
+    ExtensionRetractionLimitHit();
   }
 
   /** Resets the Extension encoder to currently read a position of 0. */
@@ -157,4 +157,31 @@ public class Extension extends SubsystemBase {
     m_extensionPIDController.setReference(position, ControlType.kPosition);
     SmartDashboard.putNumber("Desired Extension position", position);
   }
+
+  // Tell Us if Extension as At Positions
+  public boolean ExtensionIsInTravelPosition() {
+    return m_extensionEncoder
+        .getPosition() > (ExtensionConstants.kExtensionPositionFullyRetracted
+            - ExtensionConstants.kExtensionPositionTolerance);
+  }
+
+  public boolean ExtensionIsInIntakePosition() {
+    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionIntakeOut
+        + ExtensionConstants.kExtensionPositionTolerance;
+  }
+
+  public boolean ExtensionIsInMidScoringPosition() {
+    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionMidDropOff
+        + ExtensionConstants.kExtensionPositionTolerance &&
+        m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionMidDropOff
+            - ExtensionConstants.kExtensionPositionTolerance;
+  };
+
+  public boolean ExtensionIsInHighScoringPosition() {
+    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionHighDropOff
+        + ExtensionConstants.kExtensionPositionTolerance &&
+        m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionHighDropOff
+            - ExtensionConstants.kExtensionPositionTolerance;
+  };
+
 }

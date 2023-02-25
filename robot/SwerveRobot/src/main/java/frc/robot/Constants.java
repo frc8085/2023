@@ -129,6 +129,8 @@ public final class Constants {
     public static double kAltitudeDropOffPosition = -2.5;
     // Encoder at Bottom Position
     public static double kAltitudeIntakePosition = -5.2;
+    // Encoder at Shelf Position
+    public static double kAltitudeShelfPosition = -2.1;
     public static double kAltitudeError = 0.05;
 
     // estimates of angles for altitude

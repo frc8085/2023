@@ -20,6 +20,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.HoldCube;
 import frc.robot.commands.OpenIntake;
 import frc.robot.commands.PrepareMidDropOff;
+import frc.robot.commands.PrepareShelfPickup;
 import frc.robot.commands.PrepareHighDropOff;
 import frc.robot.commands.PrepareTravel;
 import frc.robot.commands.PrepareIntake;
@@ -146,14 +147,14 @@ public class RobotContainer {
                 final Trigger ejectButton = m_operatorController.leftTrigger();
                 final Trigger setCubeModeButton = m_operatorController.rightBumper();
 
-                final Trigger ExtendButton = m_operatorController.povLeft();
-                final Trigger RetractButton = m_operatorController.povRight();
+                final Trigger ExtendButton = m_operatorController.axisLessThan(5, -.25);
+                final Trigger RetractButton = m_operatorController.axisGreaterThan(5, .25);
 
                 final Trigger ExtendAndLowerButton = m_operatorController.povDownLeft();
                 final Trigger RetractAndRaiseButton = m_operatorController.povUpRight();
 
-                final Trigger RaiseButton = m_operatorController.povUp();
-                final Trigger LowerButton = m_operatorController.povDown();
+                final Trigger RaiseButton = m_operatorController.axisLessThan(1, -.25);
+                final Trigger LowerButton = m_operatorController.axisGreaterThan(5, .25);
 
                 intakeButton.whileTrue(new RunIntakeCone(m_altitude, m_extension, m_intake))
                                 .onFalse(new ParallelCommandGroup(
@@ -218,12 +219,14 @@ public class RobotContainer {
                 final Trigger prepareMidDropOffButton = m_operatorController.x();
                 final Trigger prepareTravelButton = m_operatorController.y();
                 final Trigger prepareIntakeButton = m_operatorController.a();
+                final Trigger prepareShelfPickupButton = m_operatorController.start();
 
                 prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_extension, m_altitude));
                 prepareHighDropOffButton.onTrue(new PrepareHighDropOff(m_extension, m_altitude));
                 prepareTravelButton.onTrue(new PrepareTravel(m_extension, m_altitude));
                 prepareIntakeButton.onTrue(
                                 new PrepareIntake(m_extension, m_altitude));
+                prepareShelfPickupButton.onTrue(new PrepareShelfPickup(m_extension, m_altitude));
 
         }
 
