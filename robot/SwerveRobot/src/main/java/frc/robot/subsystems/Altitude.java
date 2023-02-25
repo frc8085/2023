@@ -238,7 +238,6 @@ public class Altitude extends SubsystemBase {
             - AltitudeConstants.kAltitudePositionTolerance);
   }
 
-  // TODO : Test this
   public boolean AltitudeIsInIntakePosition() {
     return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeIntakePosition
         + AltitudeConstants.kAltitudePositionTolerance;

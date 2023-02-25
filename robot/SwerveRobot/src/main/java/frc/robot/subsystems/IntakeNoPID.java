@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SubsystemMotorConstants;
 
@@ -43,6 +44,7 @@ public class IntakeNoPID extends SubsystemBase {
         System.out.println("Velocity " + CurrentIntakeEncoderVelocity());
         System.out.println("Position " + CurrentIntakeEncoderPosition());
     }
+    // show on screen the live values so we can plot
 
     // The Intake Subsystem for the robot
     public IntakeNoPID() {
@@ -86,7 +88,8 @@ public class IntakeNoPID extends SubsystemBase {
 
     // Log info for smart dashboard
     public void log() {
-
+        SmartDashboard.putNumber("Current Intake Encoder Velocity", CurrentIntakeEncoderVelocity());
+        SmartDashboard.putNumber("Current Intake Encoder Position", CurrentIntakeEncoderPosition());
     }
 
     /** Call log method every loop. */

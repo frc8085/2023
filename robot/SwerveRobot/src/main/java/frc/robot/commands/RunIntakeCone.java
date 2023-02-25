@@ -20,7 +20,7 @@ public class RunIntakeCone extends SequentialCommandGroup {
                 // 1. Prepare intake
                 new PrepareIntake(m_extension, m_altitude),
                 // 2. Wait until at setpoint (altitude and extension at intake position)
-                new WaitUntilCommand(() -> m_altitude.AltitudeIsInIntakePosition()),
+                // new WaitUntilCommand(() -> m_altitude.AltitudeIsInIntakePosition()),
                 // TODO: Write function in Extension subsystem that
                 // returns if its at intake position
                 // new WaitUntilCommand(() -> m_extension.ExtensionIsInIntakePosition()),

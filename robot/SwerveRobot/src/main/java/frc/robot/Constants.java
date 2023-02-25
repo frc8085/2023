@@ -80,13 +80,14 @@ public final class Constants {
   public static final class IntakeNoPIDConstants {
     // Intake Cone Power
     public static final double kIntakeConePower = 0.8;
-    public static final double kEjectConePower = -0.2;
+    public static final double kEjectConePower = 0.5;
 
     // Intake Cube Power
-    public static final double kIntakeCubePower = 0.4;
-    public static final double kEjectCubePower = -1;
+    public static final double kIntakeCubePower = 0.6;
+    public static final double kEjectCubePower = 1;
     public static final double kIntakeHoldCubePower = 0.2;
 
+    public static final double kEjectWaitTime = 2;
   }
 
   public static final class ExtensionConstants {
@@ -113,7 +114,7 @@ public final class Constants {
     public static double kAltitudeStopSpeed = 0;
     public static double kAltitudeSpeed = 0.2;
     public static double kAltitudeRampRate = 1;
-    public static double kAltitudePositionTolerance = .2;
+    public static double kAltitudePositionTolerance = 1;
 
     public static final double kMaxAltitudeSpeedMetersPerSecond = .05;
     public static final double kMaxLimitedAltitudeSpeedMetersPerSecond = .01;
@@ -140,7 +141,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kFixedMidSpeedLimit = 0.20;
+    public static final double kFixedMidSpeedLimit = 0.30;
     // maxSpeedMetersPerSecond default = 4.8
     public static final double kMaxSpeedMetersPerSecond = 3.5;
     // reduced this from 2 * Math.PI to slow down rotation
