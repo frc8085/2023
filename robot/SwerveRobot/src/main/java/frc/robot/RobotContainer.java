@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.HoldCube;
 import frc.robot.commands.OpenIntake;
 import frc.robot.commands.PrepareMidDropOff;
 import frc.robot.commands.PrepareHighDropOff;
@@ -155,12 +156,16 @@ public class RobotContainer {
                 final Trigger LowerButton = m_operatorController.povDown();
 
                 intakeButton.whileTrue(new RunIntakeCone(m_altitude, m_extension, m_intake))
-                                .onFalse(new InstantCommand(m_intake::stopIntake));
+                                .onFalse(new ParallelCommandGroup(
+                                                new InstantCommand(m_intake::stopIntake),
+                                                new PrepareTravel(m_extension, m_altitude)));
 
                 // If intake button and cube mode button (right Bumper) are both pressed, run
                 // cube intake
                 intakeButton.and(setCubeModeButton).whileTrue(new RunIntakeCube(m_altitude, m_extension, m_intake))
-                                .onFalse(new InstantCommand(m_intake::stopIntake));
+                                .onFalse(new ParallelCommandGroup(
+                                                new HoldCube(m_intake),
+                                                new PrepareTravel(m_extension, m_altitude)));
 
                 ejectButton.onTrue(new RunEjectCone(m_altitude, m_extension, m_intake));
 

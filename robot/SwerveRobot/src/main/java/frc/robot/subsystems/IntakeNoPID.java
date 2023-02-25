@@ -74,6 +74,11 @@ public class IntakeNoPID extends SubsystemBase {
         m_intakeMotor.set(-IntakeNoPIDConstants.kEjectCubePower);
     }
 
+    // Run the intake forward to hold the CUBE speed
+    public void holdCube() {
+        m_intakeMotor.set(IntakeNoPIDConstants.kIntakeHoldCubePower);
+    }
+
     // Stop the intake
     public void stopIntake() {
         m_intakeMotor.set(0);

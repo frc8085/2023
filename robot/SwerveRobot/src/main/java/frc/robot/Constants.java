@@ -52,6 +52,7 @@ public final class Constants {
     // Intake Cube speeds
     public static final int kIntakeCubeSpeed = 1500;
     public static final int kEjectCubeSpeed = -2000;
+    public static final int kHoldCubeSpeed = 500;
 
     // map of modes
 
@@ -84,6 +85,7 @@ public final class Constants {
     // Intake Cube Power
     public static final double kIntakeCubePower = 0.4;
     public static final double kEjectCubePower = -1;
+    public static final double kIntakeHoldCubePower = 0.2;
 
   }
 
