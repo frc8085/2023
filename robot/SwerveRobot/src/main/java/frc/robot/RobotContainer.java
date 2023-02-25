@@ -22,7 +22,10 @@ import frc.robot.commands.PrepareMidDropOff;
 import frc.robot.commands.PrepareHighDropOff;
 import frc.robot.commands.PrepareTravel;
 import frc.robot.commands.PrepareIntake;
-import frc.robot.commands.RunIntake;
+import frc.robot.commands.RunIntakeCone;
+import frc.robot.commands.RunIntakeCube;
+import frc.robot.commands.RunEjectCone;
+import frc.robot.commands.RunEjectCube;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -151,21 +154,19 @@ public class RobotContainer {
                 final Trigger RaiseButton = m_operatorController.povUp();
                 final Trigger LowerButton = m_operatorController.povDown();
 
-                intakeButton.whileTrue(new RunIntake(m_altitude, m_extension, m_intake))
+                intakeButton.whileTrue(new RunIntakeCone(m_altitude, m_extension, m_intake))
                                 .onFalse(new InstantCommand(m_intake::stopIntake));
 
                 // If intake button and cube mode button (right Bumper) are both pressed, run
                 // cube intake
-                intakeButton.and(setCubeModeButton).whileTrue(new InstantCommand(m_intake::intakeCube, m_intake))
+                intakeButton.and(setCubeModeButton).whileTrue(new RunIntakeCube(m_altitude, m_extension, m_intake))
                                 .onFalse(new InstantCommand(m_intake::stopIntake));
 
-                ejectButton.whileTrue(new InstantCommand(m_intake::ejectCone, m_intake))
-                                .onFalse(new InstantCommand(m_intake::stopIntake));
+                ejectButton.onTrue(new RunEjectCone(m_altitude, m_extension, m_intake));
 
                 // If eject button and cube mode button (right Bumper) are both pressed, run
                 // cube eject
-                ejectButton.and(setCubeModeButton).whileTrue(new InstantCommand(m_intake::ejectCube, m_intake))
-                                .onFalse(new InstantCommand(m_intake::stopIntake));
+                ejectButton.and(setCubeModeButton).onTrue(new RunEjectCube(m_intake));
 
                 ExtendAndLowerButton
                                 .whileTrue(new ParallelCommandGroup(

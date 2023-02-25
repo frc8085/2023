@@ -11,8 +11,8 @@ import frc.robot.subsystems.IntakeNoPID;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class RunIntake extends SequentialCommandGroup {
-    public RunIntake(
+public class RunIntakeCube extends SequentialCommandGroup {
+    public RunIntakeCube(
             Altitude m_altitude,
             Extension m_extension,
             IntakeNoPID m_intake) {
@@ -26,6 +26,6 @@ public class RunIntake extends SequentialCommandGroup {
                 // new WaitUntilCommand(() -> m_extension.ExtensionIsInIntakePosition()),
 
                 // 3. Run intake
-                new InstantCommand(() -> m_intake.intakeCone()));
+                new InstantCommand(() -> m_intake.intakeCube()));
     }
 }
