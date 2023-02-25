@@ -20,6 +20,8 @@ import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Altitude extends SubsystemBase {
+  private boolean TUNING_MODE = false;
+
   private Extension m_extension;
   /** Creates a new Altitude. */
 
@@ -82,6 +84,11 @@ public class Altitude extends SubsystemBase {
     // operation, it will maintain the above configurations.
     m_altitudeMotor.burnFlash();
 
+    // If we're fine-tuning PID Constants, the display them on the dashboard
+    if (TUNING_MODE) {
+      addPIDToDashboard();
+    }
+
   }
 
   /** The log method puts interesting information to the SmartDashboard. */
@@ -93,31 +100,28 @@ public class Altitude extends SubsystemBase {
 
     SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
 
+  }
+
+  private void addPIDToDashboard() {
+    // Display PID coefficients on SmartDashboard
     SmartDashboard.putNumber("Altitude P Gain", kPAltitude);
     SmartDashboard.putNumber("Altitude I Gain", kIAltitude);
     SmartDashboard.putNumber("Altitude D Gain", kDAltitude);
     // SmartDashboard.putNumber("Altitude I Zone", kIzAltitude);
-    // SmartDashboard.putNumber("Altitude Feed Forward", kFFAltitude);
+    SmartDashboard.putNumber("Altitude Feed Forward", kFFAltitude);
     SmartDashboard.putNumber("Altitude Max Output", kMaxOutputAltitude);
     SmartDashboard.putNumber("Altitude Min Output", kMinOutputAltitude);
     SmartDashboard.putNumber("Altitude Set Rotations", 0);
-
   }
 
-  /** Call log method every loop. */
-  @Override
-  public void periodic() {
-    log();
-
-    resetAltitudeEncoderAtTopLimit();
-    AltitudeIsInTravelPosition();
+  private void readPIDTuningFromDashboard() {
 
     // Read PID Coefficients from SmartDashboard
     double pAltitude = SmartDashboard.getNumber("Altitude P Gain", 0);
     double iAltitude = SmartDashboard.getNumber("Altitude I Gain", 0);
     double dAltitude = SmartDashboard.getNumber("Altitude D Gain", 0);
     // double izAltitude = SmartDashboard.getNumber("Altitude I Zone", 0);
-    // double ffAltitude = SmartDashboard.getNumber("Altitude Feed Forward", 0);
+    double ffAltitude = SmartDashboard.getNumber("Altitude Feed Forward", 0);
     double maxAltitude = SmartDashboard.getNumber("Altitude Max Output", 0);
     double minAltitude = SmartDashboard.getNumber("Altitude Min Output", 0);
 
@@ -141,18 +145,31 @@ public class Altitude extends SubsystemBase {
      * m_altitudePIDController.setIZone(izAltitude);
      * kIzAltitude = izAltitude;
      * }
-     * if ((ffAltitude != kFFAltitude)) {
-     * m_altitudePIDController.setFF(ffAltitude);
-     * kFFAltitude = ffAltitude;
-     * }
-     **/
+     */
+
+    if ((ffAltitude != kFFAltitude)) {
+      m_altitudePIDController.setFF(ffAltitude);
+      kFFAltitude = ffAltitude;
+    }
 
     if ((maxAltitude != kMaxOutputAltitude) || (minAltitude != kMinOutputAltitude)) {
       m_altitudePIDController.setOutputRange(minAltitude, maxAltitude);
       kMinOutputAltitude = minAltitude;
       kMaxOutputAltitude = maxAltitude;
     }
+  }
 
+  /** Call log method every loop. */
+  @Override
+  public void periodic() {
+    log();
+
+    resetAltitudeEncoderAtTopLimit();
+    AltitudeIsInTravelPosition();
+
+    if (TUNING_MODE) {
+      readPIDTuningFromDashboard();
+    }
   }
 
   /** Resets the Altitude encoder to currently read a position of 0. */
