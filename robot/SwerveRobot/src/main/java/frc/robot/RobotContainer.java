@@ -17,10 +17,18 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.KeepArmPosition;
+import frc.robot.commands.HoldCube;
 import frc.robot.commands.OpenIntake;
-import frc.robot.commands.PrepareDropoff;
-import frc.robot.subsystems.Arm;
+import frc.robot.commands.PrepareMidDropOff;
+import frc.robot.commands.PrepareShelfPickup;
+import frc.robot.commands.PrepareHighDropOff;
+import frc.robot.commands.PrepareTravel;
+import frc.robot.commands.PrepareIntake;
+import frc.robot.commands.RunIntakeCone;
+import frc.robot.commands.RunIntakeCube;
+import frc.robot.commands.RunEjectCone;
+import frc.robot.commands.RunEjectCube;
+import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -33,8 +41,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.List;
 import frc.robot.subsystems.IntakeCover;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.IntakeNoPID;
+import frc.robot.subsystems.Altitude;
 import edu.wpi.first.wpilibj.DriverStation;
 // Dashboard
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,13 +56,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class RobotContainer {
 
         // The robot's subsystems
-
         private final IntakeCover m_intakeCover = new IntakeCover();
-        private final Intake m_intake = new Intake();
-        private final Elevator m_elevator = new Elevator();
-        private final Arm m_arm = new Arm();
-
-        private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_elevator, m_arm);
+        private final IntakeNoPID m_intake = new IntakeNoPID();
+        private final Extension m_extension = new Extension();
+        private final Altitude m_altitude = new Altitude(m_extension);
+        private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_altitude, m_extension);
 
         // The driver's controller
         XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -84,45 +90,41 @@ public class RobotContainer {
                                 // Right Trigger controls speed
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
-                                new RunCommand(
-                                                () -> m_robotDrive.drive(
-                                                                m_driverController.getRightBumper(),
-                                                                m_driverController.getRightTriggerAxis(),
-                                                                // MathUtil.applyDeadband(-m_driverController.getLeftY(),
-                                                                // 0.06),
-                                                                // MathUtil.applyDeadband(-m_driverController.getLeftX(),
-                                                                // 0.06),
-                                                                // MathUtil.applyDeadband(-m_driverController.getRightX(),
-                                                                // 0.06),
+                                new RunCommand(() -> m_robotDrive.drive(
+                                                m_driverController.getRightBumper(),
+                                                m_driverController.getRightTriggerAxis(),
+                                                // MathUtil.applyDeadband(-m_driverController.getLeftY(),
+                                                // 0.06),
+                                                // MathUtil.applyDeadband(-m_driverController.getLeftX(),
+                                                // 0.06),
+                                                // MathUtil.applyDeadband(-m_driverController.getRightX(),
+                                                // 0.06),
 
-                                                                // new stuff from Rev for SlewRate Limiter
-                                                                Math.max(0.0,
-                                                                                (Math.abs(m_driverController.getLeftY())
-                                                                                                - OIConstants.kDriveDeadband)
-                                                                                                / (1.0 - OIConstants.kDriveDeadband))
-                                                                                * Math.signum(-m_driverController
-                                                                                                .getLeftY()),
-                                                                Math.max(0.0,
-                                                                                (Math.abs(m_driverController.getLeftX())
-                                                                                                - OIConstants.kDriveDeadband)
-                                                                                                / (1.0 - OIConstants.kDriveDeadband))
-                                                                                * Math.signum(-m_driverController
-                                                                                                .getLeftX()),
-                                                                Math.max(0.0,
-                                                                                (Math.abs(m_driverController
-                                                                                                .getRightX())
-                                                                                                - OIConstants.kDriveDeadband)
-                                                                                                / (1.0 - OIConstants.kDriveDeadband))
-                                                                                * Math.signum(-m_driverController
-                                                                                                .getRightX()),
-                                                                true,
-                                                                // rateLimit is true if rightBumper is not pressed,
-                                                                // and we are within safe limits
-                                                                // false if it is
-                                                                !m_driverController.getRightBumper()
-                                                                                && m_robotDrive.isWithinSafeLimits()
+                                                // new stuff from Rev for SlewRate Limiter
+                                                Math.max(0.0, (Math.abs(m_driverController.getLeftY())
+                                                                - OIConstants.kDriveDeadband)
+                                                                / (1.0 - OIConstants.kDriveDeadband))
+                                                                * Math.signum(-m_driverController
+                                                                                .getLeftY()),
+                                                Math.max(0.0, (Math.abs(m_driverController.getLeftX())
+                                                                - OIConstants.kDriveDeadband)
+                                                                / (1.0 - OIConstants.kDriveDeadband))
+                                                                * Math.signum(-m_driverController
+                                                                                .getLeftX()),
+                                                Math.max(0.0, (Math.abs(m_driverController
+                                                                .getRightX())
+                                                                - OIConstants.kDriveDeadband)
+                                                                / (1.0 - OIConstants.kDriveDeadband))
+                                                                * Math.signum(-m_driverController
+                                                                                .getRightX()),
+                                                true,
+                                                // rateLimit is true if rightBumper is not pressed,
+                                                // and we are within safe limits
+                                                // false if it is
+                                                !m_driverController.getRightBumper()
+                                                                && m_robotDrive.isWithinSafeLimits()
 
-                                                ),
+                                ),
                                                 m_robotDrive));
         }
 
@@ -141,53 +143,90 @@ public class RobotContainer {
                                 .whileTrue(new RunCommand(() -> m_robotDrive.lock(), m_robotDrive));
 
                 /** MANUAL OPERATION */
-                final Trigger coneIntakeButton = m_operatorController.rightTrigger();
+                final Trigger intakeButton = m_operatorController.rightTrigger();
                 final Trigger ejectButton = m_operatorController.leftTrigger();
+                final Trigger setCubeModeButton = m_operatorController.rightBumper();
 
-                final Trigger armExtendButton = m_operatorController.povLeft();
-                final Trigger armRetractButton = m_operatorController.povRight();
+                final Trigger ExtendButton = m_operatorController.axisLessThan(5, -.25);
+                final Trigger RetractButton = m_operatorController.axisGreaterThan(5, .25);
 
-                final Trigger armExtendElevatorLowerButton = m_operatorController.povDownLeft();
+                final Trigger ExtendAndLowerButton = m_operatorController.povDownLeft();
+                final Trigger RetractAndRaiseButton = m_operatorController.povUpRight();
 
-                final Trigger elevatorRaiseButton = m_operatorController.y();
-                final Trigger elevatorLowerButton = m_operatorController.a();
+                final Trigger RaiseButton = m_operatorController.axisLessThan(1, -.25);
+                final Trigger LowerButton = m_operatorController.axisGreaterThan(5, .25);
 
-                coneIntakeButton.whileTrue(new InstantCommand(m_intake::intakeCone, m_intake))
-                                .onFalse(new InstantCommand(m_intake::stopIntake));
-
-                ejectButton.whileTrue(new InstantCommand(m_intake::eject, m_intake))
-                                .onFalse(new InstantCommand(m_intake::stopIntake));
-
-                armExtendElevatorLowerButton
-                                .whileTrue(new ParallelCommandGroup(
-                                                new InstantCommand(m_arm::extendArm, m_arm),
-                                                new InstantCommand(m_elevator::lowerElevator, m_elevator)))
+                intakeButton.whileTrue(new RunIntakeCone(m_altitude, m_extension, m_intake))
                                 .onFalse(new ParallelCommandGroup(
-                                                new InstantCommand(m_arm::stopArm, m_arm),
-                                                new InstantCommand(m_elevator::stopElevator, m_elevator)));
+                                                new InstantCommand(m_intake::stopIntake),
+                                                new PrepareTravel(m_extension, m_altitude)));
 
-                armExtendButton.whileTrue(new InstantCommand(m_arm::extendArm, m_arm))
-                                // .onFalse(new KeepArmPosition(m_arm.getCurrentArmPosition(), m_arm));
-                                .onFalse(new InstantCommand(m_arm::stopArm, m_arm));
+                // If intake button and cube mode button (right Bumper) are both pressed, run
+                // cube intake
+                intakeButton.and(setCubeModeButton).whileTrue(new RunIntakeCube(m_altitude, m_extension, m_intake))
+                                .onFalse(new ParallelCommandGroup(
+                                                new HoldCube(m_intake),
+                                                new PrepareTravel(m_extension, m_altitude)));
 
-                armRetractButton.whileTrue(new InstantCommand(m_arm::retractArm, m_arm))
-                                // .onFalse(new KeepArmPosition(m_arm.getCurrentArmPosition(), m_arm));
-                                .onFalse(new InstantCommand(m_arm::stopArm, m_arm));
+                ejectButton.onTrue(new RunEjectCone(m_altitude, m_extension, m_intake));
 
-                elevatorRaiseButton
-                                .whileTrue(new InstantCommand(m_elevator::raiseElevator, m_elevator))
+                // If eject button and cube mode button (right Bumper) are both pressed, run
+                // cube eject
+                ejectButton.and(setCubeModeButton).onTrue(new RunEjectCube(m_intake));
+
+                ExtendAndLowerButton
+                                .whileTrue(new ParallelCommandGroup(
+                                                new InstantCommand(m_extension::extendExtension, m_extension),
+                                                new InstantCommand(m_altitude::lowerAltitude, m_altitude)))
+                                .onFalse(new ParallelCommandGroup(
+                                                new InstantCommand(m_extension::stopExtension, m_extension),
+                                                new InstantCommand(m_altitude::stopAltitude, m_altitude)));
+
+                RetractAndRaiseButton
+                                .whileTrue(new ParallelCommandGroup(
+                                                new InstantCommand(m_extension::retractExtension, m_extension),
+                                                new InstantCommand(m_altitude::raiseAltitude, m_altitude)))
+                                .onFalse(new ParallelCommandGroup(
+                                                new InstantCommand(m_extension::stopExtension, m_extension),
+                                                new InstantCommand(m_altitude::stopAltitude, m_altitude)));
+
+                ExtendButton.whileTrue(new InstantCommand(m_extension::extendExtension, m_extension))
+                                // .onFalse(new KeepExtensionPosition(m_extension.getCurrentExtensionPosition(),
+                                // m_extension));
                                 .onFalse(new InstantCommand(
-                                                () -> m_elevator.keepPosition(m_elevator.getCurrentAltitude())));
+                                                () -> m_extension.keepPosition(
+                                                                m_extension.getCurrentExtensionPosition())));
 
-                elevatorLowerButton
-                                .whileTrue(new InstantCommand(m_elevator::lowerElevator, m_elevator))
+                RetractButton.whileTrue(new InstantCommand(m_extension::retractExtension, m_extension))
+                                // .onFalse(new KeepExtensionPosition(m_extension.getCurrentExtensionPosition(),
+                                // m_extension));
                                 .onFalse(new InstantCommand(
-                                                () -> m_elevator.keepPosition(m_elevator.getCurrentAltitude())));
+                                                () -> m_extension.keepPosition(
+                                                                m_extension.getCurrentExtensionPosition())));
+
+                RaiseButton
+                                .whileTrue(new InstantCommand(m_altitude::raiseAltitude, m_altitude))
+                                .onFalse(new InstantCommand(
+                                                () -> m_altitude.keepPosition(m_altitude.getCurrentAltitude())));
+
+                LowerButton
+                                .whileTrue(new InstantCommand(m_altitude::lowerAltitude, m_altitude))
+                                .onFalse(new InstantCommand(
+                                                () -> m_altitude.keepPosition(m_altitude.getCurrentAltitude())));
 
                 // PRESET POSITIONS
-                final Trigger prepareDropoffButton = m_operatorController.start();
+                final Trigger prepareHighDropOffButton = m_operatorController.b();
+                final Trigger prepareMidDropOffButton = m_operatorController.x();
+                final Trigger prepareTravelButton = m_operatorController.y();
+                final Trigger prepareIntakeButton = m_operatorController.a();
+                final Trigger prepareShelfPickupButton = m_operatorController.start();
 
-                prepareDropoffButton.onTrue(new PrepareDropoff(m_arm, m_elevator));
+                prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_extension, m_altitude));
+                prepareHighDropOffButton.onTrue(new PrepareHighDropOff(m_extension, m_altitude));
+                prepareTravelButton.onTrue(new PrepareTravel(m_extension, m_altitude));
+                prepareIntakeButton.onTrue(
+                                new PrepareIntake(m_extension, m_altitude));
+                prepareShelfPickupButton.onTrue(new PrepareShelfPickup(m_extension, m_altitude));
 
         }
 

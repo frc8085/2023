@@ -31,74 +31,119 @@ public final class Constants {
 
   public static final class SubsystemMotorConstants {
     public static final int kMotorCurrentLimit = 30;
+    public static final int kMotorCurrentLimit550 = 30;
   }
 
   public static final class IntakeConstants {
     public static final int kIntakePort = 6;
+
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
-    public static double kRampRate = 1;
-    public static double kEjectSpeed = 0.2;
-    public static double kIntakeConeSpeed = 0.8;
-    public static double kIntakeCubeSpeed = 0.1;
+    public static double kRampRate = 0;
+
+    public static final double kIntakeToleranceRPMPercent = 0.10;
+
+    // Intake off speed
+    public static final int kIntakeOffSpeed = 0;
+
+    // Intake Cone Speeds
+    public static final int kIntakeConeSpeed = 2000;
+    public static final int kEjectConeSpeed = -500;
+
+    // Intake Cube speeds
+    public static final int kIntakeCubeSpeed = 1500;
+    public static final int kEjectCubeSpeed = -2000;
+    public static final int kHoldCubeSpeed = 500;
+
+    // map of modes
+
+    public static final int[] kIntakeTargetRPM = new int[] {
+        kIntakeOffSpeed, // 0, kIntakeOffSpeed
+        kIntakeConeSpeed, // 1, kIntakeConeSpeed
+        kEjectConeSpeed, // 2, kEjectConeSpeed
+        kIntakeCubeSpeed, // 3, kIntakeCubeSpeed
+        kEjectCubeSpeed, // 4, kEjectCubeSpeed
+    };
+
+    /** Intake off index in { @see IntakeConstants.kIntakeTargetRPM } */
+    public static final int kCargoNone = 0;
+
+    /** Cone Indices in { @see IntakeConstants.kIntakeTargetRPM } */
+    public static final int kCargoConeIntake = 1;
+    public static final int kCargoConeEject = 2;
+
+    /** Cube Indices in { @see IntakeConstants.kIntakeTargetRPM } */
+    public static final int kCargoCubeIntake = 3;
+    public static final int kCargoCubeEject = 4;
+
   }
 
-  public static final class ArmConstants {
-    public static int kArmMotorPort = 7;
+  public static final class IntakeNoPIDConstants {
+    // Intake Cone Power
+    public static final double kIntakeConePower = 0.8;
+    public static final double kEjectConePower = 0.5;
 
-    public static double kArmSpeed = 0.50;
-    public static double kArmRampRate = 0;
-    public static final double kMaxArmSpeedMetersPerSecond = 0.125;
+    // Intake Cube Power
+    public static final double kIntakeCubePower = 0.6;
+    public static final double kEjectCubePower = 1;
+    public static final double kIntakeHoldCubePower = 0.2;
 
-    // Range for safe Travel arm <20
-    public static double kArmSafeMax = 20;
+    public static final double kEjectWaitTime = 2;
+  }
 
-    // encoder readings of arm position as of 2.14.2023
-    public static double kArmPositionFullyRetracted = 0;
-    public static double kArmPositionIntakeOut = 39;
-    public static double kArmPositionMidDropOff = 83;
-    public static double kArmPositionHighDropOff = 135;
-    public static double kArmPositionTolerance = 1;
+  public static final class ExtensionConstants {
+    public static int kExtensionMotorPort = 7;
+    public static double kExtensionSpeed = 0.5;
+    public static double kExtensionRampRate = 0;
+    public static double kExtensionPositionTolerance = 1;
+
+    public static final double kMaxExtensionSpeedMetersPerSecond = 0.25;
+
+    // Range for safe Travel Extension <20
+    public static double kExtensionSafeMax = 10;
+
+    // encoder readings of Extension position as of 2.14.2023
+    public static double kExtensionPositionFullyRetracted = 1;
+    public static double kExtensionPositionIntakeOut = 39;
+    public static double kExtensionPositionMidDropOff = 83;
+    public static double kExtensionPositionHighDropOff = 135;
 
   }
 
-  public static final class ElevatorConstants {
-    public static int kElevatorMotorPort = 5;
-
-    public static double kElevatorStopSpeed = 0;
-    public static double kElevatorSpeed = 0.5;
+  public static final class AltitudeConstants {
+    public static int kAltitudeMotorPort = 5;
+    public static double kAltitudeStopSpeed = 0;
+    public static double kAltitudeSpeed = 0.2;
+    public static double kAltitudeRampRate = 1;
     public static double kAltitudePositionTolerance = 1;
 
-    // {kRampRate} = Time in seconds to go from 0 to full throttle.
+    public static final double kMaxAltitudeSpeedMetersPerSecond = .05;
+    public static final double kMaxLimitedAltitudeSpeedMetersPerSecond = .01;
 
-    public static double kRampRate = 0;
-    public static double kElevatorRampRate = 0;
-    public static final double kMaxElevatorAltitudeSpeedMetersPerSecond = .125;
+    // Range for safe Travel altitude > -0.5
+    public static double kAltitudeSafeMin = -0.5;
 
-    // encoder readings of elevator altitude as of 2.14.2023
+    // encoder readings of altitude as of 2.14.2023
     // Encoder at Top Position
-    public static double kElevatorAltitudeTravelPosition = 0;
-
+    public static double kAltitudeTravelPosition = -0.15;
     // Encoder at Mid Position
-    public static double kElevatorAltitudeDropOffPosition = -2.;
+    public static double kAltitudeDropOffPosition = -2.5;
     // Encoder at Bottom Position
-    public static double kElevatorAltitudeIntakePosition = -4.75;
+    public static double kAltitudeIntakePosition = -5.2;
+    // Encoder at Shelf Position
+    public static double kAltitudeShelfPosition = -2.1;
+    public static double kAltitudeError = 0.05;
 
-    public static double kElevatorAltitudeError = 0.05;
-
-    // Range for safe Travel elevator > -0.5
-    public static double kElevatorSafeMin = -0.5;
-
-    // estimates of angles for elevator altitude
-    public static double kElevatorAltitudeTravelPositionAngle = 0;
-    public static double kElevatorAltitudeDropOffPositionAngle = -40;
-    public static double kElevatorAltitudeIntakePositionAngle = -80;
-    public static double kElevatorToleranceAngle = 2;
+    // estimates of angles for altitude
+    public static double kAltitudeTravelPositionAngle = 0;
+    public static double kAltitudeDropOffPositionAngle = -40;
+    public static double kAltitudeIntakePositionAngle = -80;
+    public static double kAltitudeToleranceAngle = 2;
   }
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kFixedMidSpeedLimit = 0.20;
+    public static final double kFixedMidSpeedLimit = 0.30;
     // maxSpeedMetersPerSecond default = 4.8
     public static final double kMaxSpeedMetersPerSecond = 3.5;
     // reduced this from 2 * Math.PI to slow down rotation
