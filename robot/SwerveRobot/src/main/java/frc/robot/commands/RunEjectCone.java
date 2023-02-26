@@ -26,6 +26,6 @@ public class RunEjectCone extends SequentialCommandGroup {
                                 new WaitCommand(IntakeNoPIDConstants.kEjectWaitTime)
                                                 .andThen(new InstantCommand(m_intake::stopIntake)),
                                 // 4. Return to Travel Position
-                                new PrepareTravel(m_extension, m_altitude));
+                                new PrepareTravelAfterScoring(m_extension, m_altitude));
         }
 }
