@@ -79,11 +79,11 @@ public final class Constants {
 
   public static final class IntakeNoPIDConstants {
     // Intake Cone Power
-    public static final double kIntakeConePower = 0.8;
-    public static final double kEjectConePower = 0.25;
+    public static final double kIntakeConePower = 0.9;
+    public static final double kEjectConePower = 0.5;
 
     // Intake Cube Power
-    public static final double kIntakeCubePower = 0.6;
+    public static final double kIntakeCubePower = 0.8;
     public static final double kEjectCubePower = 1;
     public static final double kIntakeHoldCubePower = 0.2;
 
@@ -126,13 +126,13 @@ public final class Constants {
     // Altitude at Top Position
     public static double kAltitudeTravelPosition = -0.15;
     // Altitude at DropOff Position
-    public static double kAltitudeDropOffPosition = -2.5;
+    public static double kAltitudeDropOffPosition = -2.6;
     // Altitude at Bottom Position
-    public static double kAltitudeIntakePosition = -5.2;
+    public static double kAltitudeIntakePosition = -5.0;
     // Altitude at Shelf Position
     public static double kAltitudeShelfPosition = -2.1;
     // Altitude at DropOff Final Position
-    public static double kAltitudeDropOffFinalPosition = -2.7;
+    public static double kAltitudeDropOffFinalPosition = -3;
     // Altitude Error Tolerance
     public static double kAltitudeError = 0.05;
 
@@ -141,9 +141,9 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kFixedMidSpeedLimit = 0.30;
+    public static final double kFixedMidSpeedLimit = 0.50;
     // maxSpeedMetersPerSecond default = 4.8
-    public static final double kMaxSpeedMetersPerSecond = 3.5;
+    public static final double kMaxSpeedMetersPerSecond = 4.8;
     // reduced this from 2 * Math.PI to slow down rotation
     public static final double kMaxAngularSpeed = .5 * Math.PI; // radians per second
 

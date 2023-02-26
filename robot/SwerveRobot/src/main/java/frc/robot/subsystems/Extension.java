@@ -84,6 +84,7 @@ public class Extension extends SubsystemBase {
     SmartDashboard.putBoolean("Fully Retracted", m_retractionLimit.isPressed());
     SmartDashboard.putBoolean("Extension Travel Position", ExtensionIsInTravelPosition());
 
+
     SmartDashboard.putNumber("Current position", getCurrentExtensionPosition());
   }
 

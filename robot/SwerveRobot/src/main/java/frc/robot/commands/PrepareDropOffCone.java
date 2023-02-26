@@ -4,13 +4,28 @@
 
 package frc.robot.commands;
 
+import javax.management.InstanceAlreadyExistsException;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.subsystems.Altitude;
 
+/**
+ * public class PrepareDropOffCone extends SequentialCommandGroup {
+ * public PrepareDropOffCone(Altitude m_altitude) {
+ * new InstantCommand(() ->
+ * m_altitude.keepPosition(AltitudeConstants.kAltitudeDropOffFinalPosition));
+ * }
+ * }
+ */
+
 public class PrepareDropOffCone extends SequentialCommandGroup {
     public PrepareDropOffCone(Altitude m_altitude) {
-        new InstantCommand(() -> m_altitude.keepPosition(AltitudeConstants.kAltitudeDropOffFinalPosition));
+        addCommands(
+                new InstantCommand(() -> m_altitude.lowerAltitude()),
+                new WaitCommand(.5)
+                        .andThen(new InstantCommand(() -> m_altitude.stopAltitude())));
     }
 }
