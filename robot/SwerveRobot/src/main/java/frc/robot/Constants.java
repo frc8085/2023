@@ -123,21 +123,19 @@ public final class Constants {
     public static double kAltitudeSafeMin = -0.5;
 
     // encoder readings of altitude as of 2.14.2023
-    // Encoder at Top Position
+    // Altitude at Top Position
     public static double kAltitudeTravelPosition = -0.15;
-    // Encoder at Mid Position
+    // Altitude at DropOff Position
     public static double kAltitudeDropOffPosition = -2.5;
-    // Encoder at Bottom Position
+    // Altitude at Bottom Position
     public static double kAltitudeIntakePosition = -5.2;
-    // Encoder at Shelf Position
+    // Altitude at Shelf Position
     public static double kAltitudeShelfPosition = -2.1;
+    // Altitude at DropOff Final Position
+    public static double kAltitudeDropOffFinalPosition = -2.7;
+    // Altitude Error Tolerance
     public static double kAltitudeError = 0.05;
 
-    // estimates of angles for altitude
-    public static double kAltitudeTravelPositionAngle = 0;
-    public static double kAltitudeDropOffPositionAngle = -40;
-    public static double kAltitudeIntakePositionAngle = -80;
-    public static double kAltitudeToleranceAngle = 2;
   }
 
   public static final class DriveConstants {

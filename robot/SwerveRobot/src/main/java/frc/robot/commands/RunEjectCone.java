@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.IntakeNoPID;
@@ -20,12 +21,17 @@ public class RunEjectCone extends SequentialCommandGroup {
                 addCommands(
                                 // 1. Prepare Drop Off Cone (lower altitude slightly)
                                 new PrepareDropOffCone(m_altitude),
-                                // 2. Run eject Cone
-                                new InstantCommand(() -> m_intake.ejectCone()),
-                                // 3. Wait X sec and then turn off intake
-                                new WaitCommand(IntakeNoPIDConstants.kEjectWaitTime)
-                                                .andThen(new InstantCommand(m_intake::stopIntake)),
-                                // 4. Return to Travel Position
-                                new PrepareTravelAfterScoring(m_extension, m_altitude));
+                                // Run Eject Cone and Return to Travel
+                                new ParallelCommandGroup(
+                                                // Eject Cone, Wait X time and then turn off intake
+                                                new SequentialCommandGroup(
+                                                                // 2. Run eject Cone
+                                                                new InstantCommand(() -> m_intake.ejectCone()),
+                                                                // 3. Wait X sec and then turn off intake
+                                                                new WaitCommand(IntakeNoPIDConstants.kEjectWaitTime)
+                                                                                .andThen(new InstantCommand(
+                                                                                                m_intake::stopIntake))),
+                                                // Return to Travel Position
+                                                new PrepareTravelAfterScoring(m_extension, m_altitude)));
         }
 }
