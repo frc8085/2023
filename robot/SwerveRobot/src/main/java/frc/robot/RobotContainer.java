@@ -154,9 +154,6 @@ public class RobotContainer {
                 final Trigger ExtendButton = m_operatorController.axisLessThan(5, -.25);
                 final Trigger RetractButton = m_operatorController.axisGreaterThan(5, .25);
 
-                final Trigger ExtendAndLowerButton = m_operatorController.povDownLeft();
-                final Trigger RetractAndRaiseButton = m_operatorController.povUpRight();
-
                 final Trigger RaiseButton = m_operatorController.axisLessThan(1, -.25);
                 final Trigger LowerButton = m_operatorController.axisGreaterThan(1, .25);
 
@@ -185,22 +182,6 @@ public class RobotContainer {
                 // If eject button and cube mode button (right Bumper) are both pressed, run
                 // cube eject
                 ejectButton.and(setCubeModeButton).onTrue(new RunEjectCube(m_intake));
-
-                ExtendAndLowerButton
-                                .whileTrue(new ParallelCommandGroup(
-                                                new InstantCommand(m_extension::extendExtension, m_extension),
-                                                new InstantCommand(m_altitude::lowerAltitude, m_altitude)))
-                                .onFalse(new ParallelCommandGroup(
-                                                new InstantCommand(m_extension::stopExtension, m_extension),
-                                                new InstantCommand(m_altitude::stopAltitude, m_altitude)));
-
-                RetractAndRaiseButton
-                                .whileTrue(new ParallelCommandGroup(
-                                                new InstantCommand(m_extension::retractExtension, m_extension),
-                                                new InstantCommand(m_altitude::raiseAltitude, m_altitude)))
-                                .onFalse(new ParallelCommandGroup(
-                                                new InstantCommand(m_extension::stopExtension, m_extension),
-                                                new InstantCommand(m_altitude::stopAltitude, m_altitude)));
 
                 ExtendButton.whileTrue(new InstantCommand(m_extension::extendExtension, m_extension))
                                 // .onFalse(new KeepExtensionPosition(m_extension.getCurrentExtensionPosition(),
