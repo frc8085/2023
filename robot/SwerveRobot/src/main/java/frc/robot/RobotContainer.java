@@ -25,6 +25,7 @@ import frc.robot.commands.PrepareHighDropOff;
 import frc.robot.commands.PrepareTravel;
 import frc.robot.commands.PrepareTravelAfterIntake;
 import frc.robot.commands.PrepareTravelAfterScoring;
+import frc.robot.commands.RunEjectBasedOnAltitude;
 import frc.robot.commands.PrepareIntake;
 import frc.robot.commands.RunIntakeCone;
 import frc.robot.commands.RunIntakeConeFromShelf;
@@ -177,7 +178,10 @@ public class RobotContainer {
                                                 new InstantCommand(m_intake::stopIntake),
                                                 new PrepareTravelAfterScoring(m_extension, m_altitude)));
 
-                ejectButton.onTrue(new RunEjectCone(m_altitude, m_extension, m_intake));
+                ejectButton.onTrue(new RunEjectBasedOnAltitude(m_altitude, m_extension, m_intake));
+
+                ejectButton.and(setShelfModeButton)
+                                .onTrue(new RunEjectCone(m_altitude, m_extension, m_intake));
 
                 // If eject button and cube mode button (right Bumper) are both pressed, run
                 // cube eject
