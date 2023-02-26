@@ -47,8 +47,8 @@ public class Altitude extends SubsystemBase {
     static double kMinOutputAltitude = -.9;
 
     public boolean isWithinSafeExtensionLimit() {
-        return (getCurrentAltitude() <= AltitudeConstants.kAltitudeSafeMin &&
-                m_extension.getCurrentExtensionPosition() >= ExtensionConstants.kExtensionPositionIntakeOut);
+        return (getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin &&
+                m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionPositionIntakeOut);
     }
 
     public Altitude(Extension Extension) {
