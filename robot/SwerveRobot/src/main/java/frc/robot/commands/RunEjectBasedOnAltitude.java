@@ -26,25 +26,33 @@ public class RunEjectBasedOnAltitude extends SequentialCommandGroup {
                                                 // 3. Wait X sec and then turn off intake
                                                 new WaitCommand(IntakeNoPIDConstants.kEjectWaitTime)
                                                                 .andThen(new InstantCommand(m_intake::stopIntake))),
-                                // If Altitude is not in travel position, lower altitude slightly, then drop off
+                                // If Altitude is in scoring position, lower altitude slightly, then drop off
                                 // cone and then return to travel simultaneously
-                                new SequentialCommandGroup(
-                                                // 1. Prepare Drop Off Cone (lower altitude slightly)
-                                                new PrepareDropOffCone(m_altitude),
-                                                new ParallelCommandGroup(
-                                                                new SequentialCommandGroup(
-                                                                                // 2. Run eject Cone
-                                                                                new InstantCommand(() -> m_intake
-                                                                                                .ejectCone()),
-                                                                                // 3. Wait X sec and then turn off
-                                                                                // intake
-                                                                                new WaitCommand(IntakeNoPIDConstants.kEjectWaitTime)
-                                                                                                .andThen(new InstantCommand(
-                                                                                                                m_intake::stopIntake))),
-                                                                // 4. Return to Travel Position
-                                                                new PrepareTravelAfterScoring(m_extension,
-                                                                                m_altitude))),
+                                new ConditionalCommand(
+                                                new SequentialCommandGroup(
+                                                                // 1. Prepare Drop Off Cone (lower altitude slightly)
+                                                                new PrepareDropOffCone(m_altitude),
+                                                                new ParallelCommandGroup(
+                                                                                new SequentialCommandGroup(
+                                                                                                // 2. Run eject Cone
+                                                                                                new InstantCommand(
+                                                                                                                () -> m_intake
+                                                                                                                                .ejectCone()),
+                                                                                                // 3. Wait X sec and
+                                                                                                // then turn off
+                                                                                                // intake
+                                                                                                new WaitCommand(IntakeNoPIDConstants.kEjectWaitTime)
+                                                                                                                .andThen(new InstantCommand(
+                                                                                                                                m_intake::stopIntake))),
+                                                                                // 4. Return to Travel Position
+                                                                                new PrepareTravelAfterScoring(
+                                                                                                m_extension,
+                                                                                                m_altitude))),
+                                                // If Altitude is not in travel or scoring position, then just eject
+                                                // cone
+                                                new InstantCommand(() -> m_intake.ejectCone()),
+                                                () -> m_altitude.AltitudeIsInScoringPosition()),
                                 // Is Altitude in travel position?
-                                () -> m_altitude.AltitudeIsInScoringPosition()));
+                                () -> m_altitude.AltitudeIsInTravelPosition()));
         }
 }
