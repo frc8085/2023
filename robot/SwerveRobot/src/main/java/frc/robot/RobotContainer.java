@@ -87,10 +87,9 @@ public class RobotContainer {
                 // Reset heading before we start
                 m_robotDrive.zeroHeading();
                 m_robotDrive.calibrate();
- 
+
                 m_extension.moveToStartingPosition();
                 m_altitude.moveToStartingPosition();
-                
 
                 // Configure default commands
                 m_robotDrive.setDefaultCommand(
@@ -130,7 +129,7 @@ public class RobotContainer {
                                                 // and we are within safe limits
                                                 // false if it is
                                                 !m_driverController.getRightBumper()
-                                                                && m_robotDrive.isWithinSafeLimits()
+                                                                && m_robotDrive.isWithinSafeDrivingLimits()
 
                                 ),
                                                 m_robotDrive));

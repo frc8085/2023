@@ -93,7 +93,7 @@ public class DriveSubsystem extends SubsystemBase {
           m_gyro.getAbsoluteCompassHeading());
       SmartDashboard.putNumber("Compass Heading", m_gyro.getCompassHeading());
 
-      SmartDashboard.putBoolean("In Safe Limits", isWithinSafeLimits());
+      SmartDashboard.putBoolean("In Safe Limits", isWithinSafeDrivingLimits());
 
     }
   }
@@ -146,7 +146,7 @@ public class DriveSubsystem extends SubsystemBase {
         pose);
   }
 
-  public boolean isWithinSafeLimits() {
+  public boolean isWithinSafeDrivingLimits() {
     return m_altitude.getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin &&
         m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
   }
@@ -171,10 +171,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Adjust input based on max speed
 
-    // If we set the speed limit use a fixed speed
+    // If we set the speed limit use a lower max speed
     // otherwise the speed value with some max
-    double speed = speedLimit || !isWithinSafeLimits()
-        ? DriveConstants.kFixedMidSpeedLimit * DriveConstants.kMaxSpeedMetersPerSecond
+    double speed = speedLimit || !isWithinSafeDrivingLimits()
+        ? inputSpeed * DriveConstants.kMaxLimitedSpeedMetersPerSecond
         : inputSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
 
     rotDirection *= DriveConstants.kMaxAngularSpeed;

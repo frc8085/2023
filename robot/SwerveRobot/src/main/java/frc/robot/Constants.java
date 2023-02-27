@@ -148,6 +148,8 @@ public final class Constants {
         public static final double kFixedMidSpeedLimit = 0.50;
         // maxSpeedMetersPerSecond default = 4.8
         public static final double kMaxSpeedMetersPerSecond = 4.8;
+        // Cap the max speed if it's not safe to go fast
+        public static final double kMaxLimitedSpeedMetersPerSecond = 2;
         // reduced this from 2 * Math.PI to slow down rotation
         public static final double kMaxAngularSpeed = .5 * Math.PI; // radians per second
 
