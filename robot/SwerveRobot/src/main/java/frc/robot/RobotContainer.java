@@ -93,7 +93,7 @@ public class RobotContainer {
 
                 // Configure default commands
                 m_robotDrive.setDefaultCommand(
-                                // Right Bumper sets a fixed mid speed limit
+                                // Right Bumper sets a reduced max speed limit
                                 // Right Trigger controls speed
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
@@ -153,7 +153,7 @@ public class RobotContainer {
                 final Trigger intakeButton = m_operatorController.rightTrigger();
                 final Trigger ejectButton = m_operatorController.leftTrigger();
                 final Trigger setCubeModeButton = m_operatorController.rightBumper();
-                final Trigger setShelfModeButton = m_operatorController.leftBumper();
+                final Trigger setShelfModeButton = m_operatorController.povUp();
 
                 final Trigger ExtendButton = m_operatorController.axisLessThan(5, -.25);
                 final Trigger RetractButton = m_operatorController.axisGreaterThan(5, .25);
@@ -173,9 +173,7 @@ public class RobotContainer {
                                                 new HoldCube(m_intake),
                                                 new PrepareTravelAfterIntake(m_extension, m_altitude)));
 
-                // If intake button and shelf mode button (left Bumper) are both pressed, run
-                // shelf intake
-                intakeButton.and(setShelfModeButton)
+                setShelfModeButton
                                 .whileTrue(new RunIntakeConeFromShelf(m_altitude, m_extension, m_intake))
                                 .onFalse(new ParallelCommandGroup(
                                                 new InstantCommand(m_intake::stopIntake),
@@ -183,12 +181,13 @@ public class RobotContainer {
 
                 ejectButton.onTrue(new RunEjectBasedOnAltitude(m_altitude, m_extension, m_intake));
 
-                ejectButton.and(setShelfModeButton)
-                                .onTrue(new RunEjectCone(m_altitude, m_extension, m_intake));
+                // Not Needed anymore because eject is based on altitude position
+                // ejectButton.and(setShelfModeButton)
+                // .onTrue(new RunEjectCone(m_altitude, m_extension, m_intake));
 
                 // If eject button and cube mode button (right Bumper) are both pressed, run
                 // cube eject
-                ejectButton.and(setCubeModeButton).onTrue(new RunEjectCube(m_intake));
+                // ejectButton.and(setCubeModeButton).onTrue(new RunEjectCube(m_intake));
 
                 ExtendButton.whileTrue(new InstantCommand(m_extension::extendExtension, m_extension))
                                 // .onFalse(new KeepExtensionPosition(m_extension.getCurrentExtensionPosition(),
