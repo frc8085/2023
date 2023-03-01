@@ -163,7 +163,7 @@ public class Altitude extends SubsystemBase {
     /** Call log method every loop. */
     @Override
     public void periodic() {
-        alwaysMaintainSafeExtension();
+        // alwaysMaintainSafeExtension();
         log();
 
         resetAltitudeEncoderAtTopLimit();
