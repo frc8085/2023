@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import javax.management.InstanceAlreadyExistsException;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -20,6 +18,8 @@ import frc.robot.subsystems.Altitude;
  * }
  * }
  */
+
+// TODO: Convert this to a lower altitude by position not by time
 
 public class PrepareDropOffCone extends SequentialCommandGroup {
     public PrepareDropOffCone(Altitude m_altitude) {
