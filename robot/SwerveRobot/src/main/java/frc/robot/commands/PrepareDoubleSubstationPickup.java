@@ -19,11 +19,9 @@ public class PrepareDoubleSubstationPickup extends SequentialCommandGroup {
   public PrepareDoubleSubstationPickup(
       Extension m_extension,
       Altitude m_altitude) {
-    addCommands(new ParallelCommandGroup(
-        new InstantCommand(() -> m_extension
-            .keepPosition(ExtensionConstants.kExtensionPositionMidDropOff)),
+    addCommands(new InstantCommand(() -> m_extension.keepPosition(ExtensionConstants.kExtensionPositionMidDropOff)),
         new WaitUntilCommand(() -> m_extension.ExtensionIsInMidScoringPosition()),
         new InstantCommand(() -> m_altitude.keepPosition(
-            AltitudeConstants.kAltitudeDoubleSubstationPosition))));
+            AltitudeConstants.kAltitudeDoubleSubstationPosition)));
   }
 }
