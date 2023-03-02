@@ -7,6 +7,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+
 import static frc.robot.Constants.ExtensionConstants;
 import static frc.robot.Constants.AltitudeConstants;
 
@@ -14,14 +16,18 @@ import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
 public class PrepareHighDropOff extends SequentialCommandGroup {
-        public PrepareHighDropOff(
-                        Extension m_extension,
-                        Altitude m_altitude) {
-                addCommands(new ParallelCommandGroup(
-                                new InstantCommand(() -> m_altitude.keepPosition(
-                                                AltitudeConstants.kAltitudeDropOffPosition)),
-                                new InstantCommand(() -> m_extension
-                                                .keepPosition(ExtensionConstants.kExtensionPositionHighDropOff))));
+  public PrepareHighDropOff(
+      Extension m_extension,
+      Altitude m_altitude) {
+    addCommands(
+        new ParallelCommandGroup(
+            new InstantCommand(() -> m_altitude.keepPosition(
+                AltitudeConstants.kAltitudeDropOffPosition)),
+            new InstantCommand(() -> m_extension
+                .keepPosition(ExtensionConstants.kExtensionPositionHighDropOff)),
+            new WaitUntilCommand(() -> m_extension.ExtensionIsInHighScoringPosition())),
+        new InstantCommand(() -> m_altitude.keepPosition(
+            AltitudeConstants.kAltitudeHighDropOffPosition)));
 
-        }
+  }
 }

@@ -6,26 +6,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class RunIntakeCone extends SequentialCommandGroup {
-  public RunIntakeCone(
+public class RunIntakeConeFromSingleSubstation extends SequentialCommandGroup {
+  public RunIntakeConeFromSingleSubstation(
       Altitude m_altitude,
       Extension m_extension,
       Intake m_intake) {
     addCommands(
-        // 1. Prepare intake
-        new PrepareIntake(m_extension, m_altitude),
-        // 2. Wait until at setpoint (altitude and extension at intake position)
-        // new WaitUntilCommand(() -> m_altitude.AltitudeIsInIntakePosition()),
-        // TODO: Write function in Extension subsystem that
-        // returns if its at intake position
-        // new WaitUntilCommand(() -> m_extension.ExtensionIsInIntakePosition()),
-
-        // 3. Run intake
+        // 1. Prepare Shelf Pickup
+        new PrepareSingleSubstationPickup(m_extension, m_altitude),
+        // Run intakeCone from Shelf
         new InstantCommand(() -> m_intake.intakeCone()));
   }
 }

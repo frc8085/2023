@@ -6,13 +6,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.IntakeNoPID;
+import frc.robot.subsystems.Intake;
 
 public class HoldCube extends SequentialCommandGroup {
-    public HoldCube(
-            IntakeNoPID m_intake) {
-        addCommands(
-                // 3. Run intake
-                new InstantCommand(() -> m_intake.holdCube()));
-    }
+  public HoldCube(
+      Intake m_intake) {
+    addCommands(
+        // 3. Run intake
+        new InstantCommand(() -> m_intake.holdCube()));
+  }
 }

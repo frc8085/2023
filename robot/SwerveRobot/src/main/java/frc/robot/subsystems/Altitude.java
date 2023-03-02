@@ -20,265 +20,267 @@ import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Altitude extends SubsystemBase {
-    private boolean TUNING_MODE = false;
+  private boolean TUNING_MODE = false;
 
-    private Extension m_extension;
-    /** Creates a new Altitude. */
+  private Extension m_extension;
+  /** Creates a new Altitude. */
 
-    // Altitude motors
-    private final CANSparkMax m_altitudeMotor = new CANSparkMax(AltitudeConstants.kAltitudeMotorPort,
-            MotorType.kBrushless);
+  // Altitude motors
+  private final CANSparkMax m_altitudeMotor = new CANSparkMax(AltitudeConstants.kAltitudeMotorPort,
+      MotorType.kBrushless);
 
-    // Encoders
-    private final RelativeEncoder m_altitudeEncoder = m_altitudeMotor.getEncoder();
+  // Encoders
+  private final RelativeEncoder m_altitudeEncoder = m_altitudeMotor.getEncoder();
 
-    // Limit Switches
-    private SparkMaxLimitSwitch m_altitudeTopLimit;
-    private SparkMaxLimitSwitch m_altitudeBottomLimit;
+  // Limit Switches
+  private SparkMaxLimitSwitch m_altitudeTopLimit;
+  private SparkMaxLimitSwitch m_altitudeBottomLimit;
 
-    // PID
-    private SparkMaxPIDController m_altitudePIDController = m_altitudeMotor.getPIDController();
-    static double kPAltitude = 1;
-    static double kIAltitude = 0.0001;
-    static double kDAltitude = 0.1;
-    // static double kIzAltitude = 0;
-    static double kFFAltitude = 0;
-    static double kMaxOutputAltitude = 9;
-    static double kMinOutputAltitude = -.9;
+  // PID
+  private SparkMaxPIDController m_altitudePIDController = m_altitudeMotor.getPIDController();
+  static double kPAltitude = 1;
+  static double kIAltitude = 0.0001;
+  static double kDAltitude = 0.1;
+  // static double kIzAltitude = 0;
+  static double kFFAltitude = 0;
+  static double kMaxOutputAltitude = 9;
+  static double kMinOutputAltitude = -.9;
 
-    public boolean isWithinSafeExtensionLimit() {
-        return (getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin &&
-                m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionPositionIntakeOut);
+  // When INTAKE, extension only in intake position
+  // When TRAVEL, extenion only in travel
+  public void enforceSafeExtensions() {
+    if (AltitudeIsInIntakePosition()) {
+      m_extension.keepPosition(ExtensionConstants.kExtensionPositionIntakeOut);
     }
 
-    public Altitude(Extension Extension) {
-        m_extension = Extension;
-        m_altitudeMotor.setIdleMode(IdleMode.kBrake);
-        m_altitudeMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
-        m_altitudeMotor.setOpenLoopRampRate(AltitudeConstants.kAltitudeRampRate);
-
-        m_altitudePIDController.setFeedbackDevice(m_altitudeEncoder);
-        m_altitudePIDController.setP(kPAltitude, 0);
-        m_altitudePIDController.setI(kIAltitude, 0);
-        m_altitudePIDController.setD(kDAltitude, 0);
-        m_altitudePIDController.setFF(kFFAltitude, 0);
-        m_altitudePIDController.setOutputRange(kMinOutputAltitude, kMaxOutputAltitude);
-
-        // TODO. What should these values be?
-        m_altitudePIDController.setSmartMotionMaxAccel(0.5, 0);
-        m_altitudePIDController.setSmartMotionMaxVelocity(0.5, 0);
-
-        /**
-         * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
-         * or
-         * getReverseLimitSwitch() method on an existing CANSparkMax object, depending
-         * on which direction you would like to limit
-         * 
-         * Limit switches can be configured to one of two polarities:
-         * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyOpen
-         * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyClosed
-         */
-        m_altitudeTopLimit = m_altitudeMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-        m_altitudeBottomLimit = m_altitudeMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-
-        // Save the SPARK MAX configurations. If a SPARK MAX browns out during
-        // operation, it will maintain the above configurations.
-        m_altitudeMotor.burnFlash();
-
-        // If we're fine-tuning PID Constants, the display them on the dashboard
-        if (TUNING_MODE) {
-            addPIDToDashboard();
-        }
-
-    }
-
-    /** The log method puts interesting information to the SmartDashboard. */
-    public void log() {
-        SmartDashboard.putNumber("Altitude Raw encoder read", m_altitudeEncoder.getPosition());
-        SmartDashboard.putBoolean("Altitude at Top Position", m_altitudeTopLimit.isPressed());
-        SmartDashboard.putBoolean("Altitude at Bottom Position", m_altitudeBottomLimit.isPressed());
-        SmartDashboard.putBoolean("Altitude is in Travel Position", AltitudeIsInTravelPosition());
-
-        SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
-
-    }
-
-    private void addPIDToDashboard() {
-        // Display PID coefficients on SmartDashboard
-        SmartDashboard.putNumber("Altitude P Gain", kPAltitude);
-        SmartDashboard.putNumber("Altitude I Gain", kIAltitude);
-        SmartDashboard.putNumber("Altitude D Gain", kDAltitude);
-        // SmartDashboard.putNumber("Altitude I Zone", kIzAltitude);
-        SmartDashboard.putNumber("Altitude Feed Forward", kFFAltitude);
-        SmartDashboard.putNumber("Altitude Max Output", kMaxOutputAltitude);
-        SmartDashboard.putNumber("Altitude Min Output", kMinOutputAltitude);
-        SmartDashboard.putNumber("Altitude Set Rotations", 0);
-    }
-
-    private void readPIDTuningFromDashboard() {
-
-        // Read PID Coefficients from SmartDashboard
-        double pAltitude = SmartDashboard.getNumber("Altitude P Gain", 0);
-        double iAltitude = SmartDashboard.getNumber("Altitude I Gain", 0);
-        double dAltitude = SmartDashboard.getNumber("Altitude D Gain", 0);
-        // double izAltitude = SmartDashboard.getNumber("Altitude I Zone", 0);
-        double ffAltitude = SmartDashboard.getNumber("Altitude Feed Forward", 0);
-        double maxAltitude = SmartDashboard.getNumber("Altitude Max Output", 0);
-        double minAltitude = SmartDashboard.getNumber("Altitude Min Output", 0);
-
-        // if PID coefficients on SmartDashboard have changed, write new values to
-        // controller
-        if ((pAltitude != kPAltitude)) {
-            m_altitudePIDController.setP(pAltitude);
-            kPAltitude = pAltitude;
-        }
-        if ((iAltitude != kIAltitude)) {
-            m_altitudePIDController.setI(iAltitude);
-            kIAltitude = iAltitude;
-        }
-        if ((dAltitude != kDAltitude)) {
-            m_altitudePIDController.setD(dAltitude);
-            kDAltitude = dAltitude;
-        }
-
-        /**
-         * if ((izAltitude != kIzAltitude)) {
-         * m_altitudePIDController.setIZone(izAltitude);
-         * kIzAltitude = izAltitude;
-         * }
-         */
-
-        if ((ffAltitude != kFFAltitude)) {
-            m_altitudePIDController.setFF(ffAltitude);
-            kFFAltitude = ffAltitude;
-        }
-
-        if ((maxAltitude != kMaxOutputAltitude) || (minAltitude != kMinOutputAltitude)) {
-            m_altitudePIDController.setOutputRange(minAltitude, maxAltitude);
-            kMinOutputAltitude = minAltitude;
-            kMaxOutputAltitude = maxAltitude;
-        }
-    }
-
-    /** Call log method every loop. */
-    @Override
-    public void periodic() {
-        // alwaysMaintainSafeExtension();
-        log();
-
-        resetAltitudeEncoderAtTopLimit();
-        AltitudeIsInTravelPosition();
-
-        if (TUNING_MODE) {
-            readPIDTuningFromDashboard();
-        }
-
-    }
-
-    public void alwaysMaintainSafeExtension() {
-        // If we're not within a safe extension limit given the altitude
-        // then retract to safe limit
-        if (!isWithinSafeExtensionLimit()) {
-            m_extension.keepPosition(ExtensionConstants.kExtensionPositionIntakeOut);
-        }
-    }
-
-    /** Resets the Altitude encoder to currently read a position of 0. */
-    public void reset() {
-        m_altitudeEncoder.setPosition(0);
-    }
-
-    // Reset the altitude Encoder when the top limit is pressed
-    public boolean isAltitudeTopLimitHit() {
-        return m_altitudeTopLimit.isPressed() == true;
-    }
-
-    public void resetAltitudeEncoderAtTopLimit() {
-        if (isAltitudeTopLimitHit()) {
-            m_altitudeEncoder.setPosition(-0.1);
-        }
-    };
-
-    // Starting position isn't set when robot enabled, use this to move it there
-    // when robot is turned on
-    private boolean startingPositionAltitudeTravelLimit = false;
-
-    public void moveToStartingPosition() {
-        if (!isAltitudeTopLimitHit()) {
-            raiseAltitude();
-        } else {
-            stopAltitude();
-            startingPositionAltitudeTravelLimit = true;
-        }
-    }
-
-    public boolean startingPositionAltitudeTravelLimit() {
-        return startingPositionAltitudeTravelLimit;
-    }
-
-    /** ALTITUDE **/
-    // Run the Altitude motor forward
-    public void raiseAltitude() {
-        m_altitudeMotor.set(AltitudeConstants.kAltitudeSpeed);
-    }
-
-    // Run the Altitude motor in reverse
-    public void lowerAltitude() {
-        m_altitudeMotor.set(-AltitudeConstants.kAltitudeSpeed);
-    }
-
-    // Stop the Altitude
-    public void stopAltitude() {
-        m_altitudeMotor.set(0);
-    }
-
-    // Returns the current altitude
-    public double getCurrentAltitude() {
-        return m_altitudeEncoder.getPosition();
-    }
-
-    // Returns the current altitude in degrees
-    // change altitude encoder readings to degrees angle*4.75/80
-    // making assumption that -4.75 is -80 degrees
-    // public double getCurrentAltitudeAngle() {
-    // return (m_altitudeEncoder.getPosition() / 4.75 * 80);
+    // if (AltitudeIsInTravelPosition()) {
+    // m_extension.keepPosition(ExtensionConstants.kExtensionPositionFullyRetracted);
     // }
 
-    // Set a variable speed to move to a position
-    // public void setAltitude(double speed) {
-    // if (!isWithinSafeExtensionLimit()) {
-    // m_altitudeMotor.set(speed);
-    // } else {
-    // m_altitudeMotor.set(speed);
-    // }
-    // }
+  }
 
-    // Maintain position
-    public void keepPosition(double positionAltitude) {
-        m_altitudePIDController.setReference(positionAltitude, ControlType.kPosition);
-        SmartDashboard.putNumber("Altitude Desired position", positionAltitude);
+  public Altitude(Extension Extension) {
+    m_extension = Extension;
+    m_altitudeMotor.setIdleMode(IdleMode.kBrake);
+    m_altitudeMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
+    m_altitudeMotor.setOpenLoopRampRate(AltitudeConstants.kAltitudeRampRate);
+
+    m_altitudePIDController.setFeedbackDevice(m_altitudeEncoder);
+    m_altitudePIDController.setP(kPAltitude, 0);
+    m_altitudePIDController.setI(kIAltitude, 0);
+    m_altitudePIDController.setD(kDAltitude, 0);
+    m_altitudePIDController.setFF(kFFAltitude, 0);
+    m_altitudePIDController.setOutputRange(kMinOutputAltitude, kMaxOutputAltitude);
+
+    // TODO. What should these values be?
+    m_altitudePIDController.setSmartMotionMaxAccel(0.5, 0);
+    m_altitudePIDController.setSmartMotionMaxVelocity(0.5, 0);
+
+    /**
+     * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
+     * or
+     * getReverseLimitSwitch() method on an existing CANSparkMax object, depending
+     * on which direction you would like to limit
+     * 
+     * Limit switches can be configured to one of two polarities:
+     * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyOpen
+     * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyClosed
+     */
+    m_altitudeTopLimit = m_altitudeMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    m_altitudeBottomLimit = m_altitudeMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+
+    // Save the SPARK MAX configurations. If a SPARK MAX browns out during
+    // operation, it will maintain the above configurations.
+    m_altitudeMotor.burnFlash();
+
+    // If we're fine-tuning PID Constants, the display them on the dashboard
+    if (TUNING_MODE) {
+      addPIDToDashboard();
     }
 
-    // Tell Us if Altitude as At Positions
-    public boolean AltitudeIsInTravelPosition() {
-        return m_altitudeEncoder
-                .getPosition() > (AltitudeConstants.kAltitudeTravelPosition
-                        - AltitudeConstants.kAltitudePositionTolerance);
+  }
+
+  /** The log method puts interesting information to the SmartDashboard. */
+  public void log() {
+    SmartDashboard.putNumber("Altitude Raw encoder read", m_altitudeEncoder.getPosition());
+    SmartDashboard.putBoolean("Altitude at Top Position", m_altitudeTopLimit.isPressed());
+    SmartDashboard.putBoolean("Altitude at Bottom Position", m_altitudeBottomLimit.isPressed());
+    SmartDashboard.putBoolean("Altitude is in Travel Position", AltitudeIsInTravelPosition());
+
+    SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
+
+  }
+
+  private void addPIDToDashboard() {
+    // Display PID coefficients on SmartDashboard
+    SmartDashboard.putNumber("Altitude P Gain", kPAltitude);
+    SmartDashboard.putNumber("Altitude I Gain", kIAltitude);
+    SmartDashboard.putNumber("Altitude D Gain", kDAltitude);
+    // SmartDashboard.putNumber("Altitude I Zone", kIzAltitude);
+    SmartDashboard.putNumber("Altitude Feed Forward", kFFAltitude);
+    SmartDashboard.putNumber("Altitude Max Output", kMaxOutputAltitude);
+    SmartDashboard.putNumber("Altitude Min Output", kMinOutputAltitude);
+    SmartDashboard.putNumber("Altitude Set Rotations", 0);
+  }
+
+  private void readPIDTuningFromDashboard() {
+
+    // Read PID Coefficients from SmartDashboard
+    double pAltitude = SmartDashboard.getNumber("Altitude P Gain", 0);
+    double iAltitude = SmartDashboard.getNumber("Altitude I Gain", 0);
+    double dAltitude = SmartDashboard.getNumber("Altitude D Gain", 0);
+    // double izAltitude = SmartDashboard.getNumber("Altitude I Zone", 0);
+    double ffAltitude = SmartDashboard.getNumber("Altitude Feed Forward", 0);
+    double maxAltitude = SmartDashboard.getNumber("Altitude Max Output", 0);
+    double minAltitude = SmartDashboard.getNumber("Altitude Min Output", 0);
+
+    // if PID coefficients on SmartDashboard have changed, write new values to
+    // controller
+    if ((pAltitude != kPAltitude)) {
+      m_altitudePIDController.setP(pAltitude);
+      kPAltitude = pAltitude;
+    }
+    if ((iAltitude != kIAltitude)) {
+      m_altitudePIDController.setI(iAltitude);
+      kIAltitude = iAltitude;
+    }
+    if ((dAltitude != kDAltitude)) {
+      m_altitudePIDController.setD(dAltitude);
+      kDAltitude = dAltitude;
     }
 
-    public boolean AltitudeIsInIntakePosition() {
+    /**
+     * if ((izAltitude != kIzAltitude)) {
+     * m_altitudePIDController.setIZone(izAltitude);
+     * kIzAltitude = izAltitude;
+     * }
+     */
 
-        return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeIntakePosition
-                + AltitudeConstants.kAltitudePositionTolerance;
-
+    if ((ffAltitude != kFFAltitude)) {
+      m_altitudePIDController.setFF(ffAltitude);
+      kFFAltitude = ffAltitude;
     }
 
-    public boolean AltitudeIsInScoringPosition() {
+    if ((maxAltitude != kMaxOutputAltitude) || (minAltitude != kMinOutputAltitude)) {
+      m_altitudePIDController.setOutputRange(minAltitude, maxAltitude);
+      kMinOutputAltitude = minAltitude;
+      kMaxOutputAltitude = maxAltitude;
+    }
+  }
 
-        return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeDropOffPosition
-                + AltitudeConstants.kAltitudePositionTolerance &&
-                m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeDropOffPosition
-                        - AltitudeConstants.kAltitudePositionTolerance;
-    };
+  /** Call log method every loop. */
+  @Override
+  public void periodic() {
+
+    enforceSafeExtensions();
+    log();
+
+    resetAltitudeEncoderAtTopLimit();
+    AltitudeIsInTravelPosition();
+    AltitudeIsInIntakePosition();
+
+    if (TUNING_MODE) {
+      readPIDTuningFromDashboard();
+    }
+
+  }
+
+  /** Resets the Altitude encoder to currently read a position of 0. */
+  public void reset() {
+    m_altitudeEncoder.setPosition(0);
+  }
+
+  // Reset the altitude Encoder when the top limit is pressed
+  public boolean isAltitudeTopLimitHit() {
+    return m_altitudeTopLimit.isPressed() == true;
+  }
+
+  public void resetAltitudeEncoderAtTopLimit() {
+    if (isAltitudeTopLimitHit()) {
+      m_altitudeEncoder.setPosition(-0.1);
+    }
+  };
+
+  // Starting position isn't set when robot enabled, use this to move it there
+  // when robot is turned on
+  private boolean startingPositionAltitudeTravelLimit = false;
+
+  public void moveToStartingPosition() {
+    if (!isAltitudeTopLimitHit()) {
+      raiseAltitude();
+    } else {
+      stopAltitude();
+      startingPositionAltitudeTravelLimit = true;
+    }
+  }
+
+  public boolean startingPositionAltitudeTravelLimit() {
+    return startingPositionAltitudeTravelLimit;
+  }
+
+  /** ALTITUDE **/
+  // Run the Altitude motor forward
+  public void raiseAltitude() {
+    m_altitudeMotor.set(AltitudeConstants.kAltitudeSpeed);
+  }
+
+  // Run the Altitude motor in reverse
+  public void lowerAltitude() {
+    m_altitudeMotor.set(-AltitudeConstants.kAltitudeSpeed);
+  }
+
+  // Stop the Altitude
+  public void stopAltitude() {
+    m_altitudeMotor.set(0);
+  }
+
+  // Returns the current altitude
+  public double getCurrentAltitude() {
+    return m_altitudeEncoder.getPosition();
+  }
+
+  // Returns the current altitude in degrees
+  // change altitude encoder readings to degrees angle*4.75/80
+  // making assumption that -4.75 is -80 degrees
+  // public double getCurrentAltitudeAngle() {
+  // return (m_altitudeEncoder.getPosition() / 4.75 * 80);
+  // }
+
+  // Set a variable speed to move to a position
+  // public void setAltitude(double speed) {
+  // if (!isWithinSafeExtensionLimit()) {
+  // m_altitudeMotor.set(speed);
+  // } else {
+  // m_altitudeMotor.set(speed);
+  // }
+  // }
+
+  // Maintain position
+  public void keepPosition(double positionAltitude) {
+    m_altitudePIDController.setReference(positionAltitude, ControlType.kPosition);
+    SmartDashboard.putNumber("Altitude Desired position", positionAltitude);
+  }
+
+  // Tell Us if Altitude as At Positions
+  public boolean AltitudeIsInTravelPosition() {
+    return m_altitudeEncoder
+        .getPosition() > (AltitudeConstants.kAltitudeTravelPosition
+            - AltitudeConstants.kAltitudePositionTolerance);
+  }
+
+  public boolean AltitudeIsInIntakePosition() {
+
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeIntakePosition
+        + AltitudeConstants.kAltitudePositionTolerance;
+
+  }
+
+  public boolean AltitudeIsInScoringPosition() {
+
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeDropOffPosition
+        + AltitudeConstants.kAltitudePositionTolerance &&
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeDropOffPosition
+            - AltitudeConstants.kAltitudePositionTolerance;
+  };
 
 }

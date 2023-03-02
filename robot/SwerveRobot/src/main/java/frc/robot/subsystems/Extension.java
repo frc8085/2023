@@ -170,6 +170,11 @@ public class Extension extends SubsystemBase {
         + ExtensionConstants.kExtensionPositionTolerance;
   }
 
+  public boolean ExtensionIsInDropOffReturnPosition() {
+    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionHighDropOffReturn
+        + ExtensionConstants.kExtensionPositionTolerance;
+  }
+
   public boolean ExtensionIsInMidScoringPosition() {
     return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionMidDropOff
         + ExtensionConstants.kExtensionPositionTolerance &&

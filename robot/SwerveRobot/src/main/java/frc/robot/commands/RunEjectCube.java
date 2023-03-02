@@ -7,16 +7,16 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.IntakeNoPIDConstants;
-import frc.robot.subsystems.IntakeNoPID;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.Intake;
 
 public class RunEjectCube extends SequentialCommandGroup {
-    public RunEjectCube(
-            IntakeNoPID m_intake) {
-        addCommands(
-                new InstantCommand(() -> m_intake.ejectCube()),
-                // 3. Wait X sec and then turn off intake
-                new WaitCommand(IntakeNoPIDConstants.kEjectWaitTime)
-                        .andThen(new InstantCommand(m_intake::stopIntake)));
-    }
+  public RunEjectCube(
+      Intake m_intake) {
+    addCommands(
+        new InstantCommand(() -> m_intake.ejectCube()),
+        // 3. Wait X sec and then turn off intake
+        new WaitCommand(IntakeConstants.kEjectWaitTime)
+            .andThen(new InstantCommand(m_intake::stopIntake)));
+  }
 }

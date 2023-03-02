@@ -40,29 +40,16 @@ public final class Constants {
     // {kRampRate} = Time in seconds to go from 0 to full throttle.
     public static double kRampRate = 0;
 
-    public static final double kIntakeToleranceRPMPercent = 0.10;
+    // Intake Cone Power
+    public static final double kIntakeConePower = 0.9;
+    public static final double kEjectConePower = 0.5;
 
-    // Intake off speed
-    public static final int kIntakeOffSpeed = 0;
+    // Intake Cube Power
+    public static final double kIntakeCubePower = 0.8;
+    public static final double kEjectCubePower = 1;
+    public static final double kIntakeHoldCubePower = 0.15;
 
-    // Intake Cone Speeds
-    public static final int kIntakeConeSpeed = 2000;
-    public static final int kEjectConeSpeed = -500;
-
-    // Intake Cube speeds
-    public static final int kIntakeCubeSpeed = 1500;
-    public static final int kEjectCubeSpeed = -2000;
-    public static final int kHoldCubeSpeed = 500;
-
-    // map of modes
-
-    public static final int[] kIntakeTargetRPM = new int[] {
-        kIntakeOffSpeed, // 0, kIntakeOffSpeed
-        kIntakeConeSpeed, // 1, kIntakeConeSpeed
-        kEjectConeSpeed, // 2, kEjectConeSpeed
-        kIntakeCubeSpeed, // 3, kIntakeCubeSpeed
-        kEjectCubeSpeed, // 4, kEjectCubeSpeed
-    };
+    public static final double kEjectWaitTime = 2;
 
     /** Intake off index in { @see IntakeConstants.kIntakeTargetRPM } */
     public static final int kCargoNone = 0;
@@ -74,20 +61,6 @@ public final class Constants {
     /** Cube Indices in { @see IntakeConstants.kIntakeTargetRPM } */
     public static final int kCargoCubeIntake = 3;
     public static final int kCargoCubeEject = 4;
-
-  }
-
-  public static final class IntakeNoPIDConstants {
-    // Intake Cone Power
-    public static final double kIntakeConePower = 0.9;
-    public static final double kEjectConePower = 0.5;
-
-    // Intake Cube Power
-    public static final double kIntakeCubePower = 0.8;
-    public static final double kEjectCubePower = 1;
-    public static final double kIntakeHoldCubePower = 0.2;
-
-    public static final double kEjectWaitTime = 2;
   }
 
   public static final class ExtensionConstants {
@@ -105,9 +78,11 @@ public final class Constants {
     public static double kExtensionPositionFullyRetracted = 1;
     public static double kExtensionPositionIntakeOut = 39;
     public static double kExtensionPositionMidDropOff = 83;
-    public static double kExtensionPositionHighDropOff = 135;
+    public static double kExtensionPositionHighDropOff = 145;
+    public static double kExtensionPositionHighDropOffReturn = 100;
+    public static double kExtensionPositionSingleSubstation = 41;
 
-    public static double kExtennsionSafeExtensionMax = kExtensionPositionIntakeOut + kExtensionPositionTolerance;
+    public static double kExtensionSafeExtensionMax = kExtensionPositionIntakeOut + kExtensionPositionTolerance;
 
   }
 
@@ -125,13 +100,16 @@ public final class Constants {
     // Altitude at Top Position
     public static double kAltitudeTravelPosition = -0.15;
     // Altitude at DropOff Position
-    public static double kAltitudeDropOffPosition = -2.6;
+    public static double kAltitudeDropOffPosition = -2.15;
+    public static double kAltitudeHighDropOffPosition = -2.5;
     // Altitude at Bottom Position
     public static double kAltitudeIntakePosition = -5.0;
     // Altitude at Shelf Position
-    public static double kAltitudeShelfPosition = -2.1;
+    public static double kAltitudeDoubleSubstationPosition = -2.0;
+    public static double kAltitudeSingleSubstationPosition = -1.85;
+
     // Altitude at DropOff Final Position
-    public static double kAltitudeDropOffFinalPosition = -3;
+    public static double kAltitudeDropOffFinalPosition = -3.25;
     // Altitude Error Tolerance
     public static double kAltitudeError = 0.05;
 

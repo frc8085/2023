@@ -17,37 +17,12 @@ import frc.robot.Constants.SubsystemMotorConstants;
 
 import static frc.robot.Constants.IntakeConstants;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Intake extends SubsystemBase {
-  private boolean TUNING_MODE = false;
+  private boolean TUNING_MODE = true;
   private final CANSparkMax m_intakeMotor;
   private SparkMaxPIDController m_intakePIDController;
   private RelativeEncoder m_intakeEncoder;
-  private double kIntakeSetPoint, kPIntake, kIIntake, kDIntake, kIntakeMaxOutput, kIntakeMinOutput;
-
-  /**
-   * CargoModes Mode definition
-   * currentCargoMode is an integer corresponding to the current type of
-   * cargo
-   * CargoModes translates the integer into a string so we can display it
-   * in the dashboard
-   */
-
-  private int currentCargoMode = IntakeConstants.kIntakeOffSpeed;
-
-  private static final Map<Integer, String> CargoModes = new HashMap<Integer, String>() {
-    {
-      put(IntakeConstants.kCargoNone, "No cargo type selected");
-
-      put(IntakeConstants.kCargoCubeIntake, "Intake Cube");
-      put(IntakeConstants.kCargoCubeEject, "Eject Cube");
-
-      put(IntakeConstants.kCargoConeIntake, "Intake Cone");
-      put(IntakeConstants.kCargoConeEject, "Eject Cone");
-    }
-  };
+  private double kIntakeSetPoint, kPIntake, kIIntake, kDIntake, kFFIntake, kIntakeMaxOutput, kIntakeMinOutput;
 
   // Determine current intake encoder position
   public double CurrentIntakeEncoderPosition() {
@@ -59,33 +34,30 @@ public class Intake extends SubsystemBase {
     return m_intakeEncoder.getVelocity();
   }
 
-  // log into console the intake encoder position & velocity readings
-  public void logIntakeData() {
-    System.out.println("Velocity " + CurrentIntakeEncoderVelocity());
-    System.out.println("Position " + CurrentIntakeEncoderPosition());
-  }
-
-  /** The shooter subsystem for the robot. */
+  /** The intake subsystem for the robot. */
   public Intake() {
     m_intakeMotor = new CANSparkMax(IntakeConstants.kIntakePort, MotorType.kBrushless);
+    m_intakeMotor.setOpenLoopRampRate(IntakeConstants.kRampRate);
     m_intakeMotor.restoreFactoryDefaults();
     m_intakeMotor.setIdleMode(IdleMode.kCoast);
     m_intakeMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit550);
     m_intakeEncoder = m_intakeMotor.getEncoder();
     m_intakePIDController = m_intakeMotor.getPIDController();
+    m_intakeMotor.burnFlash();
 
     // PID coefficients
-    kPIntake = 0.0004;
+    kPIntake = .5;
     kIIntake = 0;
-    kDIntake = 0.004;
-    kIntakeMaxOutput = 0;
-    kIntakeMinOutput = -1;
-    kIntakeSetPoint = IntakeConstants.kIntakeTargetRPM[0];
+    kDIntake = 0;
+    kFFIntake = 0;
+    kIntakeMaxOutput = .25;
+    kIntakeMinOutput = -.25;
 
     // Set PID coefficients
     m_intakePIDController.setP(kPIntake);
     m_intakePIDController.setI(kIIntake);
     m_intakePIDController.setD(kDIntake);
+    m_intakePIDController.setFF(kFFIntake);
     m_intakePIDController.setOutputRange(kIntakeMinOutput, kIntakeMaxOutput);
 
     // Add relevant displays to the Operator dashboard
@@ -100,7 +72,7 @@ public class Intake extends SubsystemBase {
 
   private void configureOperatorDashboard() {
     // Add the selected shooting mode to the Operator dashboard
-    SmartDashboard.putString("Cargo Mode", CargoModes.get(currentCargoMode));
+    // SmartDashboard.putString("Cargo Mode", CargoModes.get(currentCargoMode));
 
     // Add the setpoint but only if in TUNINGMODE
     if (TUNING_MODE) {
@@ -154,49 +126,51 @@ public class Intake extends SubsystemBase {
     // If we're fine-tuning PID Constants, read and apply updates from the dashboard
     if (TUNING_MODE) {
       readPIDTuningFromDashboard();
-      SmartDashboard.putNumber("Intake Encoder velocity", m_intakeEncoder.getVelocity());
+      SmartDashboard.putNumber("Intake Encoder position", m_intakeEncoder.getPosition());
 
     }
 
     // add intake encoder position into log
-    logIntakeData();
+    // logIntakeData();
 
   }
 
-  public void setSetpoint(double setPoint) {
-    m_intakePIDController.setReference(kIntakeSetPoint, ControlType.kVelocity);
-  }
-
-  public boolean atSetpoint() {
-    double encoderValue = m_intakeEncoder.getVelocity();
-    // double tolerance = Math.abs(kShooterToleranceRPMPercent * kSetPoint);
-    double tolerance = 300;
-    double setpoint = kIntakeSetPoint;
-    double minLimit = setpoint - tolerance;
-    double maxLimit = setpoint + tolerance;
-
-    boolean withinLimits =
-        // Don't consider us at setpoint for the 'motor off' case
-        setpoint != 0 &&
-        // Otherwise check if we're within limits
-            encoderValue >= minLimit
-            && encoderValue <= maxLimit;
-
-    return withinLimits;
+  public void keepVelocity(double velocity) {
+    m_intakePIDController.setReference(velocity, ControlType.kVelocity);
   }
 
   public void holdCargo() {
-    m_intakePIDController.setReference(m_intakeEncoder.getPosition(), CANSparkMax.ControlType.kPosition);
+    m_intakePIDController.setReference(CurrentIntakeEncoderPosition(), CANSparkMax.ControlType.kPosition);
   }
 
-  public void setCargoMode(int mode) {
-    currentCargoMode = mode;
-    updateSetpoint();
+  // Open loop stuff
+  // Run the intake forward at the CONE speed
+  public void intakeCone() {
+    m_intakeMotor.set(IntakeConstants.kIntakeConePower);
   }
 
-  private void updateSetpoint() {
-    // Update the setpoint to whatever the current cargo mode is
-    setSetpoint(IntakeConstants.kIntakeTargetRPM[currentCargoMode]);
+  // Run the intake forward at the CUBE speed
+  public void intakeCube() {
+    m_intakeMotor.set(IntakeConstants.kIntakeCubePower);
   }
 
+  // Run the intake reverse to eject CONE
+  public void ejectCone() {
+    m_intakeMotor.set(-IntakeConstants.kEjectConePower);
+  }
+
+  // Run the intake reverse to eject CUBE
+  public void ejectCube() {
+    m_intakeMotor.set(-IntakeConstants.kEjectCubePower);
+  }
+
+  // Run the intake forward to hold the CUBE speed
+  public void holdCube() {
+    m_intakeMotor.set(IntakeConstants.kIntakeHoldCubePower);
+  }
+
+  // Stop the intake
+  public void stopIntake() {
+    m_intakeMotor.set(0);
+  }
 }

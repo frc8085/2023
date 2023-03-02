@@ -8,15 +8,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
-import frc.robot.subsystems.IntakeNoPID;
+import frc.robot.subsystems.Intake;
 
 public class PrepareAndRunIntake extends SequentialCommandGroup {
-    public PrepareAndRunIntake(
-            Extension m_extension,
-            Altitude m_altitude,
-            IntakeNoPID m_intake) {
-        addCommands(
-                new PrepareIntake(m_extension, m_altitude),
-                new InstantCommand(() -> m_intake.intakeCone()));
-    }
+  public PrepareAndRunIntake(
+      Extension m_extension,
+      Altitude m_altitude,
+      Intake m_intake) {
+    addCommands(
+        new PrepareIntake(m_extension, m_altitude),
+        new InstantCommand(() -> m_intake.intakeCone()));
+  }
 }
