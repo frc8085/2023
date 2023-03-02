@@ -24,10 +24,7 @@ public class PrepareHighDropOff extends SequentialCommandGroup {
             new InstantCommand(() -> m_altitude.keepPosition(
                 AltitudeConstants.kAltitudeDropOffPosition)),
             new InstantCommand(() -> m_extension
-                .keepPosition(ExtensionConstants.kExtensionPositionHighDropOff)),
-            new WaitUntilCommand(() -> m_extension.ExtensionIsInHighScoringPosition())),
-        new InstantCommand(() -> m_altitude.keepPosition(
-            AltitudeConstants.kAltitudeHighDropOffPosition)));
+                .keepPosition(ExtensionConstants.kExtensionPositionHighDropOff))));
 
   }
 }

@@ -14,6 +14,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -42,7 +43,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -167,15 +170,15 @@ public class RobotContainer {
     final Trigger LowerButton = m_operatorController.axisGreaterThan(1, .25);
 
     // trying PID
-    intakeButton.whileTrue(new InstantCommand(() -> m_intake.intakeCone()))
-        .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
+    // intakeButton.whileTrue(new InstantCommand(() -> m_intake.intakeCone()))
+    // .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
 
     // TODO: Print out SparkMax flashing code
 
-    // intakeButton.whileTrue(new RunIntakeCone(m_altitude, m_extension, m_intake))
-    // .onFalse(new ParallelCommandGroup(
-    // new InstantCommand(m_intake::stopIntake),
-    // new PrepareTravelAfterIntake(m_extension, m_altitude)));
+    intakeButton.whileTrue(new RunIntakeCone(m_altitude, m_extension, m_intake))
+        .onFalse(new ParallelCommandGroup(
+            new InstantCommand(() -> m_intake.holdCargo()),
+            new PrepareTravelAfterIntake(m_extension, m_altitude)));
 
     // If intake button and cube mode button (right Bumper) are both pressed, run
     // cube intake
@@ -189,13 +192,13 @@ public class RobotContainer {
     setDoubleSubstationButton
         .whileTrue(new RunIntakeConeFromShelf(m_altitude, m_extension, m_intake))
         .onFalse(new ParallelCommandGroup(
-            new InstantCommand(m_intake::stopIntake),
+            new InstantCommand(() -> m_intake.holdCargo()),
             new PrepareTravelAfterScoring(m_extension, m_altitude)));
 
     setSingleSubstationButton
         .whileTrue(new RunIntakeConeFromSingleSubstation(m_altitude, m_extension, m_intake))
         .onFalse(new ParallelCommandGroup(
-            new InstantCommand(m_intake::stopIntake),
+            new InstantCommand(() -> m_intake.holdCargo()),
             new PrepareTravelAfterScoring(m_extension, m_altitude)));
 
     ejectButton.onTrue(new RunEjectBasedOnAltitude(m_altitude, m_extension,
@@ -241,10 +244,11 @@ public class RobotContainer {
     // final Trigger prepareShelfPickupButton = m_operatorController.start();
 
     prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_extension, m_altitude));
-    prepareHighDropOffButton.onTrue(new PrepareHighDropOff(m_extension, m_altitude));
+    prepareHighDropOffButton.onTrue(new PrepareHighDropOff(m_extension, m_altitude))
+        .onFalse(new SequentialCommandGroup(new WaitUntilCommand(() -> m_extension.ExtensionIsInHighScoringPosition()),
+            new InstantCommand(() -> m_altitude.keepPosition(AltitudeConstants.kAltitudeHighDropOffPosition))));
     prepareTravelButton.onTrue(new PrepareTravel(m_extension, m_altitude));
-    prepareIntakeButton.onTrue(
-        new PrepareIntake(m_extension, m_altitude));
+    prepareIntakeButton.onTrue(new PrepareIntake(m_extension, m_altitude));
     // prepareDoubleSubstationPickupButton.onTrue(new
     // PrepareDoubleSubstationPickup(m_extension, m_altitude));
     // prepareSingleSubstationPickupButton.onTrue(new
