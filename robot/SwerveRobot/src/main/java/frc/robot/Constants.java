@@ -101,15 +101,17 @@ public final class Constants {
     public static double kAltitudeTravelPosition = -0.15;
     // Altitude at DropOff Position
     public static double kAltitudeDropOffPosition = -2.15;
+    // Altitude when delivering high cone that it lowers to after extending fully
     public static double kAltitudeHighDropOffPosition = -2.5;
+    // Altitude at position that it releases the cone
+    public static double kAltitudeDropOffFinalPosition = -3.25;
+
     // Altitude at Bottom Position
     public static double kAltitudeIntakePosition = -5.1;
     // Altitude at Shelf Position
     public static double kAltitudeDoubleSubstationPosition = -2.05;
     public static double kAltitudeSingleSubstationPosition = -1.85;
 
-    // Altitude at DropOff Final Position
-    public static double kAltitudeDropOffFinalPosition = -3.25;
     // Altitude Error Tolerance
     public static double kAltitudeError = 0.05;
 

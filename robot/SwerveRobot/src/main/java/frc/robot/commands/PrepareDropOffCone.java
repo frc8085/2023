@@ -24,8 +24,19 @@ import frc.robot.subsystems.Altitude;
 public class PrepareDropOffCone extends SequentialCommandGroup {
     public PrepareDropOffCone(Altitude m_altitude) {
         addCommands(
+                new InstantCommand(() -> m_altitude.keepPosition(AltitudeConstants.kAltitudeDropOffFinalPosition)));
+    }
+}
+
+
+/** Command that lowers altitude for time before drop off
+ public class PrepareDropOffCone extends SequentialCommandGroup {
+    public PrepareDropOffCone(Altitude m_altitude) {
+        addCommands(
                 new InstantCommand(() -> m_altitude.lowerAltitude()),
                 new WaitCommand(.5)
                         .andThen(new InstantCommand(() -> m_altitude.stopAltitude())));
     }
 }
+
+*/
