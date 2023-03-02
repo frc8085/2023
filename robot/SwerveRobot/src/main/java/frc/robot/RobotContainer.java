@@ -17,25 +17,19 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.HoldCube;
 import frc.robot.commands.OpenIntake;
 import frc.robot.commands.PrepareMidDropOff;
-import frc.robot.commands.PrepareSingleSubstationPickup;
-import frc.robot.commands.PrepareDoubleSubstationPickup;
-import frc.robot.commands.PrepareHighDropOff;
+import frc.robot.commands.PrepareHighConeDropOff;
 import frc.robot.commands.PrepareTravel;
 import frc.robot.commands.PrepareTravelAfterIntake;
 import frc.robot.commands.PrepareTravelAfterScoring;
 import frc.robot.commands.RunEjectBasedOnAltitude;
+import frc.robot.commands.RunEjectHighCube;
 import frc.robot.commands.PrepareIntake;
-import frc.robot.commands.RunIntakeCone;
+import frc.robot.commands.RunIntakeCargo;
 import frc.robot.commands.RunIntakeConeFromDoubleSubstation;
 import frc.robot.commands.RunIntakeConeFromSingleSubstation;
-import frc.robot.commands.RunIntakeCube;
-import frc.robot.commands.RunEjectCone;
-import frc.robot.commands.RunEjectCube;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.DriveSubsystem;
@@ -159,7 +153,7 @@ public class RobotContainer {
         /** MANUAL OPERATION */
         final Trigger intakeButton = m_operatorController.rightTrigger();
         final Trigger ejectButton = m_operatorController.leftTrigger();
-        final Trigger setCubeModeButton = m_operatorController.rightBumper();
+        final Trigger highCubeEjectButton = m_operatorController.leftBumper();
         final Trigger setDoubleSubstationButton = m_operatorController.povUp();
         final Trigger setSingleSubstationButton = m_operatorController.povDown();
 
@@ -175,7 +169,7 @@ public class RobotContainer {
 
         // TODO: Print out SparkMax flashing code
 
-        intakeButton.whileTrue(new RunIntakeCone(m_altitude, m_extension, m_intake))
+        intakeButton.whileTrue(new RunIntakeCargo(m_altitude, m_extension, m_intake))
                 .onFalse(new ParallelCommandGroup(
                         new InstantCommand(() -> m_intake.holdCargo()),
                         new PrepareTravelAfterIntake(m_extension, m_altitude)));
@@ -204,13 +198,7 @@ public class RobotContainer {
         ejectButton.onTrue(new RunEjectBasedOnAltitude(m_altitude, m_extension,
                 m_intake));
 
-        // Not Needed anymore because eject is based on altitude position
-        // ejectButton.and(setShelfModeButton)
-        // .onTrue(new RunEjectCone(m_altitude, m_extension, m_intake));
-
-        // If eject button and cube mode button (right Bumper) are both pressed, run
-        // cube eject
-        // ejectButton.and(setCubeModeButton).onTrue(new RunEjectCube(m_intake));
+        highCubeEjectButton.onTrue(new RunEjectHighCube(m_altitude, m_extension, m_intake));
 
         ExtendButton.whileTrue(new InstantCommand(m_extension::extendExtension, m_extension))
                 // .onFalse(new KeepExtensionPosition(m_extension.getCurrentExtensionPosition(),
@@ -244,17 +232,13 @@ public class RobotContainer {
         // final Trigger prepareShelfPickupButton = m_operatorController.start();
 
         prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_extension, m_altitude));
-        prepareHighDropOffButton.onTrue(new PrepareHighDropOff(m_extension, m_altitude))
+        prepareHighDropOffButton.onTrue(new PrepareHighConeDropOff(m_extension, m_altitude))
                 .onFalse(new SequentialCommandGroup(
                         new WaitUntilCommand(() -> m_extension.ExtensionIsInHighScoringPosition()),
                         new InstantCommand(
                                 () -> m_altitude.keepPosition(AltitudeConstants.kAltitudeHighDropOffPosition))));
         prepareTravelButton.onTrue(new PrepareTravel(m_extension, m_altitude));
         prepareIntakeButton.onTrue(new PrepareIntake(m_extension, m_altitude));
-        // prepareDoubleSubstationPickupButton.onTrue(new
-        // PrepareDoubleSubstationPickup(m_extension, m_altitude));
-        // prepareSingleSubstationPickupButton.onTrue(new
-        // PrepareSingleSubstationPickup(m_extension, m_altitude));
 
     }
 

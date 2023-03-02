@@ -15,16 +15,13 @@ import static frc.robot.Constants.AltitudeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class PrepareHighDropOff extends SequentialCommandGroup {
-  public PrepareHighDropOff(
-      Extension m_extension,
-      Altitude m_altitude) {
-    addCommands(
-        new ParallelCommandGroup(
-            new InstantCommand(() -> m_altitude.keepPosition(
-                AltitudeConstants.kAltitudeDropOffPosition)),
-            new InstantCommand(() -> m_extension
-                .keepPosition(ExtensionConstants.kExtensionPositionHighDropOff))));
+public class PrepareHighCubeDropOff extends SequentialCommandGroup {
+    public PrepareHighCubeDropOff(
+            Extension m_extension) {
+        addCommands(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> m_extension
+                                .keepPosition(ExtensionConstants.kExtensionPositionIntakeOut))));
 
-  }
+    }
 }
