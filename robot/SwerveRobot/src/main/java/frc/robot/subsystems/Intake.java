@@ -35,6 +35,10 @@ public class Intake extends SubsystemBase {
   static double kFFIntake = 0;
   static double kIntakeMaxOutput = .25;
   static double kIntakeMinOutput = -.25;
+  
+  //Eject Wait Time
+  static double kEjectWaitTime = IntakeConstants.kEjectWaitTime;
+
 
   /** The intake subsystem for the robot. */
   public Intake() {
@@ -57,6 +61,7 @@ public class Intake extends SubsystemBase {
     // If we're fine-tuning PID Constants, the display them on the dashboard
     if (TUNING_MODE) {
       addPIDToDashboard();
+      addEjectWaitTimeToDashboard();
     }
 
   }
@@ -71,7 +76,11 @@ public class Intake extends SubsystemBase {
 
   }
 
-  private void readPIDTuningFromDashboard() {
+  private void addEjectWaitTimeToDashboard() {
+    SmartDashboard.putNumber("Eject Wait Time", kEjectWaitTime);
+  }
+  
+    private void readPIDTuningFromDashboard() {
 
     // Read PID coefficients from SmartDashboard
     double p = SmartDashboard.getNumber("Intake P Gain", 0);
@@ -101,12 +110,23 @@ public class Intake extends SubsystemBase {
     }
   }
 
+  public void readEjectWaitTimeFromDashboard() {
+    //Read Eject Wait Time from SmartDashboard
+    double t = SmartDashboard.getNumber("Eject Wait Time", 1);
+
+    // if Eject Wait Time on SmartDashboard has changed, write new values to the controller
+    if ((t != kEjectWaitTime)) {
+      kEjectWaitTime = t;
+    }
+  }
+
   @Override
   public void periodic() {
     // If we're fine-tuning PID Constants, read and apply updates from the dashboard
     if (TUNING_MODE) {
       readPIDTuningFromDashboard();
       SmartDashboard.putNumber("Intake Encoder position", m_intakeEncoder.getPosition());
+      readEjectWaitTimeFromDashboard();
 
       // add intake encoder position into log
       // logIntakeData();
