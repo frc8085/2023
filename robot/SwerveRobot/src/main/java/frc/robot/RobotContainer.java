@@ -150,13 +150,15 @@ public class RobotContainer {
         new JoystickButton(m_driverController, Button.kLeftBumper.value)
                 .whileTrue(new RunCommand(() -> m_robotDrive.lock(), m_robotDrive));
 
-        /** MANUAL OPERATION */
+        /** OPERATOR COMMANDS **/
         final Trigger intakeButton = m_operatorController.rightTrigger();
+        final Trigger manualIntakeButton = m_operatorController.rightBumper();
         final Trigger ejectButton = m_operatorController.leftTrigger();
         final Trigger highCubeEjectButton = m_operatorController.leftBumper();
         final Trigger setDoubleSubstationButton = m_operatorController.povUp();
         final Trigger setSingleSubstationButton = m_operatorController.povDown();
 
+        /** MANUAL OPERATION **/
         final Trigger ExtendButton = m_operatorController.axisLessThan(5, -.25);
         final Trigger RetractButton = m_operatorController.axisGreaterThan(5, .25);
 
@@ -167,12 +169,13 @@ public class RobotContainer {
         // intakeButton.whileTrue(new InstantCommand(() -> m_intake.intakeCone()))
         // .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
 
-        // TODO: Print out SparkMax flashing code
-
         intakeButton.whileTrue(new RunIntakeCargo(m_altitude, m_extension, m_intake))
                 .onFalse(new ParallelCommandGroup(
                         new InstantCommand(() -> m_intake.holdCargo()),
                         new PrepareTravelAfterIntake(m_extension, m_altitude)));
+
+        manualIntakeButton.whileTrue(new InstantCommand(() -> m_intake.intakeCube()))
+                .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
 
         // If intake button and cube mode button (right Bumper) are both pressed, run
         // cube intake
@@ -224,7 +227,7 @@ public class RobotContainer {
                 .onFalse(new InstantCommand(
                         () -> m_altitude.keepPosition(m_altitude.getCurrentAltitude())));
 
-        // PRESET POSITIONS
+        /** PRESET POSITIONS **/
         final Trigger prepareHighDropOffButton = m_operatorController.b();
         final Trigger prepareMidDropOffButton = m_operatorController.x();
         final Trigger prepareTravelButton = m_operatorController.y();
