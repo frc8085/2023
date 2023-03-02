@@ -10,15 +10,15 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class RunIntakeConeFromShelf extends SequentialCommandGroup {
-  public RunIntakeConeFromShelf(
+public class RunIntakeConeFromDoubleSubstation extends SequentialCommandGroup {
+  public RunIntakeConeFromDoubleSubstation(
       Altitude m_altitude,
       Extension m_extension,
       Intake m_intake) {
     addCommands(
-        // 1. Prepare Shelf Pickup
+        // 1. Prepare Double Substation Pickup
         new PrepareDoubleSubstationPickup(m_extension, m_altitude),
-        // Run intakeCone from Shelf
+        // Run intakeCone from Double Substation
         new InstantCommand(() -> m_intake.intakeCone()));
   }
 }
