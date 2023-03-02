@@ -20,19 +20,21 @@ import static frc.robot.Constants.IntakeConstants;
 public class Intake extends SubsystemBase {
   private boolean TUNING_MODE = true;
   private final CANSparkMax m_intakeMotor;
-  private SparkMaxPIDController m_intakePIDController;
   private RelativeEncoder m_intakeEncoder;
-  private double kIntakeSetPoint, kPIntake, kIIntake, kDIntake, kFFIntake, kIntakeMaxOutput, kIntakeMinOutput;
 
   // Determine current intake encoder position
   public double CurrentIntakeEncoderPosition() {
     return m_intakeEncoder.getPosition();
   }
 
-  // Determine current intake encoder velocity
-  public double CurrentIntakeEncoderVelocity() {
-    return m_intakeEncoder.getVelocity();
-  }
+  // PID
+  private SparkMaxPIDController m_intakePIDController;
+  static double kPIntake = .5;
+  static double kIIntake = 0;
+  static double kDIntake = 0.;
+  static double kFFIntake = 0;
+  static double kIntakeMaxOutput = .25;
+  static double kIntakeMinOutput = -.25;
 
   /** The intake subsystem for the robot. */
   public Intake() {
@@ -45,14 +47,6 @@ public class Intake extends SubsystemBase {
     m_intakePIDController = m_intakeMotor.getPIDController();
     m_intakeMotor.burnFlash();
 
-    // PID coefficients
-    kPIntake = .5;
-    kIIntake = 0;
-    kDIntake = 0;
-    kFFIntake = 0;
-    kIntakeMaxOutput = .25;
-    kIntakeMinOutput = -.25;
-
     // Set PID coefficients
     m_intakePIDController.setP(kPIntake);
     m_intakePIDController.setI(kIIntake);
@@ -60,23 +54,9 @@ public class Intake extends SubsystemBase {
     m_intakePIDController.setFF(kFFIntake);
     m_intakePIDController.setOutputRange(kIntakeMinOutput, kIntakeMaxOutput);
 
-    // Add relevant displays to the Operator dashboard
-    configureOperatorDashboard();
-
     // If we're fine-tuning PID Constants, the display them on the dashboard
     if (TUNING_MODE) {
       addPIDToDashboard();
-    }
-
-  }
-
-  private void configureOperatorDashboard() {
-    // Add the selected shooting mode to the Operator dashboard
-    // SmartDashboard.putString("Cargo Mode", CargoModes.get(currentCargoMode));
-
-    // Add the setpoint but only if in TUNINGMODE
-    if (TUNING_MODE) {
-      SmartDashboard.putNumber("Intake Setpoint", kIntakeSetPoint);
     }
 
   }
@@ -135,12 +115,8 @@ public class Intake extends SubsystemBase {
 
   }
 
-  public void keepVelocity(double velocity) {
-    m_intakePIDController.setReference(velocity, ControlType.kVelocity);
-  }
-
   public void holdCargo() {
-    m_intakePIDController.setReference(CurrentIntakeEncoderPosition(), CANSparkMax.ControlType.kPosition);
+    m_intakePIDController.setReference(CurrentIntakeEncoderPosition(), ControlType.kPosition);
   }
 
   // Open loop stuff
