@@ -108,11 +108,21 @@ public class Intake extends SubsystemBase {
       readPIDTuningFromDashboard();
       SmartDashboard.putNumber("Intake Encoder position", m_intakeEncoder.getPosition());
 
+      // add intake encoder position into log
+      // logIntakeData();
+
     }
 
-    // add intake encoder position into log
-    // logIntakeData();
+  }
 
+  // log into console the intake encoder position
+  // public void logIntakeData() {
+  // System.out.println("Position " + CurrentIntakeEncoderPosition());
+  // }
+
+  /** Resets the Intake encoder to currently read a position of 0. */
+  public void reset() {
+    m_intakeEncoder.setPosition(0);
   }
 
   public void holdCargo() {
