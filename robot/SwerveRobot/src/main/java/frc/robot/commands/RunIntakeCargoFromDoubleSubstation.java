@@ -10,8 +10,8 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class RunIntakeConeFromDoubleSubstation extends SequentialCommandGroup {
-  public RunIntakeConeFromDoubleSubstation(
+public class RunIntakeCargoFromDoubleSubstation extends SequentialCommandGroup {
+  public RunIntakeCargoFromDoubleSubstation(
       Altitude m_altitude,
       Extension m_extension,
       Intake m_intake) {
