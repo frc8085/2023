@@ -117,18 +117,18 @@ public class RobotContainer {
                                                 Math.max(0.0, (Math.abs(m_driverController.getLeftY())
                                                                 - OIConstants.kDriveDeadband)
                                                                 / (1.0 - OIConstants.kDriveDeadband))
-                                                                * Math.signum(-m_driverController
+                                                                * Math.signum(m_driverController
                                                                                 .getLeftY()),
                                                 Math.max(0.0, (Math.abs(m_driverController.getLeftX())
                                                                 - OIConstants.kDriveDeadband)
                                                                 / (1.0 - OIConstants.kDriveDeadband))
-                                                                * Math.signum(-m_driverController
+                                                                * Math.signum(m_driverController
                                                                                 .getLeftX()),
                                                 Math.max(0.0, (Math.abs(m_driverController
                                                                 .getRightX())
                                                                 - OIConstants.kDriveDeadband)
                                                                 / (1.0 - OIConstants.kDriveDeadband))
-                                                                * Math.signum(-m_driverController
+                                                                * Math.signum(m_driverController
                                                                                 .getRightX()),
                                                 true,
                                                 // rateLimit is true if rightBumper is not pressed,
