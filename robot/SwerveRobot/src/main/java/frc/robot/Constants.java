@@ -51,16 +51,9 @@ public final class Constants {
 
     public static final double kEjectWaitTime = 2;
 
-    /** Intake off index in { @see IntakeConstants.kIntakeTargetRPM } */
-    public static final int kCargoNone = 0;
+    // Intake Button Wait Time
+    public static final double kIntakeSafetyPressWaitTime = 2;
 
-    /** Cone Indices in { @see IntakeConstants.kIntakeTargetRPM } */
-    public static final int kCargoConeIntake = 1;
-    public static final int kCargoConeEject = 2;
-
-    /** Cube Indices in { @see IntakeConstants.kIntakeTargetRPM } */
-    public static final int kCargoCubeIntake = 3;
-    public static final int kCargoCubeEject = 4;
   }
 
   public static final class ExtensionConstants {

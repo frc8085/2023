@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.OpenIntake;
 import frc.robot.commands.PrepareMidDropOff;
@@ -177,7 +178,7 @@ public class RobotContainer {
                                 new ConditionalCommand(
                                                 new RunIntakeCargo(m_altitude, m_extension, m_intake),
                                                 new InstantCommand(),
-                                                () -> timeSince(timeWhenIntakeReleased) > 2))
+                                                () -> timeSince(timeWhenIntakeReleased) > IntakeConstants.kIntakeSafetyPressWaitTime))
                                 .onFalse(new ParallelCommandGroup(
                                                 new InstantCommand(() -> timeWhenIntakeReleased = Timer.getMatchTime()),
                                                 new InstantCommand(() -> m_intake.holdCargo()),
