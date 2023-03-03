@@ -85,6 +85,8 @@ public final class Constants {
 
     public static double kExtensionSafeExtensionMax = kExtensionPositionIntakeOut + kExtensionPositionTolerance;
 
+    public static double kExtensionConeRetractDistance = 5;
+
   }
 
   public static final class AltitudeConstants {

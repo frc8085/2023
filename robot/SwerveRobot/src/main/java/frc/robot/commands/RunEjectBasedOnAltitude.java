@@ -21,53 +21,14 @@ public class RunEjectBasedOnAltitude extends SequentialCommandGroup {
                         Extension m_extension,
                         Intake m_intake) {
                 addCommands(new ConditionalCommand(
-                                // If Altitude is in travel position, eject the object at full speed
-                                new SequentialCommandGroup(
-                                                new InstantCommand(() -> m_intake.ejectCube()),
-                                                // 3. Wait X sec and then turn off intake
-                                                // TODO: Write a editable field so we can live test different wait times
-                                                new WaitCommand(IntakeConstants.kEjectWaitTime)
-                                                                .andThen(new InstantCommand(m_intake::stopIntake))),
+                                new RunEjectCube(m_altitude, m_extension, m_intake),
                                 // If Altitude is in scoring position, lower altitude slightly, then drop off
                                 // cone and then return to travel simultaneously
 
                                 // TODO: We want to move down, then retract then eject We want to add a time
                                 // delay before ejection where retraction is happening,
                                 new ConditionalCommand(
-                                                new SequentialCommandGroup(
-                                                                // 1. Prepare Drop Off Cone (lower altitude slightly)
-                                                                new PrepareDropOffCone(m_altitude),
-                                                                new WaitUntilCommand(() -> m_altitude
-                                                                                .AltitudeIsInHighDropOffPosition())
-                                                                                .andThen(
-                                                                                                new ParallelCommandGroup(
-                                                                                                                new SequentialCommandGroup(
-
-                                                                                                                                new WaitCommand(1)
-                                                                                                                                                // 2.
-                                                                                                                                                // Run
-                                                                                                                                                // eject
-                                                                                                                                                // Cone
-                                                                                                                                                .andThen(new InstantCommand(
-                                                                                                                                                                () -> m_intake
-                                                                                                                                                                                .ejectCone())),
-                                                                                                                                // 3.
-                                                                                                                                // Wait
-                                                                                                                                // X
-                                                                                                                                // sec
-                                                                                                                                // and
-                                                                                                                                // then
-                                                                                                                                // turn
-                                                                                                                                // off
-                                                                                                                                // intake
-                                                                                                                                new WaitCommand(IntakeConstants.kEjectWaitTime)
-                                                                                                                                                .andThen(new InstantCommand(
-                                                                                                                                                                m_intake::stopIntake)))),
-                                                                                                // 4. Return to Travel
-                                                                                                // Position
-                                                                                                new PrepareTravelAfterScoring(
-                                                                                                                m_extension,
-                                                                                                                m_altitude))),
+                                                new RunEjectCone(m_altitude, m_extension, m_intake),
                                                 // If Altitude is not in travel or scoring position, then just eject
                                                 // cone
                                                 new InstantCommand(() -> m_intake.ejectCone()),

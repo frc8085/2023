@@ -198,4 +198,14 @@ public class Extension extends SubsystemBase {
             - ExtensionConstants.kExtensionPositionTolerance;
   };
 
+  public boolean ExtensionIsInReleasePosition() {
+    double ReleaseExtensionPosition = setReleaseExtensionPosition();
+    
+    return m_extensionEncoder.getPosition() < ReleaseExtensionPosition + ExtensionConstants.kExtensionPositionTolerance &&
+        m_extensionEncoder.getPosition() > ReleaseExtensionPosition - ExtensionConstants.kExtensionPositionTolerance;
+    };
+
+    public double setReleaseExtensionPosition() {
+      return getCurrentExtensionPosition() - ExtensionConstants.kExtensionConeRetractDistance ;
+  }
 }

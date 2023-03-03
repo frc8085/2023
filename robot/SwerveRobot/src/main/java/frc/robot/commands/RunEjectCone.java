@@ -6,13 +6,17 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Intake;
+import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
+//TODO: Test .until
 public class RunEjectCone extends SequentialCommandGroup {
   public RunEjectCone(
       Altitude m_altitude,
@@ -21,17 +25,20 @@ public class RunEjectCone extends SequentialCommandGroup {
     addCommands(
         // 1. Prepare Drop Off Cone (lower altitude slightly)
         new PrepareDropOffCone(m_altitude),
-        // Run Eject Cone and Return to Travel
+        // Make sure the drop off cone altitude has been reached
+        new WaitUntilCommand(() -> m_altitude.AltitudeIsInHighDropOffPosition()),
+        // Start Retracting at fixed speed until it reaches release position
+        new InstantCommand(() -> m_extension.retractExtension())
+            .until(m_extension::ExtensionIsInReleasePosition),
         new ParallelCommandGroup(
-            // Eject Cone, Wait X time and then turn off intake
             new SequentialCommandGroup(
-                // 2. Run eject Cone
                 new InstantCommand(() -> m_intake.ejectCone()),
-                // 3. Wait X sec and then turn off intake
-                new WaitCommand(IntakeConstants.kEjectWaitTime)
-                    .andThen(new InstantCommand(
-                        m_intake::stopIntake))),
-            // Return to Travel Position
-            new PrepareTravelAfterScoring(m_extension, m_altitude)));
+                new WaitCommand(IntakeConstants.kEjectWaitTime),
+                new InstantCommand(m_intake::stopIntake)),
+            new PrepareTravelAfterScoring(m_extension, m_altitude))
+
+    );
+
   }
+
 }
