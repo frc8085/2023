@@ -41,8 +41,8 @@ public final class Constants {
     public static double kRampRate = 0;
 
     // Intake Cone Power
-    public static final double kIntakeConePower = 0.9;
-    public static final double kEjectConePower = 0.5;
+    public static final double kIntakeConePower = 1;
+    public static final double kEjectConePower = 0.25;
 
     // Intake Cube Power
     public static final double kIntakeCubePower = 0.8;
