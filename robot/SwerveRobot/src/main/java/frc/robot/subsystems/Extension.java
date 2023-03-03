@@ -83,7 +83,7 @@ public class Extension extends SubsystemBase {
     SmartDashboard.putBoolean("Fully Extended", m_extensionLimit.isPressed());
     SmartDashboard.putBoolean("Fully Retracted", m_retractionLimit.isPressed());
     SmartDashboard.putBoolean("Extension Travel Position", ExtensionIsInTravelPosition());
-
+    SmartDashboard.putBoolean("Extension Intake Position", ExtensionIsInIntakePosition());
     SmartDashboard.putNumber("Current position", getCurrentExtensionPosition());
   }
 
@@ -167,7 +167,16 @@ public class Extension extends SubsystemBase {
 
   public boolean ExtensionIsInIntakePosition() {
     return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionIntakeOut
-        + ExtensionConstants.kExtensionPositionTolerance;
+        + ExtensionConstants.kExtensionPositionTolerance
+        && m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionIntakeOut
+            - ExtensionConstants.kExtensionPositionTolerance;
+  }
+
+  public boolean ExtensionIsInCubeShootPosition() {
+    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionCubeShooter
+        + ExtensionConstants.kExtensionPositionTolerance
+        && m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionCubeShooter
+            - ExtensionConstants.kExtensionPositionTolerance;
   }
 
   public boolean ExtensionIsInDropOffReturnPosition() {

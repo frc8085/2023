@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
@@ -21,12 +22,13 @@ public class RunEjectHighCube extends SequentialCommandGroup {
     addCommands(
         // Prepare Drop off Cube (move extension to proper position)
         new PrepareHighCubeDropOff(m_extension),
-        // Run Eject Cube and Return to Travel
-        new ParallelCommandGroup(
-            new InstantCommand(() -> m_intake.ejectCube()),
-            // Wait X sec and then turn off intake
-            new WaitCommand(IntakeConstants.kEjectWaitTime)
-                .andThen(new InstantCommand(m_intake::stopIntake))),
+        new WaitUntilCommand(() -> m_extension.ExtensionIsInCubeShootPosition())
+            // Run Eject Cube and Return to Travel
+            .andThen(new ParallelCommandGroup(
+                new InstantCommand(() -> m_intake.ejectCube()),
+                // Wait X sec and then turn off intake
+                new WaitCommand(IntakeConstants.kEjectWaitTime)
+                    .andThen(new InstantCommand(m_intake::stopIntake)))),
         // Return to Travel Position
         new PrepareTravelAfterScoring(m_extension, m_altitude));
   }

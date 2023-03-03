@@ -78,9 +78,10 @@ public final class Constants {
     public static double kExtensionPositionFullyRetracted = 1;
     public static double kExtensionPositionIntakeOut = 39;
     public static double kExtensionPositionMidDropOff = 83;
-    public static double kExtensionPositionHighDropOff = 145;
+    public static double kExtensionPositionHighDropOff = 140;
     public static double kExtensionPositionHighDropOffReturn = 100;
     public static double kExtensionPositionSingleSubstation = 41;
+    public static double kExtensionPositionCubeShooter = 60;
 
     public static double kExtensionSafeExtensionMax = kExtensionPositionIntakeOut + kExtensionPositionTolerance;
 
@@ -98,19 +99,19 @@ public final class Constants {
 
     // encoder readings of altitude as of 2.14.2023
     // Altitude at Top Position
-    public static double kAltitudeTravelPosition = -0.15;
+    public static double kAltitudeTravelPosition = -0.05;
     // Altitude at DropOff Position
     public static double kAltitudeDropOffPosition = -2.15;
     // Altitude when delivering high cone that it lowers to after extending fully
-    public static double kAltitudeHighDropOffPosition = -2.5;
+    public static double kAltitudeHighDropOffPosition = -2.75;
     // Altitude at position that it releases the cone
-    public static double kAltitudeDropOffFinalPosition = -3.25;
+    public static double kAltitudeDropOffFinalPosition = -3;
 
     // Altitude at Bottom Position
     public static double kAltitudeIntakePosition = -5.1;
     // Altitude at Shelf Position
     public static double kAltitudeDoubleSubstationPosition = -2.05;
-    public static double kAltitudeSingleSubstationPosition = -1.85;
+    public static double kAltitudeSingleSubstationPosition = -1.65;
 
     // Altitude Error Tolerance
     public static double kAltitudeError = 0.05;
