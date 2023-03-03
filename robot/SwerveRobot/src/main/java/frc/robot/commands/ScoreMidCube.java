@@ -14,8 +14,8 @@ import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
-public class RunEjectMidCube extends SequentialCommandGroup {
-    public RunEjectMidCube(
+public class ScoreMidCube extends SequentialCommandGroup {
+    public ScoreMidCube(
             Altitude m_altitude,
             Extension m_extension,
             Intake m_intake) {

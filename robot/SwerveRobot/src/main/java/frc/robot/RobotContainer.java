@@ -24,8 +24,9 @@ import frc.robot.commands.PrepareHighConeDropOff;
 import frc.robot.commands.PrepareTravel;
 import frc.robot.commands.PrepareTravelAfterIntake;
 import frc.robot.commands.PrepareTravelAfterScoring;
-import frc.robot.commands.RunEjectBasedOnAltitude;
-import frc.robot.commands.RunEjectHighCube;
+import frc.robot.commands.ScoreBasedOnAltitude;
+import frc.robot.commands.ScoreMidCube;
+import frc.robot.commands.ScoreHighCube;
 import frc.robot.commands.PrepareIntake;
 import frc.robot.commands.RunIntakeCargo;
 import frc.robot.commands.RunIntakeCargoFromDoubleSubstation;
@@ -34,12 +35,14 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -50,6 +53,7 @@ import frc.robot.subsystems.Altitude;
 import edu.wpi.first.wpilibj.DriverStation;
 // Dashboard
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -58,7 +62,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
+        private double timeWhenIntakeReleased;
         // The robot's subsystems
         private final IntakeCover m_intakeCover = new IntakeCover();
         // private final IntakeNoPID m_intake = new IntakeNoPID();
@@ -154,7 +158,7 @@ public class RobotContainer {
                 final Trigger intakeButton = m_operatorController.rightTrigger();
                 final Trigger manualIntakeButton = m_operatorController.rightBumper();
                 final Trigger ejectButton = m_operatorController.leftTrigger();
-                final Trigger highCubeEjectButton = m_operatorController.leftBumper();
+                final Trigger midCubeEjectButton = m_operatorController.leftBumper();
                 final Trigger setDoubleSubstationButton = m_operatorController.povUp();
                 final Trigger setSingleSubstationButton = m_operatorController.povDown();
 
@@ -169,22 +173,18 @@ public class RobotContainer {
                 // intakeButton.whileTrue(new InstantCommand(() -> m_intake.intakeCone()))
                 // .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
 
-                intakeButton.whileTrue(new RunIntakeCargo(m_altitude, m_extension, m_intake))
+                intakeButton.whileTrue(
+                                new ConditionalCommand(
+                                                new RunIntakeCargo(m_altitude, m_extension, m_intake),
+                                                new InstantCommand(),
+                                                () -> timeSince(timeWhenIntakeReleased) > 2))
                                 .onFalse(new ParallelCommandGroup(
+                                                new InstantCommand(() -> timeWhenIntakeReleased = Timer.getMatchTime()),
                                                 new InstantCommand(() -> m_intake.holdCargo()),
                                                 new PrepareTravelAfterIntake(m_extension, m_altitude)));
 
                 manualIntakeButton.whileTrue(new InstantCommand(() -> m_intake.intakeCube()))
                                 .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
-
-                // If intake button and cube mode button (right Bumper) are both pressed, run
-                // cube intake
-                // intakeButton.and(setCubeModeButton).whileTrue(new RunIntakeCube(m_altitude,
-                // m_extension, m_intake))
-                // intakeButton.whileTrue(new RunIntakeCube(m_altitude, m_extension, m_intake))
-                // .onFalse(new ParallelCommandGroup(
-                // new HoldCube(m_intake),
-                // new PrepareTravelAfterIntake(m_extension, m_altitude)));
 
                 setDoubleSubstationButton
                                 .whileTrue(new RunIntakeCargoFromDoubleSubstation(m_altitude, m_extension, m_intake))
@@ -198,10 +198,10 @@ public class RobotContainer {
                                                 new InstantCommand(() -> m_intake.holdCargo()),
                                                 new PrepareTravelAfterScoring(m_extension, m_altitude)));
 
-                ejectButton.onTrue(new RunEjectBasedOnAltitude(m_altitude, m_extension,
+                ejectButton.onTrue(new ScoreBasedOnAltitude(m_altitude, m_extension,
                                 m_intake));
 
-                highCubeEjectButton.onTrue(new RunEjectHighCube(m_altitude, m_extension, m_intake));
+                midCubeEjectButton.onTrue(new ScoreMidCube(m_altitude, m_extension, m_intake));
 
                 ExtendButton.whileTrue(new InstantCommand(m_extension::extendExtension, m_extension))
                                 // .onFalse(new KeepExtensionPosition(m_extension.getCurrentExtensionPosition(),
@@ -245,6 +245,10 @@ public class RobotContainer {
                 prepareTravelButton.onTrue(new PrepareTravel(m_extension, m_altitude));
                 prepareIntakeButton.onTrue(new PrepareIntake(m_extension, m_altitude));
 
+        }
+
+        public double timeSince(double startTime) {
+                return startTime - Timer.getMatchTime();
         }
 
         /**
