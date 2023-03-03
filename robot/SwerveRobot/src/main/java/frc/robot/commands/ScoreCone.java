@@ -17,8 +17,8 @@ import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
 //TODO: Test .until
-public class RunEjectCone extends SequentialCommandGroup {
-  public RunEjectCone(
+public class ScoreCone extends SequentialCommandGroup {
+  public ScoreCone(
       Altitude m_altitude,
       Extension m_extension,
       Intake m_intake) {

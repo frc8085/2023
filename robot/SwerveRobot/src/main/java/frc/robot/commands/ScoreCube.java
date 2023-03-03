@@ -15,8 +15,8 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class RunEjectCube extends SequentialCommandGroup {
-    public RunEjectCube(
+public class ScoreCube extends SequentialCommandGroup {
+    public ScoreCube(
             Altitude m_altitude,
             Extension m_extension,
             Intake m_intake) {
