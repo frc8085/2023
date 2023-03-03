@@ -15,20 +15,17 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class RunEjectBasedOnAltitude extends SequentialCommandGroup {
-        public RunEjectBasedOnAltitude(
+public class ScoreBasedOnAltitude extends SequentialCommandGroup {
+        public ScoreBasedOnAltitude(
                         Altitude m_altitude,
                         Extension m_extension,
                         Intake m_intake) {
                 addCommands(new ConditionalCommand(
-                                new RunEjectCube(m_altitude, m_extension, m_intake),
+                                new ScoreCube(m_altitude, m_extension, m_intake),
                                 // If Altitude is in scoring position, lower altitude slightly, then drop off
                                 // cone and then return to travel simultaneously
-
-                                // TODO: We want to move down, then retract then eject We want to add a time
-                                // delay before ejection where retraction is happening,
                                 new ConditionalCommand(
-                                                new RunEjectCone(m_altitude, m_extension, m_intake),
+                                                new ScoreCone(m_altitude, m_extension, m_intake),
                                                 // If Altitude is not in travel or scoring position, then just eject
                                                 // cone
                                                 new InstantCommand(() -> m_intake.ejectCone()),
