@@ -24,12 +24,8 @@ public class ScoreHighCube extends SequentialCommandGroup {
         new PrepareHighCubeDropOff(m_extension, m_altitude),
         new WaitUntilCommand(() -> m_extension.ExtensionIsInHighCubeShootPosition()),
         new WaitUntilCommand(() -> m_altitude.AltitudeIsInHighCubeShootPosition()),
-        // Run Eject Cube and Return to Travel
-        new ParallelCommandGroup(
-            new InstantCommand(() -> m_intake.ejectCube()),
-            // Wait X sec and then turn off intake
-            new WaitCommand(IntakeConstants.kEjectWaitTime)
-                .andThen(new InstantCommand(m_intake::stopIntake))),
+        // Run Eject Cube
+        new ScoreCube(m_altitude, m_extension, m_intake),
         // Return to Travel Position
         new PrepareTravelAfterScoring(m_extension, m_altitude));
   }

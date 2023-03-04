@@ -22,14 +22,9 @@ public class ScoreMidCube extends SequentialCommandGroup {
                 addCommands(
                                 // Prepare Drop off Cube (move extension to proper position)
                                 new PrepareMidCubeDropOff(m_extension),
-                                new WaitUntilCommand(() -> m_extension.ExtensionIsInMidCubeShootPosition())
-                                                // Run Eject Cube and Return to Travel
-                                                .andThen(new ParallelCommandGroup(
-                                                                new InstantCommand(() -> m_intake.ejectCube()),
-                                                                // Wait X sec and then turn off intake
-                                                                new WaitCommand(IntakeConstants.kEjectWaitTime)
-                                                                                .andThen(new InstantCommand(
-                                                                                                m_intake::stopIntake)))),
+                                new WaitUntilCommand(() -> m_extension.ExtensionIsInMidCubeShootPosition()),
+                                // Run Eject Cube
+                                new ScoreCube(m_altitude, m_extension, m_intake),
                                 // Return to Travel Position
                                 new PrepareTravelAfterScoring(m_extension, m_altitude));
         }
