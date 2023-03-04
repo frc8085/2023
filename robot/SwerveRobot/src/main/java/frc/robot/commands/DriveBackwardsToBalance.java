@@ -53,7 +53,6 @@ public class DriveBackwardsToBalance extends CommandBase {
   // Stop driving when the command ends or is interrupted
   @Override
   public void end(boolean interrupted) {
-    m_drive.stop();
     m_drive.lock();
   }
 
