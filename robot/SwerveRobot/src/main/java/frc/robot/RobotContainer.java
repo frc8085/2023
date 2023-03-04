@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.Autos;
 import frc.robot.commands.DriveBackwardsMeters;
 import frc.robot.commands.DriveForwardMeters;
 import frc.robot.commands.OpenIntake;
@@ -221,9 +222,7 @@ public class RobotContainer {
    */
 
   public Command getAutonomousCommand() {
-    return new SequentialCommandGroup(
-        new DriveForwardMeters(m_robotDrive, 1.0),
-        new DriveBackwardsMeters(m_robotDrive, 0.5));
+    return Autos.autoMid(m_robotDrive);
   }
 
 }

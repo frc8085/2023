@@ -251,6 +251,7 @@ public final class Constants {
     // Constats for us in Auto commands
     public static final double kTravelForwards = 1;
     public static final double kTravelBackwards = -1;
+
   }
 
   public static final class NeoMotorConstants {
