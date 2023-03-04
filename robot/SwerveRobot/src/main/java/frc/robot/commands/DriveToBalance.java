@@ -35,13 +35,13 @@ public class DriveToBalance extends CommandBase {
   @Override
   public void execute() {
     double currentPitch = m_drive.getPitch();
-    timeToSlowDown = currentPitch > 13;
+    timeToSlowDown = currentPitch < 0;
     isBalanced = currentPitch >= -3 && currentPitch <= 3;
 
     m_drive.drive(
         false,
-        timeToSlowDown ? m_speed / 2 : m_speed,
-        AutoConstants.kTravelBackwards,
+        timeToSlowDown ? m_speed * .9 : m_speed,
+        timeToSlowDown ? AutoConstants.kTravelForwards : AutoConstants.kTravelBackwards,
         0,
         0,
         true,
