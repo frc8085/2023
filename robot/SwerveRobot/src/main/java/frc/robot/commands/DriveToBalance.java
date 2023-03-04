@@ -36,14 +36,14 @@ public class DriveToBalance extends CommandBase {
   @Override
   public void execute() {
     double currentPitch = m_drive.getPitch();
-    tippedOver = currentPitch < -3;
+    tippedOver = currentPitch < -10;
     timeToSlowDown = timeToSlowDown || (!timeToSlowDown && tippedOver);
 
-    isBalanced = timeToSlowDown && (currentPitch >= -3 && currentPitch <= 3);
+    isBalanced = timeToSlowDown && (currentPitch >= -10 && currentPitch <= -.5);
 
     m_drive.drive(
         false,
-        timeToSlowDown ? m_speed * .6 : m_speed,
+        timeToSlowDown ? m_speed * .7 : m_speed,
         tippedOver ? AutoConstants.kTravelForwards : AutoConstants.kTravelBackwards,
         0,
         0,
