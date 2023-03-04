@@ -23,6 +23,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.utilities.SwerveUtils;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -108,6 +109,12 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     /** Call log method every loop. */
     log();
+
+    SmartDashboard.putData("Reset Gyro", new InstantCommand(() -> zeroHeading()));
+    SmartDashboard.putData("Drive Forward", new InstantCommand(() -> driveForward(
+        DriveConstants.kMaxLimitedSpeedMetersPerSecond, 0, 0)));
+    SmartDashboard.putData("Stop Drive",
+        new InstantCommand(() -> driveStop(0, 0, 0)));
 
     // Update the odometry in the periodic block
     m_odometry.update(
@@ -392,6 +399,29 @@ public class DriveSubsystem extends SubsystemBase {
     // Only want to go forward, so sideways direction and rotation are 0
     double forwardDirectionDelivered = 0;
     double sidewaysDirectionDelivered = DriveConstants.kMaxLimitedSpeedMetersPerSecond;
+    double rotDelivered = 0;
+
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+            forwardDirectionDelivered,
+            sidewaysDirectionDelivered,
+            rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle())));
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  public void driveStop(
+      double forwardDirection,
+      double sidewaysDirection,
+      double rotDirection) {
+
+    // Only want to go forward, so sideways direction and rotation are 0
+    double forwardDirectionDelivered = 0;
+    double sidewaysDirectionDelivered = 0;
     double rotDelivered = 0;
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
