@@ -30,7 +30,7 @@ public class DriveForwardMeters extends CommandBase {
     m_drive.zeroHeading();
     m_drive.drive(
         false,
-        1,
+        0.1,
         1,
         0,
         0,
@@ -53,7 +53,7 @@ public class DriveForwardMeters extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    double currentPose = m_drive.getPose().getY();
+    double currentPose = m_drive.getPose().getX();
     return currentPose >= m_meters;
   }
 }
