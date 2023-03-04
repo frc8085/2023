@@ -154,11 +154,14 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Method to drive the robot using joystick info.
    *
-   * @param speedLimit    Whether to fix the speed to a set value
-   * @param speed         Speed of the robot in the x direction (forward).
-   * @param rot           Angular rate of the robot.
-   * @param fieldRelative Whether the provided x and y speeds are relative to the
-   *                      field.
+   * @param speedLimit        Whether to fix the speed to a set value
+   * @param inputSpeed        Speed of the robot in the x direction (forward).
+   * @param forwardDirection
+   * @param sidewaysDirection
+   * @param rotDirection      Angular rate of the robot.
+   * @param fieldRelative     Whether the provided x and y speeds are relative to
+   *                          the
+   *                          field.
    */
   public void drive(
       boolean speedLimit,
