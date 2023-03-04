@@ -20,7 +20,7 @@ import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Altitude extends SubsystemBase {
-  private boolean TUNING_MODE = false;
+  private boolean TUNING_MODE = true;
 
   private Extension m_extension;
   /** Creates a new Altitude. */
@@ -96,6 +96,7 @@ public class Altitude extends SubsystemBase {
     // If we're fine-tuning PID Constants, the display them on the dashboard
     if (TUNING_MODE) {
       addPIDToDashboard();
+      addTuningtoDashboard();
     }
 
   }
@@ -121,6 +122,55 @@ public class Altitude extends SubsystemBase {
     SmartDashboard.putNumber("Altitude Max Output", kMaxOutputAltitude);
     SmartDashboard.putNumber("Altitude Min Output", kMinOutputAltitude);
     SmartDashboard.putNumber("Altitude Set Rotations", 0);
+  }
+
+  private void addTuningtoDashboard() {
+    // Substation Constants
+    SmartDashboard.putNumber("Single Substation Altitude", AltitudeConstants.kAltitudeSingleSubstationPosition);
+
+    // High Drop Off Adjustment
+    SmartDashboard.putNumber("High Drop Off Position", AltitudeConstants.kAltitudeHighDropOffPosition);
+    SmartDashboard.putNumber("High Drop Off Final Position", AltitudeConstants.kAltitudeHighDropOffFinalPosition);
+
+    // Mid Drop Off Adjustment
+    SmartDashboard.putNumber("Mid Drop Off Position", AltitudeConstants.kAltitudeMidDropOffPosition);
+    SmartDashboard.putNumber("Mid Drop Off Final Position", AltitudeConstants.kAltitudeMidDropOffFinalPosition);
+
+  }
+
+  private void readTuningFromDashboard() {
+    double SingleSubstationAltitude = SmartDashboard.getNumber("Single Substation Altitude",
+        AltitudeConstants.kAltitudeSingleSubstationPosition);
+    double HighDropOffAltitude = SmartDashboard.getNumber("High Drop Off Position",
+        AltitudeConstants.kAltitudeHighDropOffPosition);
+    double HighDropOffFinalAltitude = SmartDashboard.getNumber("High Drop Off Final Position",
+        AltitudeConstants.kAltitudeHighDropOffFinalPosition);
+    double MidDropOffAltitude = SmartDashboard.getNumber("Mid Drop Off Position",
+        AltitudeConstants.kAltitudeMidDropOffPosition);
+    double MidDropOffFinalAltitude = SmartDashboard.getNumber("Mid Drop Off Final Position",
+        AltitudeConstants.kAltitudeMidDropOffFinalPosition);
+
+    if ((SingleSubstationAltitude != AltitudeConstants.kAltitudeSingleSubstationPosition)) {
+      m_altitudePIDController.setP(SingleSubstationAltitude);
+      AltitudeConstants.kAltitudeSingleSubstationPosition = SingleSubstationAltitude;
+    }
+    if ((HighDropOffAltitude != AltitudeConstants.kAltitudeHighDropOffPosition)) {
+      m_altitudePIDController.setP(HighDropOffAltitude);
+      AltitudeConstants.kAltitudeHighDropOffPosition = SingleSubstationAltitude;
+    }
+    if ((HighDropOffFinalAltitude != AltitudeConstants.kAltitudeHighDropOffFinalPosition)) {
+      m_altitudePIDController.setP(HighDropOffFinalAltitude);
+      AltitudeConstants.kAltitudeHighDropOffFinalPosition = SingleSubstationAltitude;
+    }
+    if ((MidDropOffAltitude != AltitudeConstants.kAltitudeMidDropOffPosition)) {
+      m_altitudePIDController.setP(MidDropOffAltitude);
+      AltitudeConstants.kAltitudeMidDropOffPosition = SingleSubstationAltitude;
+    }
+    if ((MidDropOffFinalAltitude != AltitudeConstants.kAltitudeMidDropOffFinalPosition)) {
+      m_altitudePIDController.setP(MidDropOffFinalAltitude);
+      AltitudeConstants.kAltitudeMidDropOffFinalPosition = SingleSubstationAltitude;
+    }
+
   }
 
   private void readPIDTuningFromDashboard() {
@@ -181,6 +231,7 @@ public class Altitude extends SubsystemBase {
 
     if (TUNING_MODE) {
       readPIDTuningFromDashboard();
+      readTuningFromDashboard();
     }
 
   }
