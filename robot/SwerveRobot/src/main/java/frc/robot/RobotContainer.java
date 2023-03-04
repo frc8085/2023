@@ -238,7 +238,13 @@ public class RobotContainer {
                 final Trigger prepareIntakeButton = m_operatorController.a();
                 // final Trigger prepareShelfPickupButton = m_operatorController.start();
 
-                prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_extension, m_altitude));
+                prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_extension, m_altitude))
+                                .onFalse(new SequentialCommandGroup(
+                                                new WaitUntilCommand(
+                                                                () -> m_extension.ExtensionIsInMidScoringPosition()),
+                                                new InstantCommand(
+                                                                () -> m_altitude.keepPosition(
+                                                                                AltitudeConstants.kAltitudeMidDropOffPosition))));
                 prepareHighDropOffButton.onTrue(new PrepareHighConeDropOff(m_extension, m_altitude))
                                 .onFalse(new SequentialCommandGroup(
                                                 new WaitUntilCommand(
