@@ -21,7 +21,7 @@ import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Altitude extends SubsystemBase {
   private boolean TUNING_MODE = true;
-  private boolean encoderReset = false;
+
   private Extension m_extension;
   /** Creates a new Altitude. */
 
@@ -225,7 +225,7 @@ public class Altitude extends SubsystemBase {
     enforceSafeExtensions();
     log();
 
-    resetAltitudeEncoderAtTopLimit();
+    // resetAltitudeEncoderAtTopLimit();
     AltitudeIsInTravelPosition();
     AltitudeIsInIntakePosition();
 
@@ -247,9 +247,8 @@ public class Altitude extends SubsystemBase {
   }
 
   public void resetAltitudeEncoderAtTopLimit() {
-    if (!encoderReset && isAltitudeTopLimitHit()) {
+    if (isAltitudeTopLimitHit()) {
       m_altitudeEncoder.setPosition(-0.1);
-      encoderReset = true;
     }
   };
 
