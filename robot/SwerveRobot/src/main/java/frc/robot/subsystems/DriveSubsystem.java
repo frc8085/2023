@@ -78,6 +78,10 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
       });
 
+  public double getPitch() {
+    return m_gyro.getPitch();
+  }
+
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
     // Things to show only in tuning mode
