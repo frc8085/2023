@@ -20,7 +20,6 @@ public class DriveBackwardsToBalance extends CommandBase {
   private double m_slowSpeed = 0;
   private boolean reachedChargingStation = false;
   private boolean isBalanced = false;
-  private double currentPitch;
 
   public DriveBackwardsToBalance(DriveSubsystem drive, double speed, double slowSpeed) {
     m_drive = drive;
@@ -41,15 +40,16 @@ public class DriveBackwardsToBalance extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    currentPitch = m_drive.getPitch();
-    if (currentPitch >= 10) {
+    double currentPitch = m_drive.getPitch();
+
+    if (!reachedChargingStation && currentPitch >= 10) {
       reachedChargingStation = true;
     }
 
     if (reachedChargingStation) {
       new SequentialCommandGroup(
           new DriveBackwardsMeters(m_drive, 0.1),
-          new WaitCommand(0.5));
+          new WaitCommand(5));
     } else {
       m_drive.drive(
           false,
@@ -75,6 +75,7 @@ public class DriveBackwardsToBalance extends CommandBase {
   // End the command when we reach the desired pose in meters
   @Override
   public boolean isFinished() {
+    double currentPitch = m_drive.getPitch();
     isBalanced = currentPitch > 0 && currentPitch < 3;
     return reachedChargingStation && isBalanced;
   }
