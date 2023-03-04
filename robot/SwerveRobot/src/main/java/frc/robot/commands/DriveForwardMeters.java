@@ -4,35 +4,31 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/** An example command that uses an example subsystem. */
 public class DriveForwardMeters extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
   private double m_meters = 0;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
   public DriveForwardMeters(DriveSubsystem drive, double meters) {
     m_drive = drive;
     m_meters = meters;
     addRequirements(m_drive);
   }
 
+  // Reset the odomotry when the command is scheduled
+  // Then run the drive command to travel forwards
   @Override
   public void initialize() {
     m_drive.resetOdometry(new Pose2d());
     m_drive.drive(
         false,
-        0.1,
-        1,
+        AutoConstants.kMaxSpeedMetersPerSecond,
+        AutoConstants.kTravelForwards,
         0,
         0,
         true,
@@ -44,16 +40,18 @@ public class DriveForwardMeters extends CommandBase {
   public void execute() {
   }
 
-  // Called once the command ends or is interrupted.
+  // Stop driving when the command ends or is interrupted
   @Override
   public void end(boolean interrupted) {
     m_drive.stop();
   }
 
-  // Returns true when the command should end.
+  // End the command when we reach the desired pose in meters
   @Override
   public boolean isFinished() {
     double currentPose = m_drive.getPose().getX();
+    // Stop when the current position reaches
+    // the desired forward travel distance in meters
     return currentPose >= m_meters;
   }
 }

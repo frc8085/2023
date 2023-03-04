@@ -4,34 +4,33 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/** An example command that uses an example subsystem. */
 public class DriveBackwardsMeters extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
   private double m_meters = 0;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
   public DriveBackwardsMeters(DriveSubsystem drive, double meters) {
     m_drive = drive;
+    // Take the magnitude of meters but ignore the sign
+    // Just in case we provide a negative meters to this function by mistake
     m_meters = Math.abs(meters);
     addRequirements(m_drive);
   }
 
+  // Reset the odomotry when the command is scheduled
+  // Then run the drive command to travel backwards
   @Override
   public void initialize() {
     m_drive.resetOdometry(new Pose2d());
     m_drive.drive(
         false,
-        0.1,
-        -1,
+        AutoConstants.kMaxSpeedMetersPerSecond,
+        AutoConstants.kTravelBackwards,
         0,
         0,
         true,
@@ -43,16 +42,18 @@ public class DriveBackwardsMeters extends CommandBase {
   public void execute() {
   }
 
-  // Called once the command ends or is interrupted.
+  // Stop driving when the command ends or is interrupted
   @Override
   public void end(boolean interrupted) {
     m_drive.stop();
   }
 
-  // Returns true when the command should end.
+  // End the command when we reach the desired pose in meters
   @Override
   public boolean isFinished() {
     double currentPose = m_drive.getPose().getX();
-    return currentPose <= -m_meters;
+    // Stop when the current position reaches
+    // the desired backwards travel distance in meters
+    return currentPose <= -1 * m_meters;
   }
 }
