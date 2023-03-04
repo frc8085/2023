@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveBackwardsToBalance extends CommandBase {
@@ -15,6 +16,7 @@ public class DriveBackwardsToBalance extends CommandBase {
   private double m_speed = 0;
   private double m_slowSpeed = 0;
   private boolean reachedChargingStation = false;
+  private boolean isBalanced = false;
 
   public DriveBackwardsToBalance(DriveSubsystem drive, double speed, double slowSpeed) {
     m_drive = drive;
@@ -36,6 +38,10 @@ public class DriveBackwardsToBalance extends CommandBase {
   @Override
   public void execute() {
     double currentPitch = m_drive.getPitch();
+
+    SmartDashboard.putBoolean("REACHED STATION", reachedChargingStation);
+    SmartDashboard.putBoolean("BALACED", reachedChargingStation && isBalanced);
+
     if (currentPitch >= 10) {
       reachedChargingStation = true;
     }
@@ -59,7 +65,7 @@ public class DriveBackwardsToBalance extends CommandBase {
   // End the command when we reach the desired pose in meters
   @Override
   public boolean isFinished() {
-    boolean isBalanced = m_drive.getPitch() < 8;
+    isBalanced = m_drive.getPitch() < 7;
     return reachedChargingStation && isBalanced;
   }
 }
