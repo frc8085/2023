@@ -22,6 +22,7 @@ public class DriveForwardMeters extends CommandBase {
   public DriveForwardMeters(DriveSubsystem drive, double meters) {
     m_drive = drive;
     m_meters = meters;
+    m_drive.zeroHeading();
     addRequirements(m_drive);
   }
 

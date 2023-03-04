@@ -21,6 +21,7 @@ public class DriveBackwardsMeters extends CommandBase {
   public DriveBackwardsMeters(DriveSubsystem drive, double meters) {
     m_drive = drive;
     m_meters = Math.abs(meters);
+    m_drive.zeroHeading();
     addRequirements(m_drive);
   }
 
