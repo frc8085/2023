@@ -19,6 +19,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.DriveBackwardsMeters;
 import frc.robot.commands.DriveForwardMeters;
 import frc.robot.commands.OpenIntake;
 import frc.robot.commands.PrepareMidDropOff;
@@ -275,7 +276,9 @@ public class RobotContainer {
    */
 
   public Command getAutonomousCommand() {
-    return new DriveForwardMeters(m_robotDrive, 1.0);
+    return new SequentialCommandGroup(
+        new DriveForwardMeters(m_robotDrive, 1.0),
+        new DriveBackwardsMeters(m_robotDrive, 0.5));
   }
 
 }

@@ -5,11 +5,10 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class DriveForwardMeters extends CommandBase {
+public class DriveBackwardsMeters extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
   private double m_meters = 0;
@@ -19,9 +18,9 @@ public class DriveForwardMeters extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveForwardMeters(DriveSubsystem drive, double meters) {
+  public DriveBackwardsMeters(DriveSubsystem drive, double meters) {
     m_drive = drive;
-    m_meters = meters;
+    m_meters = Math.abs(meters);
     addRequirements(m_drive);
   }
 
@@ -31,7 +30,7 @@ public class DriveForwardMeters extends CommandBase {
     m_drive.drive(
         false,
         0.1,
-        1,
+        -1,
         0,
         0,
         true,
@@ -53,6 +52,6 @@ public class DriveForwardMeters extends CommandBase {
   @Override
   public boolean isFinished() {
     double currentPose = m_drive.getPose().getX();
-    return currentPose >= m_meters;
+    return currentPose <= -m_meters;
   }
 }
