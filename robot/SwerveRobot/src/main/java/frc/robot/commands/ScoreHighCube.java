@@ -20,9 +20,10 @@ public class ScoreHighCube extends SequentialCommandGroup {
       Extension m_extension,
       Intake m_intake) {
     addCommands(
-        // Prepare Drop off Cube (move extension to proper position)
-        new PrepareHighCubeDropOff(m_extension),
-        new WaitUntilCommand(() -> m_extension.ExtensionIsInCubeShootPosition()),
+        // Prepare High Drop off Cube (move extension and altitude to proper position)
+        new PrepareHighCubeDropOff(m_extension, m_altitude),
+        new WaitUntilCommand(() -> m_extension.ExtensionIsInHighCubeShootPosition()),
+        new WaitUntilCommand(() -> m_altitude.AltitudeIsInHighCubeShootPosition()),
         // Run Eject Cube and Return to Travel
         new ParallelCommandGroup(
             new InstantCommand(() -> m_intake.ejectCube()),

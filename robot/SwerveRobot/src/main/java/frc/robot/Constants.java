@@ -74,7 +74,8 @@ public final class Constants {
     public static double kExtensionPositionHighDropOff = 140;
     public static double kExtensionPositionHighDropOffReturn = 100;
     public static double kExtensionPositionSingleSubstation = 41;
-    public static double kExtensionPositionCubeShooter = 60;
+    public static double kExtensionPositionMidCubeShooter = 60;
+    public static double kExtensionPositionHighCubeShooter = 80;
 
     public static double kExtensionSafeExtensionMax = kExtensionPositionIntakeOut + kExtensionPositionTolerance;
 
@@ -101,6 +102,8 @@ public final class Constants {
     public static double kAltitudeHighDropOffPosition = -2.75;
     // Altitude at position that it releases the cone
     public static double kAltitudeDropOffFinalPosition = -3;
+    // Altitude at high cube shoot Altitude
+    public static double kAltitudeHighCubeShootPosition = -1;
 
     // Altitude at Bottom Position
     public static double kAltitudeIntakePosition = -5.1;

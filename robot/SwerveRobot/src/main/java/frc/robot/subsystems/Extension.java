@@ -172,10 +172,17 @@ public class Extension extends SubsystemBase {
             - ExtensionConstants.kExtensionPositionTolerance;
   }
 
-  public boolean ExtensionIsInCubeShootPosition() {
-    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionCubeShooter
+  public boolean ExtensionIsInMidCubeShootPosition() {
+    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionMidCubeShooter
         + ExtensionConstants.kExtensionPositionTolerance
-        && m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionCubeShooter
+        && m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionMidCubeShooter
+            - ExtensionConstants.kExtensionPositionTolerance;
+  }
+
+  public boolean ExtensionIsInHighCubeShootPosition() {
+    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionHighCubeShooter
+        + ExtensionConstants.kExtensionPositionTolerance
+        && m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionHighCubeShooter
             - ExtensionConstants.kExtensionPositionTolerance;
   }
 
@@ -200,12 +207,13 @@ public class Extension extends SubsystemBase {
 
   public boolean ExtensionIsInReleasePosition() {
     double ReleaseExtensionPosition = setReleaseExtensionPosition();
-    
-    return m_extensionEncoder.getPosition() < ReleaseExtensionPosition + ExtensionConstants.kExtensionPositionTolerance &&
-        m_extensionEncoder.getPosition() > ReleaseExtensionPosition - ExtensionConstants.kExtensionPositionTolerance;
-    };
 
-    public double setReleaseExtensionPosition() {
-      return getCurrentExtensionPosition() - ExtensionConstants.kExtensionConeRetractDistance ;
+    return m_extensionEncoder.getPosition() < ReleaseExtensionPosition + ExtensionConstants.kExtensionPositionTolerance
+        &&
+        m_extensionEncoder.getPosition() > ReleaseExtensionPosition - ExtensionConstants.kExtensionPositionTolerance;
+  };
+
+  public double setReleaseExtensionPosition() {
+    return getCurrentExtensionPosition() - ExtensionConstants.kExtensionConeRetractDistance;
   }
 }

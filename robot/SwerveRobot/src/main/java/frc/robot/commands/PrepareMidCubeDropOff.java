@@ -16,7 +16,7 @@ public class PrepareMidCubeDropOff extends SequentialCommandGroup {
             Extension m_extension) {
         addCommands(
                 new InstantCommand(() -> m_extension
-                        .keepPosition(ExtensionConstants.kExtensionPositionCubeShooter)));
+                        .keepPosition(ExtensionConstants.kExtensionPositionMidCubeShooter)));
 
     }
 }
