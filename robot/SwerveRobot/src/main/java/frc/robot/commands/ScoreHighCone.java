@@ -21,7 +21,7 @@ public class ScoreHighCone extends SequentialCommandGroup {
       Intake m_intake) {
     addCommands(
         // 1. Prepare Drop Off Cone (lower altitude slightly)
-        new PrepareDropOffCone(m_altitude),
+        new PrepareHighConeFinalDropOff(m_altitude),
         // Make sure the drop off cone altitude has been reached
         new WaitUntilCommand(() -> m_altitude.AltitudeIsInHighDropOffFinalPosition()),
         // Start Retracting at fixed speed until it reaches release position

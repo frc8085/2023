@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.PrepareMidDropOff;
+import frc.robot.commands.PrepareMidConeDropOff;
 import frc.robot.commands.PrepareHighConeDropOff;
 import frc.robot.commands.PrepareTravel;
 import frc.robot.commands.PrepareTravelAfterIntake;
 import frc.robot.commands.PrepareTravelAfterScoring;
-import frc.robot.commands.ScoreBasedOnAltitude;
+import frc.robot.commands.ScoreBasedOnPosition;
 import frc.robot.commands.ScoreMidCube;
 import frc.robot.commands.ScoreHighCube;
 import frc.robot.commands.PrepareIntake;
@@ -154,7 +154,7 @@ public class RobotContainer {
                                                 new InstantCommand(() -> m_intake.holdCargo()),
                                                 new PrepareTravelAfterScoring(m_extension, m_altitude)));
 
-                ejectButton.onTrue(new ScoreBasedOnAltitude(m_altitude, m_extension,
+                ejectButton.onTrue(new ScoreBasedOnPosition(m_altitude, m_extension,
                                 m_intake));
 
                 highCubeEjectButton.onTrue(new ScoreHighCube(m_altitude, m_extension, m_intake));
@@ -188,7 +188,7 @@ public class RobotContainer {
                 final Trigger prepareIntakeButton = m_operatorController.a();
                 // final Trigger prepareShelfPickupButton = m_operatorController.start();
 
-                prepareMidDropOffButton.onTrue(new PrepareMidDropOff(m_extension, m_altitude))
+                prepareMidDropOffButton.onTrue(new PrepareMidConeDropOff(m_extension, m_altitude))
                                 .onFalse(new SequentialCommandGroup(
                                                 new WaitUntilCommand(
                                                                 () -> m_extension.ExtensionIsInMidScoringPosition()),
