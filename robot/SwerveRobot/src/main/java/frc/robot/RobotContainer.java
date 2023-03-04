@@ -153,13 +153,14 @@ public class RobotContainer {
         private void configureButtonBindings() {
                 /** DRIVE LOCK **/
                 new JoystickButton(m_driverController, Button.kLeftBumper.value)
-                                .whileTrue(new RunCommand(() -> m_robotDrive.lock(), m_robotDrive));
+                                .onTrue(new RunCommand(() -> m_robotDrive.lock(), m_robotDrive));
 
                 /** OPERATOR COMMANDS **/
                 final Trigger intakeButton = m_operatorController.rightTrigger();
                 final Trigger manualIntakeButton = m_operatorController.rightBumper();
                 final Trigger ejectButton = m_operatorController.leftTrigger();
-                final Trigger midCubeEjectButton = m_operatorController.leftBumper();
+                final Trigger highCubeEjectButton = m_operatorController.leftBumper();
+                final Trigger midCubeEjectButton = m_operatorController.start();
                 final Trigger setDoubleSubstationButton = m_operatorController.povUp();
                 final Trigger setSingleSubstationButton = m_operatorController.povDown();
 
@@ -201,6 +202,8 @@ public class RobotContainer {
 
                 ejectButton.onTrue(new ScoreBasedOnAltitude(m_altitude, m_extension,
                                 m_intake));
+
+                highCubeEjectButton.onTrue(new ScoreHighCube(m_altitude, m_extension, m_intake));
 
                 midCubeEjectButton.onTrue(new ScoreMidCube(m_altitude, m_extension, m_intake));
 
