@@ -10,6 +10,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class DriveBackwardsToBalance extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
@@ -18,9 +20,7 @@ public class DriveBackwardsToBalance extends CommandBase {
   private double m_slowSpeed = 0;
   private boolean reachedChargingStation = false;
   private boolean isBalanced = false;
-
   private double currentPitch;
-  private boolean pitchTipped;
 
   public DriveBackwardsToBalance(DriveSubsystem drive, double speed, double slowSpeed) {
     m_drive = drive;
@@ -46,14 +46,14 @@ public class DriveBackwardsToBalance extends CommandBase {
       reachedChargingStation = true;
     }
 
-    pitchTipped = reachedChargingStation && currentPitch < 0;
-
-    if (reachedChargingStation && pitchTipped) {
-      new DriveForwardMeters(m_drive, 0.1);
+    if (reachedChargingStation) {
+      new SequentialCommandGroup(
+          new DriveBackwardsMeters(m_drive, 0.1),
+          new WaitCommand(0.5));
     } else {
       m_drive.drive(
           false,
-          reachedChargingStation ? m_slowSpeed : m_speed,
+          m_speed,
           AutoConstants.kTravelBackwards,
           0,
           0,
@@ -68,6 +68,7 @@ public class DriveBackwardsToBalance extends CommandBase {
   // Stop driving when the command ends or is interrupted
   @Override
   public void end(boolean interrupted) {
+    m_drive.stop();
     new RunCommand(m_drive::lock, m_drive);
   }
 
