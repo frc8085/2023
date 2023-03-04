@@ -94,7 +94,7 @@ public class RobotContainer {
 
     // Reset heading before we start
     m_robotDrive.zeroHeading();
-    m_robotDrive.calibrate();
+    m_robotDrive.resetOdometry(new Pose2d());
 
     m_extension.moveToStartingPosition();
     m_altitude.moveToStartingPosition();

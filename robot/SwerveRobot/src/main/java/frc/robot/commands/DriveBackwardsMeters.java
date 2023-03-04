@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.DriveSubsystem;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -21,13 +22,12 @@ public class DriveBackwardsMeters extends CommandBase {
   public DriveBackwardsMeters(DriveSubsystem drive, double meters) {
     m_drive = drive;
     m_meters = Math.abs(meters);
-    m_drive.zeroHeading();
     addRequirements(m_drive);
   }
 
   @Override
   public void initialize() {
-    m_drive.zeroHeading();
+    m_drive.resetOdometry(new Pose2d());
     m_drive.drive(
         false,
         0.1,

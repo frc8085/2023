@@ -11,8 +11,9 @@ import frc.robot.Constants.AltitudeConstants;
 import frc.robot.subsystems.Altitude;
 
 public class PrepareDropOffCone extends SequentialCommandGroup {
-    public PrepareDropOffCone(Altitude m_altitude) {
-        addCommands(
-                new InstantCommand(() -> m_altitude.keepPosition(AltitudeConstants.kAltitudeDropOffFinalPosition)));
-    }
+  public PrepareDropOffCone(Altitude m_altitude) {
+    addCommands(
+        new InstantCommand(
+            () -> m_altitude.keepPosition(AltitudeConstants.kAltitudeDropOffFinalPosition)));
+  }
 }
