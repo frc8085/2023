@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -35,7 +34,7 @@ public class DriveToBalance extends CommandBase {
   @Override
   public void execute() {
     double currentPitch = m_drive.getPitch();
-    isBalanced = currentPitch < 3 && currentPitch >= -3;
+    isBalanced = currentPitch < 6 && currentPitch >= -6;
 
     m_drive.drive(
         false,

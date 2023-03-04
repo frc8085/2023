@@ -7,12 +7,14 @@ package frc.robot.commands;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public final class Autos {
   public static CommandBase autoMid(DriveSubsystem m_drive) {
     return Commands.sequence(
         new DriveToReachStation(m_drive, 0.25),
-        new DriveToBalance(m_drive, .15));
+        new DriveToBalance(m_drive, .15),
+        new RunCommand(m_drive::lock, m_drive));
   }
 
   private Autos() {
