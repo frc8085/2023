@@ -180,7 +180,9 @@ public class DriveSubsystem extends SubsystemBase {
         ? inputSpeed * DriveConstants.kMaxLimitedSpeedMetersPerSecond
         : inputSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
 
-    rotDirection *= DriveConstants.kMaxAngularSpeed;
+    double limitRotationSpeed = speedLimit || !isWithinSafeDrivingLimits()
+        ? rotDirection * DriveConstants.kMaxLimitedAngularSpeed
+        : rotDirection * DriveConstants.kMaxAngularSpeed;
 
     double forwardDirectionCommanded;
     double sidewaysDirectionCommanded;
@@ -234,7 +236,7 @@ public class DriveSubsystem extends SubsystemBase {
     // Convert the commanded speeds into the correct units for the drivetrain
     double forwardDirectionDelivered = forwardDirectionCommanded * speed;
     double sidewaysDirectionDelivered = sidewaysDirectionCommanded * speed;
-    double rotDelivered = m_currentRotation * DriveConstants.kMaxAngularSpeed;
+    double rotDelivered = m_currentRotation * limitRotationSpeed;
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative

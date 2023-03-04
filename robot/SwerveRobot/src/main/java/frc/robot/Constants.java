@@ -133,6 +133,8 @@ public final class Constants {
     public static final double kMaxLimitedSpeedMetersPerSecond = 2;
     // reduced this from 2 * Math.PI to slow down rotation
     public static final double kMaxAngularSpeed = .5 * Math.PI; // radians per second
+    // even more reduced angular speed when needed
+    public static final double kMaxLimitedAngularSpeed = .2 * Math.PI;
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(24);
