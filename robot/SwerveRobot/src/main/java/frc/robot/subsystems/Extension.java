@@ -91,7 +91,7 @@ public class Extension extends SubsystemBase {
   @Override
   public void periodic() {
     log();
-    resetExtensionEncoderAtRetractionLimit();
+    // resetExtensionEncoderAtRetractionLimit();
     ExtensionRetractionLimitHit();
   }
 

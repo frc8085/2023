@@ -225,7 +225,7 @@ public class Altitude extends SubsystemBase {
     enforceSafeExtensions();
     log();
 
-    resetAltitudeEncoderAtTopLimit();
+    // resetAltitudeEncoderAtTopLimit();
     AltitudeIsInTravelPosition();
     AltitudeIsInIntakePosition();
 
