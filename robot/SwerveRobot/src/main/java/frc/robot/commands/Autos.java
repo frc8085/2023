@@ -14,6 +14,7 @@ public final class Autos {
     return Commands.sequence(
         new DriveToReachStation(m_drive, 0.25),
         new DriveToBalance(m_drive, .15),
+        new FinalBalance(m_drive, .15 * .35),
         new RunCommand(m_drive::lock, m_drive));
   }
 
