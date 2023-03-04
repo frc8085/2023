@@ -29,7 +29,6 @@ public class DriveToBalance extends CommandBase {
   // Then run the drive command to travel backwards
   @Override
   public void initialize() {
-    m_drive.resetOdometry(new Pose2d());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
