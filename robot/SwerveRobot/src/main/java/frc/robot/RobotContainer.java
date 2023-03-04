@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.OpenIntake;
 import frc.robot.commands.PrepareMidDropOff;
 import frc.robot.commands.PrepareHighConeDropOff;
 import frc.robot.commands.PrepareTravel;
@@ -36,7 +35,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import frc.robot.subsystems.IntakeCover;
 import frc.robot.subsystems.Altitude;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -48,8 +46,6 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final IntakeCover m_intakeCover = new IntakeCover();
-  // private final IntakeNoPID m_intake = new IntakeNoPID();
   private final Intake m_intake = new Intake();
   private final Extension m_extension = new Extension();
   private final Altitude m_altitude = new Altitude(m_extension);
@@ -67,8 +63,6 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-
-    m_intakeCover.setDefaultCommand(new OpenIntake(m_intakeCover));
 
     // Reset heading and odometry before we start
     m_robotDrive.zeroHeading();
