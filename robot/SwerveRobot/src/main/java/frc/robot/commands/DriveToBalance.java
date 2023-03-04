@@ -34,7 +34,7 @@ public class DriveToBalance extends CommandBase {
   @Override
   public void execute() {
     double currentPitch = m_drive.getPitch();
-    isBalanced = currentPitch < 6 && currentPitch >= -6;
+    isBalanced = currentPitch > 14;
 
     m_drive.drive(
         false,
