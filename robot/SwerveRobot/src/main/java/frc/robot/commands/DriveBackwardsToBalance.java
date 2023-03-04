@@ -42,23 +42,27 @@ public class DriveBackwardsToBalance extends CommandBase {
   @Override
   public void execute() {
     currentPitch = m_drive.getPitch();
-    pitchTipped = reachedChargingStation && currentPitch < 0;
-
     if (currentPitch >= 10) {
       reachedChargingStation = true;
     }
 
+    pitchTipped = reachedChargingStation && currentPitch < 0;
+
+    if (reachedChargingStation && pitchTipped) {
+      new DriveForwardMeters(m_drive, 0.1);
+    } else {
+      m_drive.drive(
+          false,
+          reachedChargingStation ? m_slowSpeed : m_speed,
+          AutoConstants.kTravelBackwards,
+          0,
+          0,
+          true,
+          false);
+    }
+
     SmartDashboard.putBoolean("REACHED STATION", reachedChargingStation);
     SmartDashboard.putBoolean("BALACED", reachedChargingStation && isBalanced);
-
-    m_drive.drive(
-        false,
-        reachedChargingStation ? pitchTipped ? m_slowSpeed / 2 : m_slowSpeed : m_speed,
-        pitchTipped ? AutoConstants.kTravelForwards : AutoConstants.kTravelBackwards,
-        0,
-        0,
-        true,
-        false);
   }
 
   // Stop driving when the command ends or is interrupted
