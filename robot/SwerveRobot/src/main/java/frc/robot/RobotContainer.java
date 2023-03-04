@@ -153,7 +153,7 @@ public class RobotContainer {
         private void configureButtonBindings() {
                 /** DRIVE LOCK **/
                 new JoystickButton(m_driverController, Button.kLeftBumper.value)
-                                .onTrue(new RunCommand(() -> m_robotDrive.lock(), m_robotDrive));
+                                .toggleOnTrue(new RunCommand(() -> m_robotDrive.lock(), m_robotDrive));
 
                 /** OPERATOR COMMANDS **/
                 final Trigger intakeButton = m_operatorController.rightTrigger();
