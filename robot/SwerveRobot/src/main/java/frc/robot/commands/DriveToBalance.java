@@ -15,6 +15,7 @@ public class DriveToBalance extends CommandBase {
   private final DriveSubsystem m_drive;
   private double m_speed = 0;
   private boolean isBalanced = false;
+  private boolean timeToSlowDown = false;
 
   public DriveToBalance(DriveSubsystem drive, double speed) {
     m_drive = drive;
@@ -34,11 +35,12 @@ public class DriveToBalance extends CommandBase {
   @Override
   public void execute() {
     double currentPitch = m_drive.getPitch();
-    isBalanced = currentPitch > 14;
+    timeToSlowDown = currentPitch > 13;
+    isBalanced = currentPitch >= -3 && currentPitch <= 3;
 
     m_drive.drive(
         false,
-        m_speed,
+        timeToSlowDown ? m_speed / 2 : m_speed,
         AutoConstants.kTravelBackwards,
         0,
         0,
@@ -46,6 +48,7 @@ public class DriveToBalance extends CommandBase {
         false);
 
     SmartDashboard.putBoolean("BALACED", isBalanced);
+    SmartDashboard.putBoolean("TIME TO SLOW", timeToSlowDown);
 
   }
 
