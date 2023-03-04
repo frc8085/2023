@@ -110,9 +110,8 @@ public class DriveSubsystem extends SubsystemBase {
     /** Call log method every loop. */
     log();
 
-    SmartDashboard.putData("Reset Gyro", new InstantCommand(() -> zeroHeading()));
-
     // Update the odometry in the periodic block
+    //
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
         new SwerveModulePosition[] {
@@ -319,10 +318,7 @@ public class DriveSubsystem extends SubsystemBase {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
-  public void driveForward(
-      double forwardDirection,
-      double sidewaysDirection,
-      double rotDirection) {
+  public void driveForward() {
 
     // Only want to go forward, so sideways direction and rotation are 0
     double forwardDirectionDelivered = DriveConstants.kMaxLimitedSpeedMetersPerSecond;
@@ -411,6 +407,27 @@ public class DriveSubsystem extends SubsystemBase {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  public void driveStop() {
+
+    // Only want to go forward, so sideways direction and rotation are 0
+    double forwardDirectionDelivered = 0;
+    double sidewaysDirectionDelivered = 0;
+    double rotDelivered = 0;
+
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+            forwardDirectionDelivered,
+            sidewaysDirectionDelivered,
+            rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle())));
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+
   }
 
 }
