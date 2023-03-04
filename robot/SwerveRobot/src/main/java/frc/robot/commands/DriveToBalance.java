@@ -13,21 +13,18 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 public class DriveToBalance extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
-  private double m_speed = 0;
+  private double maxSpeed = AutoConstants.kDriveOnStationMaxSpeed;
   private boolean isBalanced = false;
   private boolean timeToSlowDown = false;
   private boolean tippedOver = false;
 
-  public DriveToBalance(DriveSubsystem drive, double speed) {
+  public DriveToBalance(DriveSubsystem drive) {
     m_drive = drive;
     // Take the magnitude of meters but ignore the sign
     // Just in case we provide a negative meters to this function by mistake
-    m_speed = speed;
     addRequirements(m_drive);
   }
 
-  // Reset the odomotry when the command is scheduled
-  // Then run the drive command to travel backwards
   @Override
   public void initialize() {
   }
@@ -43,7 +40,7 @@ public class DriveToBalance extends CommandBase {
 
     m_drive.drive(
         false,
-        timeToSlowDown ? m_speed * .7 : m_speed,
+        timeToSlowDown ? maxSpeed * AutoConstants.kDriveToBalanceFactor : maxSpeed,
         tippedOver ? AutoConstants.kTravelForwards : AutoConstants.kTravelBackwards,
         0,
         0,

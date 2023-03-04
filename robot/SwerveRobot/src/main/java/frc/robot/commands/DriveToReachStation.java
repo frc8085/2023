@@ -13,14 +13,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DriveToReachStation extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
-  private double m_speed = 0;
+  private double m_speed = AutoConstants.kDriveToStationSpeed;
   private boolean reachedChargingStation = false;
 
-  public DriveToReachStation(DriveSubsystem drive, double speed) {
+  public DriveToReachStation(DriveSubsystem drive) {
     m_drive = drive;
     // Take the magnitude of meters but ignore the sign
     // Just in case we provide a negative meters to this function by mistake
-    m_speed = speed;
     addRequirements(m_drive);
   }
 

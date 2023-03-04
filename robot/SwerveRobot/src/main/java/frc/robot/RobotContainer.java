@@ -213,8 +213,8 @@ public class RobotContainer {
          * @return the command to run in autonomous
          */
 
-        public Command getAutonomousCommand() {
-                return Autos.autoMid(m_robotDrive);
-        }
+  public Command getAutonomousCommand() {
+    return Autos.scoreHighAndBalance(m_robotDrive, m_altitude, m_extension, m_intake);
+  }
 
 }
