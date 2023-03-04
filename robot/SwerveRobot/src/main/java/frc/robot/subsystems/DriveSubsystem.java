@@ -23,6 +23,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.utilities.SwerveUtils;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -108,6 +109,8 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     /** Call log method every loop. */
     log();
+
+    SmartDashboard.putData("Reset Gyro", new InstantCommand(() -> zeroHeading()));
 
     // Update the odometry in the periodic block
     m_odometry.update(
