@@ -4,27 +4,24 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Intake;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
 public class ScoreCube extends SequentialCommandGroup {
-    public ScoreCube(
-            Altitude m_altitude,
-            Extension m_extension,
-            Intake m_intake) {
-        addCommands(
-                new InstantCommand(() -> m_intake.ejectCube()),
-                // 3. Wait X sec and then turn off intake
-                new WaitCommand(IntakeConstants.kEjectWaitTime),
-                new InstantCommand(m_intake::stopIntake));
+  public ScoreCube(
+      Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    addCommands(
+        new InstantCommand(() -> m_intake.ejectCube()),
+        // 3. Wait X sec and then turn off intake
+        new WaitCommand(IntakeConstants.kEjectWaitTime),
+        new InstantCommand(m_intake::stopIntake));
 
-    }
+  }
 }

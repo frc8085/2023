@@ -4,28 +4,24 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 public class ScoreMidCube extends SequentialCommandGroup {
-        public ScoreMidCube(
-                        Altitude m_altitude,
-                        Extension m_extension,
-                        Intake m_intake) {
-                addCommands(
-                                // Prepare Drop off Cube (move extension to proper position)
-                                new PrepareMidCubeDropOff(m_extension),
-                                new WaitUntilCommand(() -> m_extension.ExtensionIsInMidCubeShootPosition()),
-                                // Run Eject Cube
-                                new ScoreCube(m_altitude, m_extension, m_intake),
-                                // Return to Travel Position
-                                new PrepareTravelAfterScoring(m_extension, m_altitude));
-        }
+  public ScoreMidCube(
+      Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    addCommands(
+        // Prepare Drop off Cube (move extension to proper position)
+        new PrepareMidCubeDropOff(m_extension),
+        new WaitUntilCommand(() -> m_extension.ExtensionIsInMidCubeShootPosition()),
+        // Run Eject Cube
+        new ScoreCube(m_altitude, m_extension, m_intake),
+        // Return to Travel Position
+        new PrepareTravelAfterScoring(m_extension, m_altitude));
+  }
 }

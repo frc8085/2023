@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 import static frc.robot.Constants.ExtensionConstants;
@@ -16,14 +15,14 @@ import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
 public class PrepareTravelAfterIntake extends SequentialCommandGroup {
-    public PrepareTravelAfterIntake(
-            Extension m_extension,
-            Altitude m_altitude) {
-        addCommands(
-                new InstantCommand(() -> m_altitude.keepPosition(AltitudeConstants.kAltitudeTravelPosition)),
-                new WaitUntilCommand(() -> m_altitude.AltitudeIsInScoringPosition()),
-                new InstantCommand(
-                        () -> m_extension.keepPosition(ExtensionConstants.kExtensionPositionFullyRetracted)));
+  public PrepareTravelAfterIntake(
+      Extension m_extension,
+      Altitude m_altitude) {
+    addCommands(
+        new InstantCommand(() -> m_altitude.keepPosition(AltitudeConstants.kAltitudeTravelPosition)),
+        new WaitUntilCommand(() -> m_altitude.AltitudeIsInScoringPosition()),
+        new InstantCommand(
+            () -> m_extension.keepPosition(ExtensionConstants.kExtensionPositionFullyRetracted)));
 
-    }
+  }
 }
