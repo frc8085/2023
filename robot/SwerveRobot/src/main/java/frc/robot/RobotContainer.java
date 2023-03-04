@@ -175,15 +175,21 @@ public class RobotContainer {
                 // intakeButton.whileTrue(new InstantCommand(() -> m_intake.intakeCone()))
                 // .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
 
-                intakeButton.whileTrue(
-                                new ConditionalCommand(
-                                                new RunIntakeCargo(m_altitude, m_extension, m_intake),
-                                                new InstantCommand(),
-                                                () -> timeSince(timeWhenIntakeReleased) > IntakeConstants.kIntakeSafetyPressWaitTime))
+                intakeButton.whileTrue(new RunIntakeCargo(m_altitude, m_extension, m_intake))
                                 .onFalse(new ParallelCommandGroup(
-                                                new InstantCommand(() -> timeWhenIntakeReleased = Timer.getMatchTime()),
                                                 new InstantCommand(() -> m_intake.holdCargo()),
                                                 new PrepareTravelAfterIntake(m_extension, m_altitude)));
+
+                // intakeButton.whileTrue(
+                // new ConditionalCommand(
+                // new RunIntakeCargo(m_altitude, m_extension, m_intake),
+                // new InstantCommand(),
+                // () -> timeSince(timeWhenIntakeReleased) >
+                // IntakeConstants.kIntakeSafetyPressWaitTime))
+                // .onFalse(new ParallelCommandGroup(
+                // new InstantCommand(() -> timeWhenIntakeReleased = Timer.getMatchTime()),
+                // new InstantCommand(() -> m_intake.holdCargo()),
+                // new PrepareTravelAfterIntake(m_extension, m_altitude)));
 
                 manualIntakeButton.whileTrue(new InstantCommand(() -> m_intake.intakeCube()))
                                 .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
