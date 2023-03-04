@@ -315,4 +315,99 @@ public class DriveSubsystem extends SubsystemBase {
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
+
+  public void driveForward(
+      double forwardDirection,
+      double sidewaysDirection,
+      double rotDirection) {
+
+    // Only want to go forward, so sideways direction and rotation are 0
+    double forwardDirectionDelivered = DriveConstants.kMaxLimitedSpeedMetersPerSecond;
+    double sidewaysDirectionDelivered = 0;
+    double rotDelivered = 0;
+
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+            forwardDirectionDelivered,
+            sidewaysDirectionDelivered,
+            rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle())));
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+
+  }
+
+  public void driveBackward(
+      double forwardDirection,
+      double sidewaysDirection,
+      double rotDirection) {
+
+    // Only want to go forward, so sideways direction and rotation are 0
+    double forwardDirectionDelivered = -DriveConstants.kMaxLimitedSpeedMetersPerSecond;
+    double sidewaysDirectionDelivered = 0;
+    double rotDelivered = 0;
+
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+            forwardDirectionDelivered,
+            sidewaysDirectionDelivered,
+            rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle())));
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+
+  }
+
+  public void driveLeft(
+      double forwardDirection,
+      double sidewaysDirection,
+      double rotDirection) {
+
+    // Only want to go forward, so sideways direction and rotation are 0
+    double forwardDirectionDelivered = 0;
+    double sidewaysDirectionDelivered = -DriveConstants.kMaxLimitedSpeedMetersPerSecond;
+    double rotDelivered = 0;
+
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+            forwardDirectionDelivered,
+            sidewaysDirectionDelivered,
+            rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle())));
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  public void driveRight(
+      double forwardDirection,
+      double sidewaysDirection,
+      double rotDirection) {
+
+    // Only want to go forward, so sideways direction and rotation are 0
+    double forwardDirectionDelivered = 0;
+    double sidewaysDirectionDelivered = DriveConstants.kMaxLimitedSpeedMetersPerSecond;
+    double rotDelivered = 0;
+
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+            forwardDirectionDelivered,
+            sidewaysDirectionDelivered,
+            rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle())));
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+  }
+
 }
