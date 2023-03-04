@@ -35,7 +35,7 @@ public class DriveToBalance extends CommandBase {
   @Override
   public void execute() {
     double currentPitch = m_drive.getPitch();
-    timeToSlowDown = currentPitch < 0;
+    timeToSlowDown = currentPitch < -3;
     isBalanced = currentPitch >= -3 && currentPitch <= 3;
 
     m_drive.drive(
