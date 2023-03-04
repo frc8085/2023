@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public final class Autos {
   public static CommandBase autoMid(DriveSubsystem m_drive) {
     return Commands.sequence(
-        new DriveBackwardsToBalance(m_drive, .25, .1));
+        new DriveBackwardsToBalance(m_drive, .25, .15));
   }
 
   private Autos() {
