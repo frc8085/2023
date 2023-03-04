@@ -11,8 +11,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public final class Autos {
   public static CommandBase autoMid(DriveSubsystem m_drive) {
     return Commands.sequence(
-        new DriveForwardMeters(m_drive, 1.0),
-        new DriveBackwardsMeters(m_drive, 0.5));
+        new DriveBackwardsMeters(m_drive, 2.6));
   }
 
   private Autos() {
