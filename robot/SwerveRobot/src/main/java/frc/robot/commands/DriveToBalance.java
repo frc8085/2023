@@ -35,7 +35,7 @@ public class DriveToBalance extends CommandBase {
   @Override
   public void execute() {
     double currentPitch = m_drive.getPitch();
-    timeToSlowDown = !timeToSlowDown && currentPitch < -3;
+    timeToSlowDown = currentPitch < -3;
     isBalanced = timeToSlowDown && (currentPitch >= -3 && currentPitch <= 3);
 
     m_drive.drive(
@@ -56,7 +56,6 @@ public class DriveToBalance extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_drive.stop();
-    new RunCommand(m_drive::lock, m_drive);
   }
 
   // End the command when we reach the desired pose in meters
