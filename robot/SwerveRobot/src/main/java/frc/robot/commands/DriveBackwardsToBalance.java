@@ -54,12 +54,13 @@ public class DriveBackwardsToBalance extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_drive.stop();
+    m_drive.lock();
   }
 
   // End the command when we reach the desired pose in meters
   @Override
   public boolean isFinished() {
-    boolean isBalanced = m_drive.getPitch() > -.1 && m_drive.getPitch() < 0.1;
+    boolean isBalanced = m_drive.getPitch() > -5 && m_drive.getPitch() < 5;
     return reachedChargingStation && isBalanced;
   }
 }
