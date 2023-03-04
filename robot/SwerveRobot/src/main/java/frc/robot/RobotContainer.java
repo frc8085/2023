@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.DriveBackwardsMeters;
-import frc.robot.commands.DriveForwardMeters;
 import frc.robot.commands.OpenIntake;
 import frc.robot.commands.PrepareMidDropOff;
 import frc.robot.commands.PrepareHighConeDropOff;
@@ -41,9 +39,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.IntakeCover;
 import frc.robot.subsystems.Altitude;
 import edu.wpi.first.wpilibj.DriverStation;
-// Dashboard
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Timer;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
