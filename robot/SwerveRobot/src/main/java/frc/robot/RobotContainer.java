@@ -4,20 +4,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Constants.AltitudeConstants;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveBackwardsMeters;
 import frc.robot.commands.DriveForwardMeters;
@@ -38,19 +28,15 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import java.util.List;
 import frc.robot.subsystems.IntakeCover;
 import frc.robot.subsystems.Altitude;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -65,7 +51,6 @@ import edu.wpi.first.wpilibj.Timer;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private double timeWhenIntakeReleased;
   // The robot's subsystems
   private final IntakeCover m_intakeCover = new IntakeCover();
   // private final IntakeNoPID m_intake = new IntakeNoPID();
@@ -74,10 +59,8 @@ public class RobotContainer {
   private final Altitude m_altitude = new Altitude(m_extension);
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_altitude, m_extension);
 
-  // The driver's controller
+  // The controllers
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-
-  // The operator's controller
   CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
 
   /**
@@ -85,17 +68,17 @@ public class RobotContainer {
    */
   public RobotContainer() {
     DriverStation.silenceJoystickConnectionWarning(true);
-    System.out.println("FMS? " + DriverStation.isFMSAttached());
 
     // Configure the button bindings
     configureButtonBindings();
 
     m_intakeCover.setDefaultCommand(new OpenIntake(m_intakeCover));
 
-    // Reset heading before we start
+    // Reset heading and odometry before we start
     m_robotDrive.zeroHeading();
     m_robotDrive.resetOdometry(new Pose2d());
 
+    // Move the elevator to starting position
     m_extension.moveToStartingPosition();
     m_altitude.moveToStartingPosition();
 
@@ -108,14 +91,7 @@ public class RobotContainer {
         new RunCommand(() -> m_robotDrive.drive(
             m_driverController.getRightBumper(),
             m_driverController.getRightTriggerAxis(),
-            // MathUtil.applyDeadband(-m_driverController.getLeftY(),
-            // 0.06),
-            // MathUtil.applyDeadband(-m_driverController.getLeftX(),
-            // 0.06),
-            // MathUtil.applyDeadband(-m_driverController.getRightX(),
-            // 0.06),
-
-            // new stuff from Rev for SlewRate Limiter
+            // From Rev for SlewRate Limiter
             Math.max(0.0, (Math.abs(m_driverController.getLeftY())
                 - OIConstants.kDriveDeadband)
                 / (1.0 - OIConstants.kDriveDeadband))
@@ -144,13 +120,7 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-   * subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-   * passing it to a
-   * {@link JoystickButton}.
+   * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
     /** DRIVE LOCK **/
@@ -165,33 +135,16 @@ public class RobotContainer {
     final Trigger midCubeEjectButton = m_operatorController.start();
     final Trigger setDoubleSubstationButton = m_operatorController.povUp();
     final Trigger setSingleSubstationButton = m_operatorController.povDown();
-
-    /** MANUAL OPERATION **/
     final Trigger ExtendButton = m_operatorController.axisLessThan(5, -.25);
     final Trigger RetractButton = m_operatorController.axisGreaterThan(5, .25);
-
     final Trigger RaiseButton = m_operatorController.axisLessThan(1, -.25);
     final Trigger LowerButton = m_operatorController.axisGreaterThan(1, .25);
 
-    // trying PID
-    // intakeButton.whileTrue(new InstantCommand(() -> m_intake.intakeCone()))
-    // .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
-
+    // Intake button will run the intake then hold game piece when released
     intakeButton.whileTrue(new RunIntakeCargo(m_altitude, m_extension, m_intake))
         .onFalse(new ParallelCommandGroup(
             new InstantCommand(() -> m_intake.holdCargo()),
             new PrepareTravelAfterIntake(m_extension, m_altitude)));
-
-    // intakeButton.whileTrue(
-    // new ConditionalCommand(
-    // new RunIntakeCargo(m_altitude, m_extension, m_intake),
-    // new InstantCommand(),
-    // () -> timeSince(timeWhenIntakeReleased) >
-    // IntakeConstants.kIntakeSafetyPressWaitTime))
-    // .onFalse(new ParallelCommandGroup(
-    // new InstantCommand(() -> timeWhenIntakeReleased = Timer.getMatchTime()),
-    // new InstantCommand(() -> m_intake.holdCargo()),
-    // new PrepareTravelAfterIntake(m_extension, m_altitude)));
 
     manualIntakeButton.whileTrue(new InstantCommand(() -> m_intake.intakeCube()))
         .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
@@ -216,15 +169,11 @@ public class RobotContainer {
     midCubeEjectButton.onTrue(new ScoreMidCube(m_altitude, m_extension, m_intake));
 
     ExtendButton.whileTrue(new InstantCommand(m_extension::extendExtension, m_extension))
-        // .onFalse(new KeepExtensionPosition(m_extension.getCurrentExtensionPosition(),
-        // m_extension));
         .onFalse(new InstantCommand(
             () -> m_extension.keepPosition(
                 m_extension.getCurrentExtensionPosition())));
 
     RetractButton.whileTrue(new InstantCommand(m_extension::retractExtension, m_extension))
-        // .onFalse(new KeepExtensionPosition(m_extension.getCurrentExtensionPosition(),
-        // m_extension));
         .onFalse(new InstantCommand(
             () -> m_extension.keepPosition(
                 m_extension.getCurrentExtensionPosition())));
@@ -263,10 +212,6 @@ public class RobotContainer {
     prepareTravelButton.onTrue(new PrepareTravel(m_extension, m_altitude));
     prepareIntakeButton.onTrue(new PrepareIntake(m_extension, m_altitude));
 
-  }
-
-  public double timeSince(double startTime) {
-    return startTime - Timer.getMatchTime();
   }
 
   /**
