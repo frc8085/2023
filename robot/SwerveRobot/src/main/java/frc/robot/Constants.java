@@ -42,7 +42,7 @@ public final class Constants {
 
     // Intake Cone Power
     public static final double kIntakeConePower = 1;
-    public static final double kEjectConePower = 0.25;
+    public static final double kEjectConePower = 0.35;
 
     // Intake Cube Power
     public static final double kIntakeCubePower = 0.8;
@@ -71,7 +71,7 @@ public final class Constants {
     public static double kExtensionPositionFullyRetracted = 1;
     public static double kExtensionPositionIntakeOut = 39;
     public static double kExtensionPositionMidDropOff = 83;
-    public static double kExtensionPositionHighDropOff = 140;
+    public static double kExtensionPositionHighDropOff = 135;
     public static double kExtensionPositionHighDropOffReturn = 100;
     public static double kExtensionPositionSingleSubstation = 41;
     public static double kExtensionPositionMidCubeShooter = 60;
@@ -101,17 +101,17 @@ public final class Constants {
     // Altitude when delivering high cone that it lowers to after extending fully
     public static double kAltitudeHighDropOffPosition = -2.75;
     // Altitude at position that it releases the cone
-    public static double kAltitudeMidDropOffPosition = -2.75;
+    public static double kAltitudeMidDropOffPosition = -2.85;
     // Altitude at position that it releases the cone
     public static double kAltitudeDropOffFinalPosition = -3;
     // Altitude at high cube shoot Altitude
     public static double kAltitudeHighCubeShootPosition = -1;
 
     // Altitude at Bottom Position
-    public static double kAltitudeIntakePosition = -5.1;
+    public static double kAltitudeIntakePosition = -5.5;
     // Altitude at Shelf Position
     public static double kAltitudeDoubleSubstationPosition = -2.05;
-    public static double kAltitudeSingleSubstationPosition = -1.65;
+    public static double kAltitudeSingleSubstationPosition = -1.85;
 
     // Altitude Error Tolerance
     public static double kAltitudeError = 0.05;
