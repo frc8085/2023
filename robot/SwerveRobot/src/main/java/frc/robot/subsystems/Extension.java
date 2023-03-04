@@ -18,6 +18,8 @@ import static frc.robot.Constants.ExtensionConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Extension extends SubsystemBase {
+  private boolean encoderReset = false;
+
   /** Creates a new Extension. */
 
   // Extension motors
@@ -91,7 +93,7 @@ public class Extension extends SubsystemBase {
   @Override
   public void periodic() {
     log();
-    // resetExtensionEncoderAtRetractionLimit();
+    resetExtensionEncoderAtRetractionLimit();
     ExtensionRetractionLimitHit();
   }
 
@@ -106,8 +108,9 @@ public class Extension extends SubsystemBase {
   }
 
   public void resetExtensionEncoderAtRetractionLimit() {
-    if (isRetractionLimitHit()) {
+    if (!encoderReset && isRetractionLimitHit()) {
       m_extensionEncoder.setPosition(1);
+      encoderReset = true;
     }
   }
 
