@@ -277,17 +277,25 @@ public class Altitude extends SubsystemBase {
 
   public boolean AltitudeIsInScoringPosition() {
 
-    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeDropOffPosition
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeHighDropOffPosition
         + AltitudeConstants.kAltitudePositionTolerance &&
-        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeDropOffPosition
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeMidDropOffPosition
             - AltitudeConstants.kAltitudePositionTolerance;
   };
 
-  public boolean AltitudeIsInHighDropOffPosition() {
+  public boolean AltitudeIsInHighDropOffFinalPosition() {
 
-    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeDropOffFinalPosition
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeHighDropOffFinalPosition
         + AltitudeConstants.kAltitudePositionTolerance &&
-        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeDropOffFinalPosition
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeHighDropOffFinalPosition
+            - AltitudeConstants.kAltitudePositionTolerance;
+  };
+
+  public boolean AltitudeIsInMidDropOffFinalPosition() {
+
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeMidDropOffFinalPosition
+        + AltitudeConstants.kAltitudePositionTolerance &&
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeMidDropOffFinalPosition
             - AltitudeConstants.kAltitudePositionTolerance;
   };
 

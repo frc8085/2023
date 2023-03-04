@@ -102,8 +102,11 @@ public final class Constants {
     public static double kAltitudeHighDropOffPosition = -2.75;
     // Altitude at position that it releases the cone
     public static double kAltitudeMidDropOffPosition = -2.85;
-    // Altitude at position that it releases the cone
-    public static double kAltitudeDropOffFinalPosition = -3;
+    // Altitude at position that it releases the High cone
+    public static double kAltitudeHighDropOffFinalPosition = -3;
+    // Altitude at position that it releases the Mid cone
+    public static double kAltitudeMidDropOffFinalPosition = -3.1;
+
     // Altitude at high cube shoot Altitude
     public static double kAltitudeHighCubeShootPosition = -1;
 

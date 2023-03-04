@@ -13,8 +13,8 @@ import static frc.robot.Constants.AltitudeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class PrepareMidDropOff extends SequentialCommandGroup {
-  public PrepareMidDropOff(
+public class PrepareMidConeDropOff extends SequentialCommandGroup {
+  public PrepareMidConeDropOff(
       Extension m_extension,
       Altitude m_altitude) {
     addCommands(new ParallelCommandGroup(

@@ -14,16 +14,16 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class ScoreCone extends SequentialCommandGroup {
-  public ScoreCone(
+public class ScoreMidCone extends SequentialCommandGroup {
+  public ScoreMidCone(
       Altitude m_altitude,
       Extension m_extension,
       Intake m_intake) {
     addCommands(
         // 1. Prepare Drop Off Cone (lower altitude slightly)
-        new PrepareDropOffCone(m_altitude),
+        new PrepareMidConeFinalDropOff(m_altitude),
         // Make sure the drop off cone altitude has been reached
-        new WaitUntilCommand(() -> m_altitude.AltitudeIsInHighDropOffPosition()),
+        new WaitUntilCommand(() -> m_altitude.AltitudeIsInMidDropOffFinalPosition()),
         // Start Retracting at fixed speed until it reaches release position
         new InstantCommand(() -> m_extension.retractExtension())
             .until(m_extension::ExtensionIsInReleasePosition),
