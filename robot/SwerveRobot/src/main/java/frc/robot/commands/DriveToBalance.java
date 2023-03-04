@@ -10,23 +10,18 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class DriveBackwardsToBalance extends CommandBase {
+public class DriveToBalance extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
   private double m_speed = 0;
-  private double m_slowSpeed = 0;
-  private boolean reachedChargingStation = false;
   private boolean isBalanced = false;
 
-  public DriveBackwardsToBalance(DriveSubsystem drive, double speed, double slowSpeed) {
+  public DriveToBalance(DriveSubsystem drive, double speed) {
     m_drive = drive;
     // Take the magnitude of meters but ignore the sign
     // Just in case we provide a negative meters to this function by mistake
     m_speed = speed;
-    m_slowSpeed = slowSpeed;
     addRequirements(m_drive);
   }
 
@@ -41,28 +36,19 @@ public class DriveBackwardsToBalance extends CommandBase {
   @Override
   public void execute() {
     double currentPitch = m_drive.getPitch();
+    isBalanced = currentPitch > 14;
 
-    if (!reachedChargingStation && currentPitch >= 10) {
-      reachedChargingStation = true;
-    }
+    m_drive.drive(
+        false,
+        m_speed,
+        AutoConstants.kTravelBackwards,
+        0,
+        0,
+        true,
+        false);
 
-    if (reachedChargingStation) {
-      new SequentialCommandGroup(
-          new DriveBackwardsMeters(m_drive, 0.1),
-          new WaitCommand(5));
-    } else {
-      m_drive.drive(
-          false,
-          m_speed,
-          AutoConstants.kTravelBackwards,
-          0,
-          0,
-          true,
-          false);
-    }
+    SmartDashboard.putBoolean("BALACED", isBalanced);
 
-    SmartDashboard.putBoolean("REACHED STATION", reachedChargingStation);
-    SmartDashboard.putBoolean("BALACED", reachedChargingStation && isBalanced);
   }
 
   // Stop driving when the command ends or is interrupted
@@ -75,8 +61,6 @@ public class DriveBackwardsToBalance extends CommandBase {
   // End the command when we reach the desired pose in meters
   @Override
   public boolean isFinished() {
-    double currentPitch = m_drive.getPitch();
-    isBalanced = currentPitch > 0 && currentPitch < 3;
-    return reachedChargingStation && isBalanced;
+    return isBalanced;
   }
 }
