@@ -251,9 +251,14 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
-    // Constats for us in Auto commands
+    // Constants for us in Auto commands
     public static final double kTravelForwards = 1;
     public static final double kTravelBackwards = -1;
+
+    public static final double kDriveToStationSpeed = 0.25;
+    public static final double kDriveOnStationMaxSpeed = 0.15;
+    public static final double kDriveToBalanceFactor = 0.7;
+    public static final double kFinalBalanceSpeed = kDriveOnStationMaxSpeed * (kDriveToBalanceFactor / 2);
 
   }
 
