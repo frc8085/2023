@@ -13,14 +13,14 @@ import static frc.robot.Constants.AltitudeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class PrepareSingleSubstationPickup extends SequentialCommandGroup {
-  public PrepareSingleSubstationPickup(
-      Extension m_extension,
-      Altitude m_altitude) {
-    addCommands(new ParallelCommandGroup(
-        new InstantCommand(() -> m_extension
-            .keepPosition(ExtensionConstants.kExtensionPositionSingleSubstation)),
-        new InstantCommand(() -> m_altitude.keepPosition(
-            AltitudeConstants.kAltitudeSingleSubstationPosition))));
-  }
+public class MoveToSingleSubstationPickup extends SequentialCommandGroup {
+    public MoveToSingleSubstationPickup(
+            Extension m_extension,
+            Altitude m_altitude) {
+        addCommands(new ParallelCommandGroup(
+                new InstantCommand(() -> m_extension
+                        .keepPosition(ExtensionConstants.kExtensionPositionSingleSubstation)),
+                new InstantCommand(() -> m_altitude.keepPosition(
+                        AltitudeConstants.kAltitudeSingleSubstationPosition))));
+    }
 }

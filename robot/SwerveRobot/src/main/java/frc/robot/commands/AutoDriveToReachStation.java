@@ -10,56 +10,56 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveToReachStation extends CommandBase {
-  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final DriveSubsystem m_drive;
-  private double m_speed = AutoConstants.kDriveToStationSpeed;
-  private boolean reachedChargingStation = false;
+public class AutoDriveToReachStation extends CommandBase {
+    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+    private final DriveSubsystem m_drive;
+    private double m_speed = AutoConstants.kDriveToStationSpeed;
+    private boolean reachedChargingStation = false;
 
-  public DriveToReachStation(DriveSubsystem drive) {
-    m_drive = drive;
-    // Take the magnitude of meters but ignore the sign
-    // Just in case we provide a negative meters to this function by mistake
-    addRequirements(m_drive);
-  }
-
-  // Reset the odomotry when the command is scheduled
-  // Then run the drive command to travel backwards
-  @Override
-  public void initialize() {
-    m_drive.resetOdometry(new Pose2d());
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    double currentPitch = m_drive.getPitch();
-
-    if (!reachedChargingStation && currentPitch >= 10) {
-      reachedChargingStation = true;
+    public AutoDriveToReachStation(DriveSubsystem drive) {
+        m_drive = drive;
+        // Take the magnitude of meters but ignore the sign
+        // Just in case we provide a negative meters to this function by mistake
+        addRequirements(m_drive);
     }
 
-    m_drive.drive(
-        false,
-        m_speed,
-        AutoConstants.kTravelBackwards,
-        0,
-        0,
-        true,
-        false);
+    // Reset the odomotry when the command is scheduled
+    // Then run the drive command to travel backwards
+    @Override
+    public void initialize() {
+        m_drive.resetOdometry(new Pose2d());
+    }
 
-    SmartDashboard.putBoolean("REACHED STATION", reachedChargingStation);
-  }
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        double currentPitch = m_drive.getPitch();
 
-  // Stop driving when the command ends or is interrupted
-  @Override
-  public void end(boolean interrupted) {
-    m_drive.stop();
-  }
+        if (!reachedChargingStation && currentPitch >= 10) {
+            reachedChargingStation = true;
+        }
 
-  // End the command when we reach the desired pose in meters
-  @Override
-  public boolean isFinished() {
-    return reachedChargingStation;
-  }
+        m_drive.drive(
+                false,
+                m_speed,
+                AutoConstants.kTravelBackwards,
+                0,
+                0,
+                true,
+                false);
+
+        SmartDashboard.putBoolean("REACHED STATION", reachedChargingStation);
+    }
+
+    // Stop driving when the command ends or is interrupted
+    @Override
+    public void end(boolean interrupted) {
+        m_drive.stop();
+    }
+
+    // End the command when we reach the desired pose in meters
+    @Override
+    public boolean isFinished() {
+        return reachedChargingStation;
+    }
 }

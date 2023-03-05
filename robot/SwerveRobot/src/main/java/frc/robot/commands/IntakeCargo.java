@@ -11,18 +11,18 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class RunIntakeCargo extends SequentialCommandGroup {
-  public RunIntakeCargo(
-      Altitude m_altitude,
-      Extension m_extension,
-      Intake m_intake) {
-    addCommands(
-        // 1. Prepare intake
-        new PrepareIntake(m_extension, m_altitude),
-        new WaitUntilCommand(
-            () -> m_altitude.AltitudeIsInIntakePosition() &&
-                m_extension.ExtensionIsInIntakePosition()),
-        // 2. Run intake
-        new InstantCommand(() -> m_intake.intakeCone()));
-  }
+public class IntakeCargo extends SequentialCommandGroup {
+    public IntakeCargo(
+            Altitude m_altitude,
+            Extension m_extension,
+            Intake m_intake) {
+        addCommands(
+                // 1. Prepare intake
+                new MoveToIntake(m_extension, m_altitude),
+                new WaitUntilCommand(
+                        () -> m_altitude.AltitudeIsInIntakePosition() &&
+                                m_extension.ExtensionIsInIntakePosition()),
+                // 2. Run intake
+                new InstantCommand(() -> m_intake.intakeCone()));
+    }
 }

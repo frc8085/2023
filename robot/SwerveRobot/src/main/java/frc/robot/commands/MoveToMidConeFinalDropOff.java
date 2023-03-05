@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.subsystems.Altitude;
 
-public class PrepareMidConeFinalDropOff extends SequentialCommandGroup {
-  public PrepareMidConeFinalDropOff(Altitude m_altitude) {
-    addCommands(
-        new InstantCommand(
-            () -> m_altitude.keepPosition(AltitudeConstants.kAltitudeMidDropOffFinalPosition)));
-  }
+public class MoveToMidConeFinalDropOff extends SequentialCommandGroup {
+    public MoveToMidConeFinalDropOff(Altitude m_altitude) {
+        addCommands(
+                new InstantCommand(
+                        () -> m_altitude.keepPosition(AltitudeConstants.kAltitudeMidDropOffFinalPosition)));
+    }
 }

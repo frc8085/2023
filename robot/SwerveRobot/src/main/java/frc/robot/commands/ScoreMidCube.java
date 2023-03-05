@@ -11,17 +11,17 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 public class ScoreMidCube extends SequentialCommandGroup {
-  public ScoreMidCube(
-      Altitude m_altitude,
-      Extension m_extension,
-      Intake m_intake) {
-    addCommands(
-        // Prepare Drop off Cube (move extension to proper position)
-        new PrepareMidCubeDropOff(m_extension),
-        new WaitUntilCommand(() -> m_extension.ExtensionIsInMidCubeShootPosition()),
-        // Run Eject Cube
-        new ScoreCube(m_altitude, m_extension, m_intake),
-        // Return to Travel Position
-        new PrepareTravelAfterScoring(m_extension, m_altitude));
-  }
+    public ScoreMidCube(
+            Altitude m_altitude,
+            Extension m_extension,
+            Intake m_intake) {
+        addCommands(
+                // Prepare Drop off Cube (move extension to proper position)
+                new MoveToMidCubeDropOff(m_extension),
+                new WaitUntilCommand(() -> m_extension.ExtensionIsInMidCubeShootPosition()),
+                // Run Eject Cube
+                new ScoreCube(m_altitude, m_extension, m_intake),
+                // Return to Travel Position
+                new MoveToTravelAfterScoring(m_extension, m_altitude));
+    }
 }

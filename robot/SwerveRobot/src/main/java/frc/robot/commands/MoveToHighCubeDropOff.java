@@ -13,14 +13,14 @@ import frc.robot.Constants.AltitudeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class PrepareHighCubeDropOff extends SequentialCommandGroup {
-  public PrepareHighCubeDropOff(
-      Extension m_extension, Altitude m_altitude) {
-    addCommands(
-        new InstantCommand(() -> m_extension
-            .keepPosition(ExtensionConstants.kExtensionPositionHighCubeShooter)),
-        new InstantCommand(() -> m_altitude
-            .keepPosition(AltitudeConstants.kAltitudeHighCubeShootPosition)));
+public class MoveToHighCubeDropOff extends SequentialCommandGroup {
+    public MoveToHighCubeDropOff(
+            Extension m_extension, Altitude m_altitude) {
+        addCommands(
+                new InstantCommand(() -> m_extension
+                        .keepPosition(ExtensionConstants.kExtensionPositionHighCubeShooter)),
+                new InstantCommand(() -> m_altitude
+                        .keepPosition(AltitudeConstants.kAltitudeHighCubeShootPosition)));
 
-  }
+    }
 }
