@@ -18,7 +18,7 @@ import frc.robot.Constants.SubsystemMotorConstants;
 import static frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  private boolean TUNING_MODE = true;
+  private boolean TUNING_MODE = false;
   private final CANSparkMax m_intakeMotor;
   private RelativeEncoder m_intakeEncoder;
 
