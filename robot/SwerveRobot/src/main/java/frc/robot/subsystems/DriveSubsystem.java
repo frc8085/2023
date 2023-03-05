@@ -23,6 +23,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.utilities.SwerveUtils;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -77,6 +78,10 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
       });
 
+  public double getPitch() {
+    return m_gyro.getPitch();
+  }
+
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
     // Things to show only in tuning mode
@@ -93,7 +98,7 @@ public class DriveSubsystem extends SubsystemBase {
           m_gyro.getAbsoluteCompassHeading());
       SmartDashboard.putNumber("Compass Heading", m_gyro.getCompassHeading());
 
-      SmartDashboard.putBoolean("In Safe Limits", isWithinSafeLimits());
+      SmartDashboard.putBoolean("In Safe Limits", isWithinSafeDrivingLimits());
 
     }
   }
@@ -110,6 +115,7 @@ public class DriveSubsystem extends SubsystemBase {
     log();
 
     // Update the odometry in the periodic block
+    //
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
         new SwerveModulePosition[] {
@@ -146,19 +152,26 @@ public class DriveSubsystem extends SubsystemBase {
         pose);
   }
 
-  public boolean isWithinSafeLimits() {
+  public boolean isWithinSafeDrivingLimits() {
     return m_altitude.getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin &&
         m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
+  }
+
+  public void stop() {
+    drive(false, 0, 0, 0, 0, true, false);
   }
 
   /**
    * Method to drive the robot using joystick info.
    *
-   * @param speedLimit    Whether to fix the speed to a set value
-   * @param speed         Speed of the robot in the x direction (forward).
-   * @param rot           Angular rate of the robot.
-   * @param fieldRelative Whether the provided x and y speeds are relative to the
-   *                      field.
+   * @param speedLimit        Whether to fix the speed to a set value
+   * @param inputSpeed        Speed of the robot in the x direction (forward).
+   * @param forwardDirection
+   * @param sidewaysDirection
+   * @param rotDirection      Angular rate of the robot.
+   * @param fieldRelative     Whether the provided x and y speeds are relative to
+   *                          the
+   *                          field.
    */
   public void drive(
       boolean speedLimit,
@@ -171,13 +184,15 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Adjust input based on max speed
 
-    // If we set the speed limit use a fixed speed
+    // If we set the speed limit use a lower max speed
     // otherwise the speed value with some max
-    double speed = speedLimit || !isWithinSafeLimits()
-        ? DriveConstants.kFixedMidSpeedLimit * DriveConstants.kMaxSpeedMetersPerSecond
+    double speed = speedLimit || !isWithinSafeDrivingLimits()
+        ? inputSpeed * DriveConstants.kMaxLimitedSpeedMetersPerSecond
         : inputSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
 
-    rotDirection *= DriveConstants.kMaxAngularSpeed;
+    rotDirection = speedLimit || !isWithinSafeDrivingLimits()
+        ? rotDirection * DriveConstants.kMaxLimitedAngularSpeed
+        : rotDirection * DriveConstants.kMaxAngularSpeed;
 
     double forwardDirectionCommanded;
     double sidewaysDirectionCommanded;
@@ -288,6 +303,11 @@ public class DriveSubsystem extends SubsystemBase {
     m_gyro.reset();
   }
 
+  /** Zeroes the heading of the robot. */
+  public void resetPose() {
+    m_gyro.reset();
+  }
+
   /** Calibrates the gyro */
   public void calibrate() {
     m_gyro.calibrate();
@@ -310,4 +330,5 @@ public class DriveSubsystem extends SubsystemBase {
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
+
 }

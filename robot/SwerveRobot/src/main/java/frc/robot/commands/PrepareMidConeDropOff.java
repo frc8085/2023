@@ -13,14 +13,14 @@ import static frc.robot.Constants.AltitudeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class PrepareShelfPickup extends SequentialCommandGroup {
-    public PrepareShelfPickup(
-            Extension m_extension,
-            Altitude m_altitude) {
-        addCommands(new ParallelCommandGroup(
-                new InstantCommand(() -> m_altitude.keepPosition(
-                        AltitudeConstants.kAltitudeShelfPosition)),
-                new InstantCommand(() -> m_extension
-                        .keepPosition(ExtensionConstants.kExtensionPositionMidDropOff))));
-    }
+public class PrepareMidConeDropOff extends SequentialCommandGroup {
+  public PrepareMidConeDropOff(
+      Extension m_extension,
+      Altitude m_altitude) {
+    addCommands(new ParallelCommandGroup(
+        new InstantCommand(() -> m_altitude.keepPosition(
+            AltitudeConstants.kAltitudeDropOffPosition)),
+        new InstantCommand(() -> m_extension
+            .keepPosition(ExtensionConstants.kExtensionPositionMidDropOff))));
+  }
 }

@@ -83,7 +83,7 @@ public class Extension extends SubsystemBase {
     SmartDashboard.putBoolean("Fully Extended", m_extensionLimit.isPressed());
     SmartDashboard.putBoolean("Fully Retracted", m_retractionLimit.isPressed());
     SmartDashboard.putBoolean("Extension Travel Position", ExtensionIsInTravelPosition());
-
+    SmartDashboard.putBoolean("Extension Intake Position", ExtensionIsInIntakePosition());
     SmartDashboard.putNumber("Current position", getCurrentExtensionPosition());
   }
 
@@ -91,7 +91,7 @@ public class Extension extends SubsystemBase {
   @Override
   public void periodic() {
     log();
-    resetExtensionEncoderAtRetractionLimit();
+    // resetExtensionEncoderAtRetractionLimit();
     ExtensionRetractionLimitHit();
   }
 
@@ -106,9 +106,7 @@ public class Extension extends SubsystemBase {
   }
 
   public void resetExtensionEncoderAtRetractionLimit() {
-    if (isRetractionLimitHit()) {
-      m_extensionEncoder.setPosition(1);
-    }
+    m_extensionEncoder.setPosition(1);
   }
 
   private boolean startingPositionRetractionTravelLimit = false;
@@ -119,6 +117,7 @@ public class Extension extends SubsystemBase {
     } else
       stopExtension();
     startingPositionRetractionTravelLimit = true;
+    resetExtensionEncoderAtRetractionLimit();
   }
 
   public boolean startingPositionRetractionTravelLimit() {
@@ -167,6 +166,27 @@ public class Extension extends SubsystemBase {
 
   public boolean ExtensionIsInIntakePosition() {
     return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionIntakeOut
+        + ExtensionConstants.kExtensionPositionTolerance
+        && m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionIntakeOut
+            - ExtensionConstants.kExtensionPositionTolerance;
+  }
+
+  public boolean ExtensionIsInMidCubeShootPosition() {
+    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionMidCubeShooter
+        + ExtensionConstants.kExtensionPositionTolerance
+        && m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionMidCubeShooter
+            - ExtensionConstants.kExtensionPositionTolerance;
+  }
+
+  public boolean ExtensionIsInHighCubeShootPosition() {
+    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionHighCubeShooter
+        + ExtensionConstants.kExtensionPositionTolerance
+        && m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionHighCubeShooter
+            - ExtensionConstants.kExtensionPositionTolerance;
+  }
+
+  public boolean ExtensionIsInDropOffReturnPosition() {
+    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionHighDropOffReturn
         + ExtensionConstants.kExtensionPositionTolerance;
   }
 
@@ -184,4 +204,15 @@ public class Extension extends SubsystemBase {
             - ExtensionConstants.kExtensionPositionTolerance;
   };
 
+  public boolean ExtensionIsInReleasePosition() {
+    double ReleaseExtensionPosition = setReleaseExtensionPosition();
+
+    return m_extensionEncoder.getPosition() < ReleaseExtensionPosition + ExtensionConstants.kExtensionPositionTolerance
+        &&
+        m_extensionEncoder.getPosition() > ReleaseExtensionPosition - ExtensionConstants.kExtensionPositionTolerance;
+  };
+
+  public double setReleaseExtensionPosition() {
+    return getCurrentExtensionPosition() - ExtensionConstants.kExtensionConeRetractDistance;
+  }
 }

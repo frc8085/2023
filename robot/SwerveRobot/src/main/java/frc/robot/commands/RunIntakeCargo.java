@@ -6,17 +6,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
-import frc.robot.subsystems.IntakeNoPID;
 
-public class PrepareAndRunIntake extends SequentialCommandGroup {
-    public PrepareAndRunIntake(
-            Extension m_extension,
-            Altitude m_altitude,
-            IntakeNoPID m_intake) {
-        addCommands(
-                new PrepareIntake(m_extension, m_altitude),
-                new InstantCommand(() -> m_intake.intakeCone()));
-    }
+public class RunIntakeCargo extends SequentialCommandGroup {
+  public RunIntakeCargo(
+      Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    addCommands(
+        // 1. Prepare intake
+        new PrepareIntake(m_extension, m_altitude),
+        // 2. Run intake
+        new InstantCommand(() -> m_intake.intakeCone()));
+  }
 }

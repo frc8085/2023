@@ -20,6 +20,8 @@ import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Altitude extends SubsystemBase {
+  private boolean TUNING_MODE = true;
+
   private Extension m_extension;
   /** Creates a new Altitude. */
 
@@ -44,8 +46,17 @@ public class Altitude extends SubsystemBase {
   static double kMaxOutputAltitude = 9;
   static double kMinOutputAltitude = -.9;
 
-  public boolean isWithinSafeExtensionLimit() {
-    return m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionPositionIntakeOut;
+  // When INTAKE, extension only in intake position
+  // When TRAVEL, extenion only in travel
+  public void enforceSafeExtensions() {
+    if (AltitudeIsInIntakePosition()) {
+      m_extension.keepPosition(ExtensionConstants.kExtensionPositionIntakeOut);
+    }
+
+    // if (AltitudeIsInTravelPosition()) {
+    // m_extension.keepPosition(ExtensionConstants.kExtensionPositionFullyRetracted);
+    // }
+
   }
 
   public Altitude(Extension Extension) {
@@ -82,6 +93,12 @@ public class Altitude extends SubsystemBase {
     // operation, it will maintain the above configurations.
     m_altitudeMotor.burnFlash();
 
+    // If we're fine-tuning PID Constants, the display them on the dashboard
+    if (TUNING_MODE) {
+      addPIDToDashboard();
+      addTuningtoDashboard();
+    }
+
   }
 
   /** The log method puts interesting information to the SmartDashboard. */
@@ -93,31 +110,77 @@ public class Altitude extends SubsystemBase {
 
     SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
 
+  }
+
+  private void addPIDToDashboard() {
+    // Display PID coefficients on SmartDashboard
     SmartDashboard.putNumber("Altitude P Gain", kPAltitude);
     SmartDashboard.putNumber("Altitude I Gain", kIAltitude);
     SmartDashboard.putNumber("Altitude D Gain", kDAltitude);
     // SmartDashboard.putNumber("Altitude I Zone", kIzAltitude);
-    // SmartDashboard.putNumber("Altitude Feed Forward", kFFAltitude);
+    SmartDashboard.putNumber("Altitude Feed Forward", kFFAltitude);
     SmartDashboard.putNumber("Altitude Max Output", kMaxOutputAltitude);
     SmartDashboard.putNumber("Altitude Min Output", kMinOutputAltitude);
     SmartDashboard.putNumber("Altitude Set Rotations", 0);
+  }
+
+  private void addTuningtoDashboard() {
+    // Substation Constants
+    SmartDashboard.putNumber("Single Substation Altitude", AltitudeConstants.kAltitudeSingleSubstationPosition);
+
+    // High Drop Off Adjustment
+    SmartDashboard.putNumber("High Drop Off Position", AltitudeConstants.kAltitudeHighDropOffPosition);
+    SmartDashboard.putNumber("High Drop Off Final Position", AltitudeConstants.kAltitudeHighDropOffFinalPosition);
+
+    // Mid Drop Off Adjustment
+    SmartDashboard.putNumber("Mid Drop Off Position", AltitudeConstants.kAltitudeMidDropOffPosition);
+    SmartDashboard.putNumber("Mid Drop Off Final Position", AltitudeConstants.kAltitudeMidDropOffFinalPosition);
 
   }
 
-  /** Call log method every loop. */
-  @Override
-  public void periodic() {
-    log();
+  private void readTuningFromDashboard() {
+    double SingleSubstationAltitude = SmartDashboard.getNumber("Single Substation Altitude",
+        AltitudeConstants.kAltitudeSingleSubstationPosition);
+    double HighDropOffAltitude = SmartDashboard.getNumber("High Drop Off Position",
+        AltitudeConstants.kAltitudeHighDropOffPosition);
+    double HighDropOffFinalAltitude = SmartDashboard.getNumber("High Drop Off Final Position",
+        AltitudeConstants.kAltitudeHighDropOffFinalPosition);
+    double MidDropOffAltitude = SmartDashboard.getNumber("Mid Drop Off Position",
+        AltitudeConstants.kAltitudeMidDropOffPosition);
+    double MidDropOffFinalAltitude = SmartDashboard.getNumber("Mid Drop Off Final Position",
+        AltitudeConstants.kAltitudeMidDropOffFinalPosition);
 
-    resetAltitudeEncoderAtTopLimit();
-    AltitudeIsInTravelPosition();
+    if ((SingleSubstationAltitude != AltitudeConstants.kAltitudeSingleSubstationPosition)) {
+      m_altitudePIDController.setP(SingleSubstationAltitude);
+      AltitudeConstants.kAltitudeSingleSubstationPosition = SingleSubstationAltitude;
+    }
+    if ((HighDropOffAltitude != AltitudeConstants.kAltitudeHighDropOffPosition)) {
+      m_altitudePIDController.setP(HighDropOffAltitude);
+      AltitudeConstants.kAltitudeHighDropOffPosition = SingleSubstationAltitude;
+    }
+    if ((HighDropOffFinalAltitude != AltitudeConstants.kAltitudeHighDropOffFinalPosition)) {
+      m_altitudePIDController.setP(HighDropOffFinalAltitude);
+      AltitudeConstants.kAltitudeHighDropOffFinalPosition = SingleSubstationAltitude;
+    }
+    if ((MidDropOffAltitude != AltitudeConstants.kAltitudeMidDropOffPosition)) {
+      m_altitudePIDController.setP(MidDropOffAltitude);
+      AltitudeConstants.kAltitudeMidDropOffPosition = SingleSubstationAltitude;
+    }
+    if ((MidDropOffFinalAltitude != AltitudeConstants.kAltitudeMidDropOffFinalPosition)) {
+      m_altitudePIDController.setP(MidDropOffFinalAltitude);
+      AltitudeConstants.kAltitudeMidDropOffFinalPosition = SingleSubstationAltitude;
+    }
+
+  }
+
+  private void readPIDTuningFromDashboard() {
 
     // Read PID Coefficients from SmartDashboard
     double pAltitude = SmartDashboard.getNumber("Altitude P Gain", 0);
     double iAltitude = SmartDashboard.getNumber("Altitude I Gain", 0);
     double dAltitude = SmartDashboard.getNumber("Altitude D Gain", 0);
     // double izAltitude = SmartDashboard.getNumber("Altitude I Zone", 0);
-    // double ffAltitude = SmartDashboard.getNumber("Altitude Feed Forward", 0);
+    double ffAltitude = SmartDashboard.getNumber("Altitude Feed Forward", 0);
     double maxAltitude = SmartDashboard.getNumber("Altitude Max Output", 0);
     double minAltitude = SmartDashboard.getNumber("Altitude Min Output", 0);
 
@@ -141,16 +204,34 @@ public class Altitude extends SubsystemBase {
      * m_altitudePIDController.setIZone(izAltitude);
      * kIzAltitude = izAltitude;
      * }
-     * if ((ffAltitude != kFFAltitude)) {
-     * m_altitudePIDController.setFF(ffAltitude);
-     * kFFAltitude = ffAltitude;
-     * }
-     **/
+     */
+
+    if ((ffAltitude != kFFAltitude)) {
+      m_altitudePIDController.setFF(ffAltitude);
+      kFFAltitude = ffAltitude;
+    }
 
     if ((maxAltitude != kMaxOutputAltitude) || (minAltitude != kMinOutputAltitude)) {
       m_altitudePIDController.setOutputRange(minAltitude, maxAltitude);
       kMinOutputAltitude = minAltitude;
       kMaxOutputAltitude = maxAltitude;
+    }
+  }
+
+  /** Call log method every loop. */
+  @Override
+  public void periodic() {
+
+    enforceSafeExtensions();
+    log();
+
+    // resetAltitudeEncoderAtTopLimit();
+    AltitudeIsInTravelPosition();
+    AltitudeIsInIntakePosition();
+
+    if (TUNING_MODE) {
+      readPIDTuningFromDashboard();
+      readTuningFromDashboard();
     }
 
   }
@@ -181,6 +262,7 @@ public class Altitude extends SubsystemBase {
     } else {
       stopAltitude();
       startingPositionAltitudeTravelLimit = true;
+      resetAltitudeEncoderAtTopLimit();
     }
   }
 
@@ -239,14 +321,41 @@ public class Altitude extends SubsystemBase {
   }
 
   public boolean AltitudeIsInIntakePosition() {
+
     return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeIntakePosition
         + AltitudeConstants.kAltitudePositionTolerance;
+
   }
 
   public boolean AltitudeIsInScoringPosition() {
-    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeDropOffPosition
+
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeHighDropOffPosition
         + AltitudeConstants.kAltitudePositionTolerance &&
-        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeDropOffPosition
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeMidDropOffPosition
+            - AltitudeConstants.kAltitudePositionTolerance;
+  };
+
+  public boolean AltitudeIsInHighDropOffFinalPosition() {
+
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeHighDropOffFinalPosition
+        + AltitudeConstants.kAltitudePositionTolerance &&
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeHighDropOffFinalPosition
+            - AltitudeConstants.kAltitudePositionTolerance;
+  };
+
+  public boolean AltitudeIsInMidDropOffFinalPosition() {
+
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeMidDropOffFinalPosition
+        + AltitudeConstants.kAltitudePositionTolerance &&
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeMidDropOffFinalPosition
+            - AltitudeConstants.kAltitudePositionTolerance;
+  };
+
+  public boolean AltitudeIsInHighCubeShootPosition() {
+
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeHighCubeShootPosition
+        + AltitudeConstants.kAltitudePositionTolerance &&
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeHighCubeShootPosition
             - AltitudeConstants.kAltitudePositionTolerance;
   };
 

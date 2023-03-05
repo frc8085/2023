@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,6 +27,9 @@ public class Robot extends TimedRobot {
 
   private final Timer m_timer = new Timer();
 
+  Thread m_visionThread;
+  UsbCamera camera1;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -36,6 +41,10 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    if (Robot.isReal()) {
+      camera1 = CameraServer.startAutomaticCapture(0);
+    }
   }
 
   /**
@@ -63,6 +72,10 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+    }
+
   }
 
   @Override
@@ -75,6 +88,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    m_timer.reset();
+    m_timer.start();
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     /*

@@ -5,23 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import static frc.robot.Constants.ExtensionConstants;
-import static frc.robot.Constants.AltitudeConstants;
 
+import static frc.robot.Constants.ExtensionConstants;
+
+import frc.robot.Constants.AltitudeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class PrepareIntake extends SequentialCommandGroup {
-  public PrepareIntake(
-      Extension m_extension,
-      Altitude m_altitude) {
-    addCommands(new ParallelCommandGroup(
-        new InstantCommand(() -> m_altitude.keepPosition(
-            AltitudeConstants.kAltitudeIntakePosition)),
+public class PrepareHighCubeDropOff extends SequentialCommandGroup {
+  public PrepareHighCubeDropOff(
+      Extension m_extension, Altitude m_altitude) {
+    addCommands(
         new InstantCommand(() -> m_extension
-            .keepPosition(ExtensionConstants.kExtensionPositionIntakeOut))));
+            .keepPosition(ExtensionConstants.kExtensionPositionHighCubeShooter)),
+        new InstantCommand(() -> m_altitude
+            .keepPosition(AltitudeConstants.kAltitudeHighCubeShootPosition)));
 
   }
 }
