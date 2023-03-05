@@ -31,7 +31,7 @@ public class ResetPositionToStart extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_altitude.lowerAltitude();
+        m_altitude.raiseAltitude();
         m_extension.retractExtension();
     }
 

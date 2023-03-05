@@ -65,13 +65,6 @@ public class RobotContainer {
         // Configure the button bindings
         configureButtonBindings();
 
-        // Reset heading and odometry before we start
-        m_robotDrive.zeroHeading();
-        m_robotDrive.resetOdometry(new Pose2d());
-
-        // Move the elevator to starting position
-        new ResetPositionToStart(m_altitude, m_extension);
-
         // Configure default commands
         m_robotDrive.setDefaultCommand(
                 // Right Bumper sets a reduced max speed limit
@@ -121,6 +114,7 @@ public class RobotContainer {
                 .onTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
         /** OPERATOR COMMANDS **/
+        final Trigger startButton = m_operatorController.start();
         final Trigger intakeButton = m_operatorController.rightTrigger();
         final Trigger manualIntakeButton = m_operatorController.rightBumper();
         final Trigger ejectButton = m_operatorController.leftTrigger();
@@ -132,6 +126,8 @@ public class RobotContainer {
         final Trigger RetractButton = m_operatorController.axisGreaterThan(5, .25);
         final Trigger RaiseButton = m_operatorController.axisLessThan(1, -.25);
         final Trigger LowerButton = m_operatorController.axisGreaterThan(1, .25);
+
+        startButton.onTrue(new ResetPositionToStart(m_altitude, m_extension));
 
         // Intake button will run the intake then hold game piece when released
         intakeButton.whileTrue(new IntakeCargo(m_altitude, m_extension, m_intake))
