@@ -113,7 +113,7 @@ public final class Constants {
     // Altitude at Bottom Position
     public static double kAltitudeIntakePosition = -5.5;
     // Altitude at Shelf Position
-    public static double kAltitudeDoubleSubstationPosition = -2.65;
+    public static double kAltitudeDoubleSubstationPosition = -2.85;
     public static double kAltitudeSingleSubstationPosition = -1.65;
 
     // Altitude Error Tolerance
