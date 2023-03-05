@@ -11,12 +11,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class SetStartingPosition extends SequentialCommandGroup {
-  public SetStartingPosition(
+public class ResetPositionToStart extends SequentialCommandGroup {
+  public ResetPositionToStart(
       Extension m_extension,
       Altitude m_altitude) {
     addCommands(new ParallelCommandGroup(
         new InstantCommand(m_altitude::moveToStartingPosition, m_altitude),
         new InstantCommand(m_extension::moveToStartingPosition, m_extension)));
+    // TODO: Reset the gyro here
   }
 }
