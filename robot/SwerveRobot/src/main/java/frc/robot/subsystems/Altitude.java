@@ -262,6 +262,7 @@ public class Altitude extends SubsystemBase {
     } else {
       stopAltitude();
       startingPositionAltitudeTravelLimit = true;
+      resetAltitudeEncoderAtTopLimit();
     }
   }
 

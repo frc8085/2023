@@ -75,7 +75,7 @@ public final class Constants {
     public static double kExtensionPositionHighDropOffReturn = 100;
     public static double kExtensionPositionSingleSubstation = 41;
     public static double kExtensionPositionMidCubeShooter = 60;
-    public static double kExtensionPositionHighCubeShooter = 80;
+    public static double kExtensionPositionHighCubeShooter = 70;
 
     public static double kExtensionSafeExtensionMax = kExtensionPositionIntakeOut + kExtensionPositionTolerance;
 
@@ -113,7 +113,7 @@ public final class Constants {
     // Altitude at Bottom Position
     public static double kAltitudeIntakePosition = -5.5;
     // Altitude at Shelf Position
-    public static double kAltitudeDoubleSubstationPosition = -2.05;
+    public static double kAltitudeDoubleSubstationPosition = -2.65;
     public static double kAltitudeSingleSubstationPosition = -1.65;
 
     // Altitude Error Tolerance

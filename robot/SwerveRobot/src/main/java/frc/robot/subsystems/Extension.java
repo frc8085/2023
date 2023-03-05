@@ -106,9 +106,7 @@ public class Extension extends SubsystemBase {
   }
 
   public void resetExtensionEncoderAtRetractionLimit() {
-    if (isRetractionLimitHit()) {
-      m_extensionEncoder.setPosition(1);
-    }
+    m_extensionEncoder.setPosition(1);
   }
 
   private boolean startingPositionRetractionTravelLimit = false;
@@ -119,6 +117,7 @@ public class Extension extends SubsystemBase {
     } else
       stopExtension();
     startingPositionRetractionTravelLimit = true;
+    resetExtensionEncoderAtRetractionLimit();
   }
 
   public boolean startingPositionRetractionTravelLimit() {
