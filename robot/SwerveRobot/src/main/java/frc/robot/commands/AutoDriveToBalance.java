@@ -49,6 +49,7 @@ public class AutoDriveToBalance extends CommandBase {
 
         SmartDashboard.putBoolean("BALACED", isBalanced);
         SmartDashboard.putBoolean("TIME TO SLOW", timeToSlowDown);
+        m_drive.logServeStates();
 
     }
 

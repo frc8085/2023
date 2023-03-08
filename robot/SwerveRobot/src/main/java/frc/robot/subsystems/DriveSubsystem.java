@@ -83,6 +83,13 @@ public class DriveSubsystem extends SubsystemBase {
         return m_gyro.getPitch();
     }
 
+    public void logServeStates() {
+        System.out.println("SwerveState FrontLeft:" + m_frontLeft.getState());
+        System.out.println("SwerveState FrontRight:" + m_frontRight.getState());
+        System.out.println("SwerveState RearLeft:" + m_rearLeft.getState());
+        System.out.println("SwerveState RearRight:" + m_rearRight.getState());
+    }
+
     /** The log method puts interesting information to the SmartDashboard. */
     public void log() {
         SmartDashboard.putNumber("Match time remaining", getMatchTimeRemaining());
