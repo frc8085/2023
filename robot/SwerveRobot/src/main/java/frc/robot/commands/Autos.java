@@ -18,48 +18,47 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public final class Autos {
-  public static CommandBase balance(DriveSubsystem m_drive) {
-    return Commands.sequence(
-        new AutoDriveToReachStation(m_drive),
-        new AutoDriveToBalance(m_drive),
-        new AutoFinalBalance(m_drive),
-        new RunCommand(m_drive::lock, m_drive));
-  }
+    public static CommandBase balance(DriveSubsystem m_drive) {
+        return Commands.sequence(
+                new AutoDriveToReachStation(m_drive),
+                new AutoDriveToBalance(m_drive),
+                new AutoFinalBalance(m_drive),
+                new RunCommand(m_drive::lock, m_drive));
+    }
 
-  public static CommandBase scoreHighLeaveAndPickup(DriveSubsystem m_drive, Altitude m_altitude,
-      Extension m_extension,
-      Intake m_intake) {
-    return Commands.sequence(
-        new MoveToHighConeDropOff(m_extension, m_altitude)
-            .until(() -> m_extension.ExtensionIsInHighScoringPosition()),
-        new WaitUntilCommand(
-            () -> m_extension.ExtensionIsInHighScoringPosition()),
-        new InstantCommand(
-            () -> m_altitude.keepPosition(
-                AltitudeConstants.kAltitudeHighDropOffPosition)),
-        new WaitCommand(.5),
-        new ScoreHighCone(m_altitude, m_extension, m_intake),
-        new DriveBackwardsMeters(m_drive, 3.6),
-        new InstantCommand(m_drive::stop));
-  }
+    public static CommandBase scoreHigh(DriveSubsystem m_drive, Altitude m_altitude,
+            Extension m_extension,
+            Intake m_intake) {
+        return Commands.sequence(
+                new MoveToHighConeDropOff(m_extension, m_altitude)
+                        .until(() -> m_extension.ExtensionIsInHighScoringPosition()),
+                new WaitUntilCommand(
+                        () -> m_extension.ExtensionIsInHighScoringPosition()),
+                new InstantCommand(
+                        () -> m_altitude.keepPosition(
+                                AltitudeConstants.kAltitudeHighDropOffPosition)),
+                new WaitCommand(.5),
+                new ScoreHighCone(m_altitude, m_extension, m_intake));
+    }
 
-  public static CommandBase scoreHighAndBalance(DriveSubsystem m_drive, Altitude m_altitude,
-      Extension m_extension,
-      Intake m_intake) {
-    return Commands.sequence(
-        new MoveToHighConeDropOff(m_extension, m_altitude)
-            .until(() -> m_extension.ExtensionIsInHighScoringPosition()),
-        new WaitUntilCommand(
-            () -> m_extension.ExtensionIsInHighScoringPosition()),
-        new InstantCommand(
-            () -> m_altitude.keepPosition(
-                AltitudeConstants.kAltitudeHighDropOffPosition)),
-        new WaitCommand(.5),
-        new ScoreHighCone(m_altitude, m_extension, m_intake),
-        balance(m_drive));
-  }
+    public static CommandBase scoreHighLeaveAndPickup(DriveSubsystem m_drive, Altitude m_altitude,
+            Extension m_extension,
+            Intake m_intake) {
+        return Commands.sequence(
+                scoreHigh(m_drive, m_altitude, m_extension, m_intake),
+                new AutoDriveBackwardsMeters(m_drive, 3.6),
+                new InstantCommand(m_drive::stop));
+    }
 
-  private Autos() {
-    throw new UnsupportedOperationException("This is a utility class!");
-  }
+    public static CommandBase scoreHighAndBalance(DriveSubsystem m_drive, Altitude m_altitude,
+            Extension m_extension,
+            Intake m_intake) {
+        return Commands.sequence(
+                scoreHigh(m_drive, m_altitude, m_extension, m_intake),
+                balance(m_drive));
+    }
+
+    private Autos() {
+        throw new UnsupportedOperationException("This is a utility class!");
+    }
 }

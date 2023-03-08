@@ -21,7 +21,6 @@ public class AutoDriveMeters extends CommandBase {
         m_drive = drive;
         m_forwardMeters = forwardMeters;
         m_sidewaysMeters = sidewaysMeters;
-
         addRequirements(m_drive);
     }
 
