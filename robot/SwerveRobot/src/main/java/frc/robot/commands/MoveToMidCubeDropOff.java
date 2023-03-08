@@ -11,12 +11,12 @@ import static frc.robot.Constants.ExtensionConstants;
 
 import frc.robot.subsystems.Extension;
 
-public class PrepareMidCubeDropOff extends SequentialCommandGroup {
-  public PrepareMidCubeDropOff(
-      Extension m_extension) {
-    addCommands(
-        new InstantCommand(() -> m_extension
-            .keepPosition(ExtensionConstants.kExtensionPositionMidCubeShooter)));
+public class MoveToMidCubeDropOff extends SequentialCommandGroup {
+    public MoveToMidCubeDropOff(
+            Extension m_extension) {
+        addCommands(
+                new InstantCommand(() -> m_extension
+                        .keepPosition(ExtensionConstants.kExtensionPositionMidCubeShooter)));
 
-  }
+    }
 }

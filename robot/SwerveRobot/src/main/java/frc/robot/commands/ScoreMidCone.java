@@ -15,27 +15,27 @@ import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
 public class ScoreMidCone extends SequentialCommandGroup {
-  public ScoreMidCone(
-      Altitude m_altitude,
-      Extension m_extension,
-      Intake m_intake) {
-    addCommands(
-        // 1. Prepare Drop Off Cone (lower altitude slightly)
-        new PrepareMidConeFinalDropOff(m_altitude),
-        // Make sure the drop off cone altitude has been reached
-        new WaitUntilCommand(() -> m_altitude.AltitudeIsInMidDropOffFinalPosition()),
-        // Start Retracting at fixed speed until it reaches release position
-        new InstantCommand(() -> m_extension.retractExtension())
-            .until(m_extension::ExtensionIsInReleasePosition),
-        new ParallelCommandGroup(
-            new SequentialCommandGroup(
-                new InstantCommand(() -> m_intake.ejectCone()),
-                new WaitCommand(IntakeConstants.kEjectWaitTime),
-                new InstantCommand(m_intake::stopIntake)),
-            new PrepareTravelAfterScoring(m_extension, m_altitude))
+    public ScoreMidCone(
+            Altitude m_altitude,
+            Extension m_extension,
+            Intake m_intake) {
+        addCommands(
+                // 1. Prepare Drop Off Cone (lower altitude slightly)
+                new MoveToMidConeFinalDropOff(m_altitude),
+                // Make sure the drop off cone altitude has been reached
+                new WaitUntilCommand(() -> m_altitude.AltitudeIsInMidDropOffFinalPosition()),
+                // Start Retracting at fixed speed until it reaches release position
+                new InstantCommand(() -> m_extension.retractExtension())
+                        .until(m_extension::ExtensionIsInReleasePosition),
+                new ParallelCommandGroup(
+                        new SequentialCommandGroup(
+                                new InstantCommand(() -> m_intake.ejectCone()),
+                                new WaitCommand(IntakeConstants.kEjectWaitTime),
+                                new InstantCommand(m_intake::stopIntake)),
+                        new MoveToTravelAfterScoring(m_extension, m_altitude))
 
-    );
+        );
 
-  }
+    }
 
 }
