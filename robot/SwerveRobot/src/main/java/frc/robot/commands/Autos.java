@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
@@ -41,6 +40,15 @@ public final class Autos {
         new ScoreHighCone(m_altitude, m_extension, m_intake));
   }
 
+  public static CommandBase intake(Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    return Commands.sequence(
+        new IntakeCargo(m_altitude, m_extension, m_intake).withTimeout(.5),
+        new InstantCommand(() -> m_intake.holdCargo()),
+        new MoveToTravelAfterIntake(m_extension, m_altitude));
+  }
+
   public static CommandBase scoreHighAndBalance(DriveSubsystem m_drive, Altitude m_altitude,
       Extension m_extension,
       Intake m_intake) {
@@ -57,7 +65,7 @@ public final class Autos {
         new AutoDriveBackwardsMeters(m_drive, 5),
         new AutoRotateDegrees(m_drive, 180),
         new InstantCommand(m_drive::stop),
-        new IntakeCargo(m_altitude, m_extension, m_intake));
+        intake(m_altitude, m_extension, m_intake));
   }
 
   private Autos() {
