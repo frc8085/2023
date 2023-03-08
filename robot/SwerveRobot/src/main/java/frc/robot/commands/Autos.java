@@ -12,6 +12,7 @@ import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -66,6 +67,19 @@ public final class Autos {
         new AutoRotateDegrees(m_drive, 180),
         new InstantCommand(m_drive::stop),
         intake(m_altitude, m_extension, m_intake));
+  }
+
+  public static CommandBase scoreHighLeavePickupAndBalance(DriveSubsystem m_drive, Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    return Commands.sequence(
+        scoreHigh(m_drive, m_altitude, m_extension, m_intake),
+        new AutoDriveBackwardsMeters(m_drive, 5),
+        new ParallelCommandGroup(
+            new AutoRotateDegrees(m_drive, 180),
+            new MoveToIntake(m_extension, m_altitude)),
+        intake(m_altitude, m_extension, m_intake),
+        balance(m_drive));
   }
 
   private Autos() {

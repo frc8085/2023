@@ -112,12 +112,15 @@ public class RobotContainer {
   }
 
   private void configureAuto() {
-    autoSelection.setDefaultOption("1 - Score High, Balance",
+    autoSelection.setDefaultOption("(18pt) RELIABLE: Score High, Balance",
         Autos.scoreHighAndBalance(m_robotDrive, m_altitude, m_extension, m_intake));
-    autoSelection.addOption("2 - Score High, Leave, Pickup",
+    autoSelection.addOption("(9pt) SIDEKICK: Score High, Leave, Pickup",
         Autos.scoreHighLeaveAndPickup(m_robotDrive, m_altitude, m_extension, m_intake));
-    autoSelection.addOption("3 - Balance", Autos.balance(m_robotDrive));
-    autoSelection.addOption("4 - Score High", Autos.scoreHigh(m_robotDrive, m_altitude, m_extension, m_intake));
+    autoSelection.addOption("(21pt) IDEAL: Score High, Leave, Pickup, Balance",
+        Autos.scoreHighLeavePickupAndBalance(m_robotDrive, m_altitude, m_extension, m_intake));
+    autoSelection.addOption("(12pt) MINIMAL: Balance", Autos.balance(m_robotDrive));
+    autoSelection.addOption("(6pt) MINIMAL: Score High",
+        Autos.scoreHigh(m_robotDrive, m_altitude, m_extension, m_intake));
   }
 
   /**
