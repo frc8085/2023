@@ -146,7 +146,6 @@ public class Intake extends SubsystemBase {
   }
 
   public void holdCargo() {
-    reset();
     m_intakePIDController.setReference(CurrentIntakeEncoderPosition(), ControlType.kPosition);
   }
 
