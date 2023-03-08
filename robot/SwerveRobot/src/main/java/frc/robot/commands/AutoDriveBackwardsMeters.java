@@ -9,12 +9,12 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveBackwardsMeters extends CommandBase {
+public class AutoDriveBackwardsMeters extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
   private double m_meters = 0;
 
-  public DriveBackwardsMeters(DriveSubsystem drive, double meters) {
+  public AutoDriveBackwardsMeters(DriveSubsystem drive, double meters) {
     m_drive = drive;
     // Take the magnitude of meters but ignore the sign
     // Just in case we provide a negative meters to this function by mistake

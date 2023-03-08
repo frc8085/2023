@@ -9,12 +9,12 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveForwardMeters extends CommandBase {
+public class AutoDriveForwardMeters extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
   private double m_meters = 0;
 
-  public DriveForwardMeters(DriveSubsystem drive, double meters) {
+  public AutoDriveForwardMeters(DriveSubsystem drive, double meters) {
     m_drive = drive;
     m_meters = meters;
     addRequirements(m_drive);

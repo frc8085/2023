@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
@@ -44,6 +45,9 @@ import edu.wpi.first.wpilibj.DriverStation;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  // Add Auto Selection chooser to Dashboard
+  protected SendableChooser<Command> autoSelection = new SendableChooser<>();
+
   // The robot's subsystems
   private final Intake m_intake = new Intake();
   private final Extension m_extension = new Extension();
@@ -64,6 +68,8 @@ public class RobotContainer {
     m_robotDrive.zeroHeading();
     m_robotDrive.resetOdometry(new Pose2d());
     m_intake.reset();
+
+    configureAuto();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -103,6 +109,15 @@ public class RobotContainer {
 
         ),
             m_robotDrive));
+  }
+
+  private void configureAuto() {
+    autoSelection.setDefaultOption("1 - Score High, Balance",
+        Autos.scoreHighAndBalance(m_robotDrive, m_altitude, m_extension, m_intake));
+    autoSelection.addOption("2 - Score High, Leave, Pickup",
+        Autos.scoreHighLeaveAndPickup(m_robotDrive, m_altitude, m_extension, m_intake));
+    autoSelection.addOption("3 - Balance", Autos.balance(m_robotDrive));
+    autoSelection.addOption("4 - Score High", Autos.scoreHigh(m_robotDrive, m_altitude, m_extension, m_intake));
   }
 
   /**
@@ -215,15 +230,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return new ResetPositionToStart(m_altitude, m_extension)
-        .andThen(
-            Autos.scoreHighAndBalance(
-                m_robotDrive,
-                m_altitude,
-                m_extension,
-                m_intake))
-
-    ;
-
+        .andThen(autoSelection.getSelected());
   }
 
 }
