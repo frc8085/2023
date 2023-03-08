@@ -75,9 +75,7 @@ public final class Autos {
     return Commands.sequence(
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
         new AutoDriveBackwardsMeters(m_drive, 5),
-        new ParallelCommandGroup(
-            new AutoRotateDegrees(m_drive, 180),
-            new MoveToIntake(m_extension, m_altitude)),
+        new AutoRotateDegrees(m_drive, 180),
         intake(m_altitude, m_extension, m_intake),
         balance(m_drive));
   }
