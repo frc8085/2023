@@ -41,7 +41,7 @@ public final class Autos {
         new ScoreHighCone(m_altitude, m_extension, m_intake));
   }
 
-  public static CommandBase intake(Altitude m_altitude,
+  public static CommandBase intakeAndHold(Altitude m_altitude,
       Extension m_extension,
       Intake m_intake) {
     return Commands.sequence(
@@ -65,8 +65,7 @@ public final class Autos {
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
         new AutoDriveBackwardsMeters(m_drive, 5),
         new AutoRotateDegrees(m_drive, 180),
-        new InstantCommand(m_drive::stop),
-        intake(m_altitude, m_extension, m_intake));
+        intakeAndHold(m_altitude, m_extension, m_intake));
   }
 
   public static CommandBase scoreHighLeavePickupAndBalance(DriveSubsystem m_drive, Altitude m_altitude,
@@ -76,7 +75,7 @@ public final class Autos {
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
         new AutoDriveBackwardsMeters(m_drive, 5),
         new AutoRotateDegrees(m_drive, 180),
-        intake(m_altitude, m_extension, m_intake),
+        intakeAndHold(m_altitude, m_extension, m_intake),
         balance(m_drive));
   }
 
