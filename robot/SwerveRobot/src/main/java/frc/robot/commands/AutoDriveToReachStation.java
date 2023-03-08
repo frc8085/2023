@@ -49,6 +49,7 @@ public class AutoDriveToReachStation extends CommandBase {
                 false);
 
         SmartDashboard.putBoolean("REACHED STATION", reachedChargingStation);
+        m_drive.logSwerveStates();
     }
 
     // Stop driving when the command ends or is interrupted

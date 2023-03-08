@@ -49,7 +49,7 @@ public class AutoDriveToBalance extends CommandBase {
 
         SmartDashboard.putBoolean("BALACED", isBalanced);
         SmartDashboard.putBoolean("TIME TO SLOW", timeToSlowDown);
-
+        m_drive.logSwerveStates();
     }
 
     // Stop driving when the command ends or is interrupted

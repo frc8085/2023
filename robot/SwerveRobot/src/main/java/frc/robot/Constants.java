@@ -46,7 +46,7 @@ public final class Constants {
 
     // Intake Cube Power
     public static final double kIntakeCubePower = 0.8;
-    public static final double kEjectCubePower = 1;
+    public static final double kEjectCubePower = .8;
     public static final double kIntakeHoldCubePower = 0.15;
 
     public static final double kEjectWaitTime = 2;
@@ -114,7 +114,7 @@ public final class Constants {
     public static double kAltitudeIntakePosition = -5.5;
     // Altitude at Shelf Position
     public static double kAltitudeDoubleSubstationPosition = -2.85;
-    public static double kAltitudeSingleSubstationPosition = -1.65;
+    public static double kAltitudeSingleSubstationPosition = -1.45;
 
     // Altitude Error Tolerance
     public static double kAltitudeError = 0.05;
