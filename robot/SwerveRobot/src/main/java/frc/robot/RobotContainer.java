@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
@@ -121,6 +122,9 @@ public class RobotContainer {
     autoSelection.addOption("(12pt) MINIMAL: Balance", Autos.balance(m_robotDrive));
     autoSelection.addOption("(6pt) MINIMAL: Score High",
         Autos.scoreHigh(m_robotDrive, m_altitude, m_extension, m_intake));
+
+    // Put the chooser on the dashboard
+    SmartDashboard.putData("Auto Routine", autoSelection);
   }
 
   /**
