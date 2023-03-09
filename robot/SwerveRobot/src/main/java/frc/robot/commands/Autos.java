@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.Constants.AltitudeConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
@@ -64,8 +66,10 @@ public final class Autos {
         initialize(m_drive, m_altitude, m_extension),
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
         new ParallelCommandGroup(
-            new MoveToTravelAfterScoring(m_extension, m_altitude)),
-        balance(m_drive));
+            new SequentialCommandGroup(new WaitCommand(IntakeConstants.kEjectWaitTime),
+                new InstantCommand(m_intake::stopIntake)),
+            new MoveToTravelAfterScoring(m_extension, m_altitude),
+            balance(m_drive)));
   }
 
   public static CommandBase scoreHighLeaveAndPickup(DriveSubsystem m_drive, Altitude m_altitude,

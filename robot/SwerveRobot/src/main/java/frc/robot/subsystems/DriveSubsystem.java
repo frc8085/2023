@@ -84,10 +84,10 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void logSwerveStates() {
-    System.out.println("Position FrontLeft: " + m_frontLeft.getPosition());
-    System.out.println("Position FrontRight: " + m_frontRight.getPosition());
-    System.out.println("Position RearLeft: " + m_rearLeft.getPosition());
-    System.out.println("Position RearRight: " + m_rearRight.getPosition());
+    // System.out.println("Position FrontLeft: " + m_frontLeft.getPosition());
+    // System.out.println("Position FrontRight: " + m_frontRight.getPosition());
+    // System.out.println("Position RearLeft: " + m_rearLeft.getPosition());
+    // System.out.println("Position RearRight: " + m_rearRight.getPosition());
   }
 
   /** The log method puts interesting information to the SmartDashboard. */

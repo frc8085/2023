@@ -33,10 +33,10 @@ public class AutoDriveToBalance extends CommandBase {
   @Override
   public void execute() {
     double currentPitch = m_drive.getPitch();
-    tippedOver = currentPitch < -10;
+    tippedOver = currentPitch < -12;
     timeToSlowDown = timeToSlowDown || (!timeToSlowDown && tippedOver);
 
-    isBalanced = timeToSlowDown && (currentPitch >= -10 && currentPitch <= -.5);
+    isBalanced = timeToSlowDown && (currentPitch >= -12 && currentPitch <= -.5);
 
     m_drive.drive(
         false,

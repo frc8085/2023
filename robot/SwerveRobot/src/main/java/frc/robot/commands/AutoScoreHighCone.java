@@ -27,10 +27,8 @@ public class AutoScoreHighCone extends SequentialCommandGroup {
         // Start Retracting at fixed speed until it reaches release position
         new InstantCommand(() -> m_extension.retractExtension())
             .until(m_extension::ExtensionIsInReleasePosition),
-        new SequentialCommandGroup(
-            new InstantCommand(() -> m_intake.ejectCone()),
-            new WaitCommand(IntakeConstants.kEjectWaitTime),
-            new InstantCommand(m_intake::stopIntake)));
+        new InstantCommand(() -> m_intake.ejectCone()));
+
   }
 
 }
