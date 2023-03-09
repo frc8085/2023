@@ -35,6 +35,14 @@ public final class Autos {
         new RunCommand(m_drive::lock, m_drive));
   }
 
+  public static CommandBase balanceByDistance(DriveSubsystem m_drive) {
+    return Commands.sequence(
+        new AutoDriveBackwardsMeters(m_drive, 1.905),
+        new AutoDriveToBalanceByDistance(m_drive),
+        new AutoFinalBalance(m_drive),
+        new RunCommand(m_drive::lock, m_drive));
+  }
+
   public static CommandBase scoreHigh(DriveSubsystem m_drive, Altitude m_altitude,
       Extension m_extension,
       Intake m_intake) {
@@ -57,6 +65,19 @@ public final class Autos {
         new IntakeCargo(m_altitude, m_extension, m_intake).withTimeout(.5),
         new InstantCommand(() -> m_intake.holdCargo()),
         new MoveToTravelAfterIntake(m_extension, m_altitude));
+  }
+
+  public static CommandBase scoreHighAndBalanceByDistance(DriveSubsystem m_drive, Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    return Commands.sequence(
+        initialize(m_drive, m_altitude, m_extension),
+        scoreHigh(m_drive, m_altitude, m_extension, m_intake),
+        new ParallelCommandGroup(
+            new SequentialCommandGroup(new WaitCommand(IntakeConstants.kEjectWaitTime),
+                new InstantCommand(m_intake::stopIntake)),
+            new MoveToTravelAfterScoring(m_extension, m_altitude),
+            balanceByDistance(m_drive)));
   }
 
   public static CommandBase scoreHighAndBalance(DriveSubsystem m_drive, Altitude m_altitude,

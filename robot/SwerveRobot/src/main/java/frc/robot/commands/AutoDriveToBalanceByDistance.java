@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
-public class AutoDriveToBalance extends CommandBase {
+public class AutoDriveToBalanceByDistance extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
   private double maxSpeed = AutoConstants.kDriveOnStationMaxSpeed;
@@ -18,7 +18,7 @@ public class AutoDriveToBalance extends CommandBase {
   private boolean timeToSlowDown = false;
   private boolean tippedOver = false;
 
-  public AutoDriveToBalance(DriveSubsystem drive) {
+  public AutoDriveToBalanceByDistance(DriveSubsystem drive) {
     m_drive = drive;
     // Take the magnitude of meters but ignore the sign
     // Just in case we provide a negative meters to this function by mistake
@@ -33,14 +33,14 @@ public class AutoDriveToBalance extends CommandBase {
   @Override
   public void execute() {
     double currentPitch = m_drive.getPitch();
-    tippedOver = currentPitch < -10;
+    tippedOver = currentPitch < -3;
     timeToSlowDown = timeToSlowDown || (!timeToSlowDown && tippedOver);
 
-    isBalanced = timeToSlowDown && (currentPitch >= -10 && currentPitch <= -.5);
+    isBalanced = timeToSlowDown && (currentPitch >= -3 && currentPitch <= -.5);
 
     m_drive.drive(
         false,
-        timeToSlowDown ? maxSpeed * AutoConstants.kDriveToBalanceFactor : maxSpeed,
+        maxSpeed * AutoConstants.kDriveToBalanceFactor,
         tippedOver ? AutoConstants.kTravelForwards : AutoConstants.kTravelBackwards,
         0,
         0,
