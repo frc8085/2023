@@ -116,7 +116,7 @@ public class RobotContainer {
   private void configureAuto() {
 
     autoSelection.setDefaultOption("(18pt) TEST: Score High, Balance",
-        Autos.scoreHighAndBalance(m_robotDrive, m_altitude, m_extension, m_intake));
+        Autos.scoreHighAndBalanceByDistance(m_robotDrive, m_altitude, m_extension, m_intake));
     autoSelection.addOption("(18pt) RELIABLE: Score High, Balance",
         Autos.scoreHighAndBalance(m_robotDrive, m_altitude, m_extension, m_intake));
     autoSelection.addOption("(9pt) SIDEKICK: Score High, Leave, Pickup",
