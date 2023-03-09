@@ -18,6 +18,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public final class Autos {
+
+  public static CommandBase initialize(DriveSubsystem m_drive, Altitude m_altitude, Extension m_extension) {
+    return Commands.sequence(
+        new ResetPositionToStart(m_altitude, m_extension),
+        new InstantCommand(m_drive::zeroHeading));
+  }
+
   public static CommandBase balance(DriveSubsystem m_drive) {
     return Commands.sequence(
         new AutoDriveToReachStation(m_drive),
@@ -54,6 +61,7 @@ public final class Autos {
       Extension m_extension,
       Intake m_intake) {
     return Commands.sequence(
+        initialize(m_drive, m_altitude, m_extension),
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
         balance(m_drive));
   }
@@ -62,6 +70,7 @@ public final class Autos {
       Extension m_extension,
       Intake m_intake) {
     return Commands.sequence(
+        initialize(m_drive, m_altitude, m_extension),
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
         new AutoDriveBackwardsMeters(m_drive, 5),
         new AutoRotateDegrees(m_drive, 180),
@@ -72,6 +81,7 @@ public final class Autos {
       Extension m_extension,
       Intake m_intake) {
     return Commands.sequence(
+        initialize(m_drive, m_altitude, m_extension),
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
         new AutoDriveBackwardsMeters(m_drive, 5),
         new AutoRotateDegrees(m_drive, 180),

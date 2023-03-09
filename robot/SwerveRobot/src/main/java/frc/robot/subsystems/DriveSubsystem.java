@@ -84,10 +84,10 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void logSwerveStates() {
-    // System.out.println("State FrontLeft: " + m_frontLeft.getState());
-    // System.out.println("State FrontRight: " + m_frontRight.getState());
-    // System.out.println("State RearLeft: " + m_rearLeft.getState());
-    // System.out.println("State RearRight: " + m_rearRight.getState());
+    System.out.println("State FrontLeft: " + m_frontLeft.getState());
+    System.out.println("State FrontRight: " + m_frontRight.getState());
+    System.out.println("State RearLeft: " + m_rearLeft.getState());
+    System.out.println("State RearRight: " + m_rearRight.getState());
   }
 
   /** The log method puts interesting information to the SmartDashboard. */

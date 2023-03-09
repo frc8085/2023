@@ -27,6 +27,7 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -236,8 +237,7 @@ public class RobotContainer {
    */
 
   public Command getAutonomousCommand() {
-    return new ResetPositionToStart(m_altitude, m_extension)
-        .andThen(autoSelection.getSelected());
+    return autoSelection.getSelected();
   }
 
 }
