@@ -20,7 +20,7 @@ import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Altitude extends SubsystemBase {
-    private boolean TUNING_MODE = true;
+    private boolean TUNING_MODE = false;
 
     private Extension m_extension;
     /** Creates a new Altitude. */
@@ -103,12 +103,17 @@ public class Altitude extends SubsystemBase {
 
     /** The log method puts interesting information to the SmartDashboard. */
     public void log() {
-        SmartDashboard.putNumber("Altitude Raw encoder read", m_altitudeEncoder.getPosition());
-        SmartDashboard.putBoolean("Altitude at Top Position", m_altitudeTopLimit.isPressed());
-        SmartDashboard.putBoolean("Altitude at Bottom Position", m_altitudeBottomLimit.isPressed());
-        SmartDashboard.putBoolean("Altitude is in Travel Position", AltitudeIsInTravelPosition());
 
-        SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
+        if (TUNING_MODE) {
+            readPIDTuningFromDashboard();
+            readTuningFromDashboard();
+
+            SmartDashboard.putNumber("Altitude Raw encoder read", m_altitudeEncoder.getPosition());
+            SmartDashboard.putBoolean("Altitude at Top Position", m_altitudeTopLimit.isPressed());
+            SmartDashboard.putBoolean("Altitude at Bottom Position", m_altitudeBottomLimit.isPressed());
+            SmartDashboard.putBoolean("Altitude is in Travel Position", AltitudeIsInTravelPosition());
+            SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
+        }
 
     }
 
@@ -223,7 +228,6 @@ public class Altitude extends SubsystemBase {
     public void periodic() {
 
         enforceSafeExtensions();
-        log();
 
         // resetAltitudeEncoderAtTopLimit();
         AltitudeIsInTravelPosition();
@@ -232,6 +236,8 @@ public class Altitude extends SubsystemBase {
         if (TUNING_MODE) {
             readPIDTuningFromDashboard();
             readTuningFromDashboard();
+            log();
+
         }
 
     }
@@ -271,29 +277,14 @@ public class Altitude extends SubsystemBase {
         return m_altitudeEncoder.getPosition();
     }
 
-    // Returns the current altitude in degrees
-    // change altitude encoder readings to degrees angle*4.75/80
-    // making assumption that -4.75 is -80 degrees
-    // public double getCurrentAltitudeAngle() {
-    // return (m_altitudeEncoder.getPosition() / 4.75 * 80);
-    // }
-
-    // Set a variable speed to move to a position
-    // public void setAltitude(double speed) {
-    // if (!isWithinSafeExtensionLimit()) {
-    // m_altitudeMotor.set(speed);
-    // } else {
-    // m_altitudeMotor.set(speed);
-    // }
-    // }
-
     // Maintain position
     public void keepPosition(double positionAltitude) {
         m_altitudePIDController.setReference(positionAltitude, ControlType.kPosition);
         SmartDashboard.putNumber("Altitude Desired position", positionAltitude);
     }
 
-    // Tell Us if Altitude as At Positions
+    // Tell Us if Altitude as At Set Positions
+
     public boolean AltitudeIsInTravelPosition() {
         return m_altitudeEncoder
                 .getPosition() > (AltitudeConstants.kAltitudeTravelPosition
@@ -301,14 +292,12 @@ public class Altitude extends SubsystemBase {
     }
 
     public boolean AltitudeIsInIntakePosition() {
-
         return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeIntakePosition
                 + AltitudeConstants.kAltitudePositionTolerance;
 
     }
 
     public boolean AltitudeIsInScoringPosition() {
-
         return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeHighDropOffPosition
                 + AltitudeConstants.kAltitudePositionTolerance &&
                 m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeMidDropOffPosition
@@ -316,7 +305,6 @@ public class Altitude extends SubsystemBase {
     };
 
     public boolean AltitudeIsInHighDropOffFinalPosition() {
-
         return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeHighDropOffFinalPosition
                 + AltitudeConstants.kAltitudePositionTolerance &&
                 m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeHighDropOffFinalPosition
@@ -324,7 +312,6 @@ public class Altitude extends SubsystemBase {
     };
 
     public boolean AltitudeIsInMidDropOffFinalPosition() {
-
         return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeMidDropOffFinalPosition
                 + AltitudeConstants.kAltitudePositionTolerance &&
                 m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeMidDropOffFinalPosition
@@ -332,7 +319,6 @@ public class Altitude extends SubsystemBase {
     };
 
     public boolean AltitudeIsInHighCubeShootPosition() {
-
         return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeHighCubeShootPosition
                 + AltitudeConstants.kAltitudePositionTolerance &&
                 m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeHighCubeShootPosition
