@@ -45,7 +45,7 @@ public final class Autos {
             () -> m_altitude.keepPosition(
                 AltitudeConstants.kAltitudeHighDropOffPosition)),
         new WaitCommand(.5),
-        new ScoreHighCone(m_altitude, m_extension, m_intake));
+        new AutoScoreHighCone(m_altitude, m_extension, m_intake));
   }
 
   public static CommandBase intakeAndHold(Altitude m_altitude,
@@ -63,6 +63,8 @@ public final class Autos {
     return Commands.sequence(
         initialize(m_drive, m_altitude, m_extension),
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
+        new ParallelCommandGroup(
+            new MoveToTravelAfterScoring(m_extension, m_altitude)),
         balance(m_drive));
   }
 
