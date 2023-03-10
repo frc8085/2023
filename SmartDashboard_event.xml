@@ -1,53 +1,40 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="FINAL BALANCED" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="590" y="493"/>
+	</widget>
+	<widget field="BALANCED" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="609" y="469"/>
+	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.ConnectionIndicator">
 		<location x="1487" y="14"/>
 	</static-widget>
-	<widget field="BALANCED" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="712" y="501"/>
-	</widget>
 	<widget field="Auto Routine" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="0" y="410"/>
 	</widget>
-	<widget field="FINAL BALANCED" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="681" y="522"/>
-	</widget>
 	<widget field="Pitch" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="639" y="67"/>
+		<location x="185" y="483"/>
 	</widget>
 	<widget field="TIME TO SLOW" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
-		<location x="683" y="458"/>
+		<location x="590" y="433"/>
 	</widget>
 	<widget field="REACHED STATION" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
-		<location x="668" y="484"/>
-	</widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
-		<location x="2" y="3"/>
-		<width>632</width>
-		<height>385</height>
-		<property name="Camera Choice" value=""/>
-	</static-widget>
-	<widget field="Compass Heading" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="761" y="162"/>
-		<height>21</height>
-	</widget>
-	<widget field="Absolute Compass Heading" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="722" y="194"/>
+		<location x="574" y="449"/>
 	</widget>
 	<widget field="Roll" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="643" y="96"/>
+		<location x="191" y="510"/>
 	</widget>
 	<widget field="Yaw" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="639" y="42"/>
+		<location x="189" y="456"/>
 	</widget>
 	<widget field="Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="631" y="14"/>
+		<location x="181" y="432"/>
 	</widget>
 	<widget field="POSE Y Meters" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="801" y="55"/>
+		<location x="324" y="462"/>
 	</widget>
 	<widget field="POSE X Meters" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="800" y="28"/>
+		<location x="322" y="433"/>
 		<height>19</height>
 	</widget>
 	<widget field="Match time remaining" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
@@ -57,7 +44,7 @@
 		<property name="Background" value="102.255.102.255"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
-		<location x="2" y="3"/>
+		<location x="6" y="3"/>
 		<width>632</width>
 		<height>385</height>
 		<property name="Camera Choice" value=""/>
@@ -65,39 +52,9 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="Extension Intake Position"/>
-	<hidden field="Intake Max Output"/>
-	<hidden field="Intake D Gain"/>
-	<hidden field="Current position"/>
-	<hidden field="Altitude Feed Forward"/>
-	<hidden field="Intake P Gain"/>
-	<hidden field="Fully Extended"/>
+	<hidden field="Absolute Compass Heading"/>
 	<hidden field="Desired Extension position"/>
-	<hidden field="Single Substation Altitude"/>
-	<hidden field="Intake Min Output"/>
-	<hidden field="Altitude Set Rotations"/>
-	<hidden field="Altitude Min Output"/>
-	<hidden field="Mid Drop Off Position"/>
-	<hidden field="High Drop Off Final Position"/>
-	<hidden field="Altitude Max Output"/>
-	<hidden field="Intake"/>
-	<hidden field="Altitude Desired position"/>
-	<hidden field="Eject Wait Time"/>
-	<hidden field="Altitude D Gain"/>
-	<hidden field="Altitude at Top Position"/>
-	<hidden field="Altitude at Bottom Position"/>
-	<hidden field="Current altitude"/>
-	<hidden field="Mid Drop Off Final Position"/>
-	<hidden field="Extension Travel Position"/>
-	<hidden field="Altitude I Gain"/>
-	<hidden field="High Drop Off Position"/>
-	<hidden field="Fully Retracted"/>
-	<hidden field="Extension Raw encoder read"/>
-	<hidden field="Altitude is in Travel Position"/>
+	<hidden field="Compass Heading"/>
 	<hidden field="In Safe Limits"/>
-	<hidden field="Altitude P Gain"/>
-	<hidden field="Altitude Raw encoder read"/>
-	<hidden field="BALACED"/>
-	<hidden field="Intake I Gain"/>
-	<hidden field="Intake Encoder position"/>
+	<hidden field="Altitude Desired position"/>
 </xml>
