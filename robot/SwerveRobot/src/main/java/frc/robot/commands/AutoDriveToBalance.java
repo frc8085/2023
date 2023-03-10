@@ -11,56 +11,58 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public class AutoDriveToBalance extends CommandBase {
-  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final DriveSubsystem m_drive;
-  private double maxSpeed = AutoConstants.kDriveOnStationMaxSpeed;
-  private boolean isBalanced = false;
-  private boolean timeToSlowDown = false;
-  private boolean tippedOver = false;
+    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+    private final DriveSubsystem m_drive;
+    private double maxSpeed = AutoConstants.kDriveOnStationMaxSpeed;
+    private boolean isBalanced = false;
+    private boolean timeToSlowDown = false;
+    private boolean tippedOver = false;
 
-  public AutoDriveToBalance(DriveSubsystem drive) {
-    m_drive = drive;
-    // Take the magnitude of meters but ignore the sign
-    // Just in case we provide a negative meters to this function by mistake
-    addRequirements(m_drive);
-  }
+    public AutoDriveToBalance(DriveSubsystem drive) {
+        m_drive = drive;
+        // Take the magnitude of meters but ignore the sign
+        // Just in case we provide a negative meters to this function by mistake
+        addRequirements(m_drive);
+    }
 
-  @Override
-  public void initialize() {
-  }
+    @Override
+    public void initialize() {
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    double currentPitch = m_drive.getPitch();
-    tippedOver = currentPitch < -10;
-    timeToSlowDown = timeToSlowDown || (!timeToSlowDown && tippedOver);
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        super.execute();
 
-    isBalanced = timeToSlowDown && (currentPitch >= -10 && currentPitch <= -.5);
+        double currentPitch = m_drive.getPitch();
+        tippedOver = currentPitch < -10;
+        timeToSlowDown = timeToSlowDown || (!timeToSlowDown && tippedOver);
 
-    m_drive.drive(
-        false,
-        timeToSlowDown ? maxSpeed * AutoConstants.kDriveToBalanceFactor : maxSpeed,
-        tippedOver ? AutoConstants.kTravelForwards : AutoConstants.kTravelBackwards,
-        0,
-        0,
-        true,
-        false);
+        isBalanced = timeToSlowDown && (currentPitch >= -10 && currentPitch <= -.5);
 
-    SmartDashboard.putBoolean("BALANCED", isBalanced);
-    SmartDashboard.putBoolean("TIME TO SLOW", timeToSlowDown);
-    m_drive.logSwerveStates();
-  }
+        m_drive.drive(
+                false,
+                timeToSlowDown ? maxSpeed * AutoConstants.kDriveToBalanceFactor : maxSpeed,
+                tippedOver ? AutoConstants.kTravelForwards : AutoConstants.kTravelBackwards,
+                0,
+                0,
+                true,
+                false);
 
-  // Stop driving when the command ends or is interrupted
-  @Override
-  public void end(boolean interrupted) {
-    m_drive.stop();
-  }
+        SmartDashboard.putBoolean("BALANCED", isBalanced);
+        SmartDashboard.putBoolean("TIME TO SLOW", timeToSlowDown);
+        m_drive.logSwerveStates();
+    }
 
-  // End the command when we reach the desired pose in meters
-  @Override
-  public boolean isFinished() {
-    return isBalanced;
-  }
+    // Stop driving when the command ends or is interrupted
+    @Override
+    public void end(boolean interrupted) {
+        m_drive.stop();
+    }
+
+    // End the command when we reach the desired pose in meters
+    @Override
+    public boolean isFinished() {
+        return isBalanced;
+    }
 }
