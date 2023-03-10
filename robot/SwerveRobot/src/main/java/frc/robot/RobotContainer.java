@@ -4,12 +4,23 @@
 
 package frc.robot;
 
+import java.util.List;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AltitudeConstants;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoDriveMeters;
 import frc.robot.commands.AutoDriveMetersAndTurn;
@@ -36,6 +47,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -55,8 +67,8 @@ public class RobotContainer {
     protected SendableChooser<Command> autoSelection = new SendableChooser<>();
 
     // The robot's subsystems
-    private final LEDs m_leds = new LEDs();
-    private final Intake m_intake = new Intake(m_leds);
+
+    private final Intake m_intake = new Intake();
     private final Extension m_extension = new Extension();
     private final Altitude m_altitude = new Altitude(m_extension);
     private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_altitude, m_extension);
@@ -69,6 +81,9 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        // Instantiate LEDs
+        LEDs.getInstance();
+
         DriverStation.silenceJoystickConnectionWarning(true);
 
         // Zero heading and reset odometry when we start
@@ -133,6 +148,7 @@ public class RobotContainer {
                 Autos.scoreHighLeaveAndPickup(m_robotDrive, m_altitude, m_extension, m_intake));
         autoSelection.addOption("TESTING: Auto Drive and Turn",
                 new AutoDriveMetersAndTurn(m_robotDrive, -2, 0, .3, 180, .3));
+        autoSelection.addOption("TESTING: Pose based", getAutonomousCommandForPose());
         // This isn't working now
         // autoSelection.addOption("(15pt) IDEAL SIDEKICK: Score High, Leave, Pickup,
         // Return and Score Again",
@@ -265,6 +281,47 @@ public class RobotContainer {
         // return new AutoRotateDegrees(m_robotDrive, 180);
         return Autos.scoreHighLeaveAndPickup(m_robotDrive, m_altitude, m_extension,
                 m_intake);
+    }
+
+    public Command getAutonomousCommandForPose() {
+        // Create config for trajectory
+        TrajectoryConfig config = new TrajectoryConfig(
+                AutoConstants.kMaxSpeedMetersPerSecond,
+                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+                // Add kinematics to ensure max speed is actually obeyed
+                .setKinematics(DriveConstants.kDriveKinematics);
+
+        // An example trajectory to follow. All units in meters.
+        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+                // Start at the origin facing the +X direction
+                new Pose2d(0, 0, new Rotation2d(0)),
+                // Pass through these two interior waypoints, making an 's' curve path
+                List.of(new Translation2d(.5, .5), new Translation2d(1, -.5)),
+                // End 3 meters straight ahead of where we started, facing forward
+                new Pose2d(1.5, 0, new Rotation2d(0)),
+                config);
+
+        var thetaController = new ProfiledPIDController(
+                AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+                exampleTrajectory,
+                m_robotDrive::getPose, // Functional interface to feed supplier
+                DriveConstants.kDriveKinematics,
+
+                // Position controllers
+                new PIDController(AutoConstants.kPXController, 0, 0),
+                new PIDController(AutoConstants.kPYController, 0, 0),
+                thetaController,
+                m_robotDrive::setModuleStates,
+                m_robotDrive);
+
+        // Reset odometry to the starting pose of the trajectory.
+        m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+
+        // Run path following command, then stop at the end.
+        return swerveControllerCommand.andThen(() -> m_robotDrive.stop());
     }
 
 }
