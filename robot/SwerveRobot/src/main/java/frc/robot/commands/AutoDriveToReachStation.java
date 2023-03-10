@@ -27,12 +27,15 @@ public class AutoDriveToReachStation extends CommandBase {
     // Then run the drive command to travel backwards
     @Override
     public void initialize() {
+        super.initialize();
         m_drive.resetOdometry(new Pose2d());
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        super.execute();
+
         double currentPitch = m_drive.getPitch();
 
         if (!reachedChargingStation && currentPitch >= 10) {

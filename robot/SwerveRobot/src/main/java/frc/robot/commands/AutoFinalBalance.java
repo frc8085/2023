@@ -30,6 +30,8 @@ public class AutoFinalBalance extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        super.execute();
+
         double currentPitch = m_drive.getPitch();
         isBalanced = currentPitch >= 0.5 && currentPitch <= 1.5;
 

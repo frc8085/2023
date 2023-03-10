@@ -36,6 +36,7 @@ public class AutoDriveMetersAndTurn extends CommandBase {
     // Then run the drive command to travel backwards
     @Override
     public void initialize() {
+        super.initialize();
         m_drive.resetOdometry(new Pose2d());
         m_drive.zeroHeading();
 
@@ -44,12 +45,14 @@ public class AutoDriveMetersAndTurn extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        super.execute();
+
         m_drive.drive(
                 false,
                 m_speed,
                 forwardReached ? 0 : Math.signum(m_forwardMeters),
                 sidewaysReached ? 0 : Math.signum(m_sidewaysMeters),
-                turnComplete ? 0 : Math.signum(-m_rotationSpeed),
+                turnComplete ? 0 : Math.signum(m_degrees) * -m_rotationSpeed,
                 true,
                 false);
     }

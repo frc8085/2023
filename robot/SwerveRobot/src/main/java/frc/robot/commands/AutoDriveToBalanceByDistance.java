@@ -15,70 +15,72 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public class AutoDriveToBalanceByDistance extends CommandBase {
-  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final DriveSubsystem m_drive;
-  // private double maxSpeed = AutoConstants.kDriveOnStationMaxSpeed;
-  private double maxSpeed = AutoConstants.kFinalBalanceSpeed;
-  private boolean isBalanced = false;
-  private boolean timeToSlowDown = false;
-  private boolean tippedOver = false;
-  private int reading = 0;
-  private int windowSize = 1;
-  private double[] readings = new double[windowSize];
-  private double averageReading;
-  private double impossibleReading = 99999;
+    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+    private final DriveSubsystem m_drive;
+    // private double maxSpeed = AutoConstants.kDriveOnStationMaxSpeed;
+    private double maxSpeed = AutoConstants.kFinalBalanceSpeed;
+    private boolean isBalanced = false;
+    private boolean timeToSlowDown = false;
+    private boolean tippedOver = false;
+    private int reading = 0;
+    private int windowSize = 1;
+    private double[] readings = new double[windowSize];
+    private double averageReading;
+    private double impossibleReading = 99999;
 
-  public AutoDriveToBalanceByDistance(DriveSubsystem drive) {
-    m_drive = drive;
-    // Take the magnitude of meters but ignore the sign
-    // Just in case we provide a negative meters to this function by mistake
-    addRequirements(m_drive);
-  }
+    public AutoDriveToBalanceByDistance(DriveSubsystem drive) {
+        m_drive = drive;
+        // Take the magnitude of meters but ignore the sign
+        // Just in case we provide a negative meters to this function by mistake
+        addRequirements(m_drive);
+    }
 
-  @Override
-  public void initialize() {
-  }
+    @Override
+    public void initialize() {
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    double currentPitch = m_drive.getPitch();
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        super.execute();
 
-    readings[reading % windowSize] = currentPitch;
-    reading++;
+        double currentPitch = m_drive.getPitch();
 
-    averageReading = reading >= windowSize
-        ? Arrays.stream(readings).sum() / windowSize
-        : impossibleReading;
+        readings[reading % windowSize] = currentPitch;
+        reading++;
 
-    tippedOver = averageReading < -2;
-    isBalanced = averageReading >= -2 && averageReading <= -0.5;
+        averageReading = reading >= windowSize
+                ? Arrays.stream(readings).sum() / windowSize
+                : impossibleReading;
 
-    m_drive.drive(
-        false,
-        maxSpeed,
-        tippedOver ? AutoConstants.kTravelForwards : AutoConstants.kTravelBackwards,
-        0,
-        0,
-        true,
-        false);
+        tippedOver = averageReading < -2;
+        isBalanced = averageReading >= -2 && averageReading <= -0.5;
 
-    SmartDashboard.putBoolean("BALANCED", isBalanced);
-    SmartDashboard.putBoolean("TIME TO SLOW", timeToSlowDown);
-    SmartDashboard.putNumber("AVERAGE PITCH", averageReading);
-    SmartDashboard.putNumberArray("READINGS", readings);
-    m_drive.logSwerveStates();
-  }
+        m_drive.drive(
+                false,
+                maxSpeed,
+                tippedOver ? AutoConstants.kTravelForwards : AutoConstants.kTravelBackwards,
+                0,
+                0,
+                true,
+                false);
 
-  // Stop driving when the command ends or is interrupted
-  @Override
-  public void end(boolean interrupted) {
-    m_drive.stop();
-  }
+        SmartDashboard.putBoolean("BALANCED", isBalanced);
+        SmartDashboard.putBoolean("TIME TO SLOW", timeToSlowDown);
+        SmartDashboard.putNumber("AVERAGE PITCH", averageReading);
+        SmartDashboard.putNumberArray("READINGS", readings);
+        m_drive.logSwerveStates();
+    }
 
-  // End the command when we reach the desired pose in meters
-  @Override
-  public boolean isFinished() {
-    return isBalanced;
-  }
+    // Stop driving when the command ends or is interrupted
+    @Override
+    public void end(boolean interrupted) {
+        m_drive.stop();
+    }
+
+    // End the command when we reach the desired pose in meters
+    @Override
+    public boolean isFinished() {
+        return isBalanced;
+    }
 }
