@@ -104,12 +104,6 @@ public class DriveSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("Pitch", m_gyro.getPitch());
             SmartDashboard.putNumber("Roll", m_gyro.getRoll());
 
-            SmartDashboard.putNumber("Absolute Compass Heading",
-                    m_gyro.getAbsoluteCompassHeading());
-            SmartDashboard.putNumber("Compass Heading", m_gyro.getCompassHeading());
-
-            SmartDashboard.putBoolean("In Safe Limits", isWithinSafeDrivingLimits());
-
         }
     }
 
