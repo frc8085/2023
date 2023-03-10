@@ -6,19 +6,29 @@ package frc.robot.commands;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
-public class AutoDriveToBalance extends CommandBase {
+public class AutoDriveToBalanceByDistance extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
-  private double maxSpeed = AutoConstants.kDriveOnStationMaxSpeed;
+  // private double maxSpeed = AutoConstants.kDriveOnStationMaxSpeed;
+  private double maxSpeed = AutoConstants.kFinalBalanceSpeed;
   private boolean isBalanced = false;
   private boolean timeToSlowDown = false;
   private boolean tippedOver = false;
+  private int reading = 0;
+  private int windowSize = 1;
+  private double[] readings = new double[windowSize];
+  private double averageReading;
+  private double impossibleReading = 99999;
 
-  public AutoDriveToBalance(DriveSubsystem drive) {
+  public AutoDriveToBalanceByDistance(DriveSubsystem drive) {
     m_drive = drive;
     // Take the magnitude of meters but ignore the sign
     // Just in case we provide a negative meters to this function by mistake
@@ -33,14 +43,20 @@ public class AutoDriveToBalance extends CommandBase {
   @Override
   public void execute() {
     double currentPitch = m_drive.getPitch();
-    tippedOver = currentPitch < -10;
-    timeToSlowDown = timeToSlowDown || (!timeToSlowDown && tippedOver);
 
-    isBalanced = timeToSlowDown && (currentPitch >= -10 && currentPitch <= -.5);
+    readings[reading % windowSize] = currentPitch;
+    reading++;
+
+    averageReading = reading >= windowSize
+        ? Arrays.stream(readings).sum() / windowSize
+        : impossibleReading;
+
+    tippedOver = averageReading < -2;
+    isBalanced = averageReading >= -2 && averageReading <= -0.5;
 
     m_drive.drive(
         false,
-        timeToSlowDown ? maxSpeed * AutoConstants.kDriveToBalanceFactor : maxSpeed,
+        maxSpeed,
         tippedOver ? AutoConstants.kTravelForwards : AutoConstants.kTravelBackwards,
         0,
         0,
@@ -49,6 +65,8 @@ public class AutoDriveToBalance extends CommandBase {
 
     SmartDashboard.putBoolean("BALANCED", isBalanced);
     SmartDashboard.putBoolean("TIME TO SLOW", timeToSlowDown);
+    SmartDashboard.putNumber("AVERAGE PITCH", averageReading);
+    SmartDashboard.putNumberArray("READINGS", readings);
     m_drive.logSwerveStates();
   }
 

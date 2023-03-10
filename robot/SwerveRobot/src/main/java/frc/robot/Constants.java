@@ -238,7 +238,7 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = 0.15;
+    public static final double kMaxSpeedMetersPerSecond = .4;
     public static final double kMaxAccelerationMetersPerSecondSquared = 0.5;
     public static final double kMaxAngularSpeedRadiansPerSecond = 0.25 * Math.PI;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = 0.25 * Math.PI;
@@ -255,7 +255,7 @@ public final class Constants {
     public static final double kTravelForwards = 1;
     public static final double kTravelBackwards = -1;
 
-    public static final double kDriveToStationSpeed = 0.25;
+    public static final double kDriveToStationSpeed = 0.4;
     public static final double kDriveOnStationMaxSpeed = 0.15;
     public static final double kDriveToBalanceFactor = 0.7;
     public static final double kFinalBalanceSpeed = kDriveOnStationMaxSpeed * (kDriveToBalanceFactor / 2);

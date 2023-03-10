@@ -84,10 +84,10 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void logSwerveStates() {
-        System.out.println("State FrontLeft: " + m_frontLeft.getState());
-        System.out.println("State FrontRight: " + m_frontRight.getState());
-        System.out.println("State RearLeft: " + m_rearLeft.getState());
-        System.out.println("State RearRight: " + m_rearRight.getState());
+        // System.out.println("Position FrontLeft: " + m_frontLeft.getPosition());
+        // System.out.println("Position FrontRight: " + m_frontRight.getPosition());
+        // System.out.println("Position RearLeft: " + m_rearLeft.getPosition());
+        // System.out.println("Position RearRight: " + m_rearRight.getPosition());
     }
 
     /** The log method puts interesting information to the SmartDashboard. */
@@ -314,7 +314,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_gyro.reset();
     }
 
-    /** Zeroes the heading of the robot. */
+    /** Resets the odometry of the robot. */
     public void resetPose() {
         m_gyro.reset();
     }

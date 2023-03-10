@@ -18,6 +18,8 @@ import static frc.robot.Constants.ExtensionConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Extension extends SubsystemBase {
+    private boolean TUNING_MODE = false;
+
     /** Creates a new Extension. */
 
     // Extension motors
@@ -55,10 +57,6 @@ public class Extension extends SubsystemBase {
         m_extensionPIDController.setFF(kFFExtension, 0);
         m_extensionPIDController.setOutputRange(-0.85, 0.85);
 
-        // TODO. What should these values be?
-        m_extensionPIDController.setSmartMotionMaxAccel(0.5, 0);
-        m_extensionPIDController.setSmartMotionMaxVelocity(0.5, 0);
-
         /**
          * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
          * or
@@ -79,12 +77,14 @@ public class Extension extends SubsystemBase {
 
     /** The log method puts interesting information to the SmartDashboard. */
     public void log() {
-        SmartDashboard.putNumber("Extension Raw encoder read", m_extensionEncoder.getPosition());
-        SmartDashboard.putBoolean("Fully Extended", m_extensionLimit.isPressed());
-        SmartDashboard.putBoolean("Fully Retracted", m_retractionLimit.isPressed());
-        SmartDashboard.putBoolean("Extension Travel Position", ExtensionIsInTravelPosition());
-        SmartDashboard.putBoolean("Extension Intake Position", ExtensionIsInIntakePosition());
-        SmartDashboard.putNumber("Current position", getCurrentExtensionPosition());
+        if (TUNING_MODE) {
+            SmartDashboard.putNumber("Extension Raw encoder read", m_extensionEncoder.getPosition());
+            SmartDashboard.putBoolean("Fully Extended", m_extensionLimit.isPressed());
+            SmartDashboard.putBoolean("Fully Retracted", m_retractionLimit.isPressed());
+            SmartDashboard.putBoolean("Extension Travel Position", ExtensionIsInTravelPosition());
+            SmartDashboard.putBoolean("Extension Intake Position", ExtensionIsInIntakePosition());
+            SmartDashboard.putNumber("Current position", getCurrentExtensionPosition());
+        }
     }
 
     /** Call log method every loop. */
@@ -128,12 +128,6 @@ public class Extension extends SubsystemBase {
     public double getCurrentExtensionPosition() {
         return m_extensionEncoder.getPosition();
     }
-
-    // Set a variable speed
-    // public void setExtension(double speed) {
-    // m_extensionMotor.set(speed *
-    // ExtensionConstants.kMaxExtensionSpeedMetersPerSecond);
-    // }
 
     // Maintain Position
     public void keepPosition(double position) {

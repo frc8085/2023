@@ -14,13 +14,15 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SubsystemMotorConstants;
+import frc.robot.subsystems.LEDs.GamePiece;
 
 import static frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  private boolean TUNING_MODE = true;
+  private boolean TUNING_MODE = false;
   private final CANSparkMax m_intakeMotor;
   private RelativeEncoder m_intakeEncoder;
+  private LEDs m_leds;
 
   // Determine current intake encoder position
   public double CurrentIntakeEncoderPosition() {
@@ -40,7 +42,8 @@ public class Intake extends SubsystemBase {
   static double kEjectWaitTime = IntakeConstants.kEjectWaitTime;
 
   /** The intake subsystem for the robot. */
-  public Intake() {
+  public Intake(LEDs leds) {
+    m_leds = leds;
     m_intakeMotor = new CANSparkMax(IntakeConstants.kIntakePort, MotorType.kBrushless);
     m_intakeMotor.setOpenLoopRampRate(IntakeConstants.kRampRate);
     m_intakeMotor.restoreFactoryDefaults();
@@ -111,7 +114,7 @@ public class Intake extends SubsystemBase {
 
   public void readEjectWaitTimeFromDashboard() {
     // Read Eject Wait Time from SmartDashboard
-    double t = SmartDashboard.getNumber("Eject Wait Time", 1);
+    double t = SmartDashboard.getNumber("Eject Wait Time", IntakeConstants.kEjectWaitTime);
 
     // if Eject Wait Time on SmartDashboard has changed, write new values to the
     // controller
@@ -125,8 +128,8 @@ public class Intake extends SubsystemBase {
     // If we're fine-tuning PID Constants, read and apply updates from the dashboard
     if (TUNING_MODE) {
       readPIDTuningFromDashboard();
-      SmartDashboard.putNumber("Intake Encoder position", m_intakeEncoder.getPosition());
       readEjectWaitTimeFromDashboard();
+      SmartDashboard.putNumber("Intake Encoder position", m_intakeEncoder.getPosition());
 
       // add intake encoder position into log
       // logIntakeData();
@@ -146,18 +149,20 @@ public class Intake extends SubsystemBase {
   }
 
   public void holdCargo() {
-    reset();
+    m_leds.setDesiredPiece(GamePiece.NONE);
     m_intakePIDController.setReference(CurrentIntakeEncoderPosition(), ControlType.kPosition);
   }
 
   // Open loop stuff
   // Run the intake forward at the CONE speed
   public void intakeCone() {
+    m_leds.setDesiredPiece(GamePiece.CONE);
     m_intakeMotor.set(IntakeConstants.kIntakeConePower);
   }
 
   // Run the intake forward at the CUBE speed
   public void intakeCube() {
+    m_leds.setDesiredPiece(GamePiece.CUBE);
     m_intakeMotor.set(IntakeConstants.kIntakeCubePower);
   }
 
@@ -169,11 +174,6 @@ public class Intake extends SubsystemBase {
   // Run the intake reverse to eject CUBE
   public void ejectCube() {
     m_intakeMotor.set(-IntakeConstants.kEjectCubePower);
-  }
-
-  // Run the intake forward to hold the CUBE speed
-  public void holdCube() {
-    m_intakeMotor.set(IntakeConstants.kIntakeHoldCubePower);
   }
 
   // Stop the intake
