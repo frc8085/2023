@@ -35,10 +35,9 @@ public class Intake extends SubsystemBase {
   static double kFFIntake = 0;
   static double kIntakeMaxOutput = .25;
   static double kIntakeMinOutput = -.25;
-  
-  //Eject Wait Time
-  static double kEjectWaitTime = IntakeConstants.kEjectWaitTime;
 
+  // Eject Wait Time
+  static double kEjectWaitTime = IntakeConstants.kEjectWaitTime;
 
   /** The intake subsystem for the robot. */
   public Intake() {
@@ -79,8 +78,8 @@ public class Intake extends SubsystemBase {
   private void addEjectWaitTimeToDashboard() {
     SmartDashboard.putNumber("Eject Wait Time", kEjectWaitTime);
   }
-  
-    private void readPIDTuningFromDashboard() {
+
+  private void readPIDTuningFromDashboard() {
 
     // Read PID coefficients from SmartDashboard
     double p = SmartDashboard.getNumber("Intake P Gain", 0);
@@ -111,10 +110,11 @@ public class Intake extends SubsystemBase {
   }
 
   public void readEjectWaitTimeFromDashboard() {
-    //Read Eject Wait Time from SmartDashboard
+    // Read Eject Wait Time from SmartDashboard
     double t = SmartDashboard.getNumber("Eject Wait Time", 1);
 
-    // if Eject Wait Time on SmartDashboard has changed, write new values to the controller
+    // if Eject Wait Time on SmartDashboard has changed, write new values to the
+    // controller
     if ((t != kEjectWaitTime)) {
       kEjectWaitTime = t;
     }
@@ -146,6 +146,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void holdCargo() {
+    reset();
     m_intakePIDController.setReference(CurrentIntakeEncoderPosition(), ControlType.kPosition);
   }
 

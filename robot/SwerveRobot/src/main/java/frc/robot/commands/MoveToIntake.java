@@ -13,15 +13,15 @@ import static frc.robot.Constants.AltitudeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class PrepareIntake extends SequentialCommandGroup {
-  public PrepareIntake(
-      Extension m_extension,
-      Altitude m_altitude) {
-    addCommands(new ParallelCommandGroup(
-        new InstantCommand(() -> m_altitude.keepPosition(
-            AltitudeConstants.kAltitudeIntakePosition)),
-        new InstantCommand(() -> m_extension
-            .keepPosition(ExtensionConstants.kExtensionPositionIntakeOut))));
+public class MoveToIntake extends SequentialCommandGroup {
+    public MoveToIntake(
+            Extension m_extension,
+            Altitude m_altitude) {
+        addCommands(new ParallelCommandGroup(
+                new InstantCommand(() -> m_altitude.keepPosition(
+                        AltitudeConstants.kAltitudeIntakePosition)),
+                new InstantCommand(() -> m_extension
+                        .keepPosition(ExtensionConstants.kExtensionPositionIntakeOut))));
 
-  }
+    }
 }
