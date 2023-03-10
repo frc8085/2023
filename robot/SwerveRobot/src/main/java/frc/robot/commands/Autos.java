@@ -105,8 +105,9 @@ public final class Autos {
         new MoveToTravelAfterScoring(m_extension, m_altitude),
         new AutoDriveBackwardsMeters(m_drive, 2.5, .4),
         new AutoRotateDegrees(m_drive, 180),
-        // TODO: Move to intake positoin before intaking
+        new PrepareIntake(m_extension, m_altitude),
         new InstantCommand(m_intake::intakeCone),
+        new WaitCommand(1),
         new AutoDriveBackwardsMeters(m_drive, 1, .4),
         new InstantCommand(() -> m_intake.holdCargo()));
 
