@@ -277,6 +277,10 @@ public class DriveSubsystem extends SubsystemBase {
         m_rearRight.setDesiredState(swerveModuleStates[3]);
     }
 
+    public void turn(double speed) {
+        drive(false, 0, 0, 0, speed, true, false);
+    }
+
     /**
      * Sets the wheels into an X formation to prevent movement.
      */
@@ -345,4 +349,5 @@ public class DriveSubsystem extends SubsystemBase {
     public double getMatchTimeRemaining() {
         return Timer.getMatchTime();
     }
+
 }
