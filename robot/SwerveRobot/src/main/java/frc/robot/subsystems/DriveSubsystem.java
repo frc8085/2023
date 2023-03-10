@@ -93,6 +93,8 @@ public class DriveSubsystem extends SubsystemBase {
     /** The log method puts interesting information to the SmartDashboard. */
     public void log() {
         SmartDashboard.putNumber("Match time remaining", getMatchTimeRemaining());
+        SmartDashboard.putBoolean("Under 15s", getMatchTimeRemaining() > 15);
+        SmartDashboard.putBoolean("Under 5s ", getMatchTimeRemaining() > 5);
 
         // Things to show only in tuning mode
         if (TUNING_MODE) {
