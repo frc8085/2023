@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoRotateDegrees;
 import frc.robot.commands.Autos;
 import frc.robot.commands.MoveToMidConeDropOff;
 import frc.robot.commands.MoveToHighConeDropOff;
@@ -119,6 +120,7 @@ public class RobotContainer {
 
     autoSelection.setDefaultOption("(18pt) TEST: Score High, Balance",
         Autos.scoreHighAndBalanceByDistance(m_robotDrive, m_altitude, m_extension, m_intake));
+    autoSelection.addOption("PRACTICE turn", new AutoRotateDegrees(m_robotDrive, 180));
     autoSelection.addOption("(18pt) RELIABLE: Score High, Balance",
         Autos.scoreHighAndBalance(m_robotDrive, m_altitude, m_extension, m_intake));
     autoSelection.addOption("(9pt) SIDEKICK: Score High, Leave, Pickup",
@@ -245,7 +247,11 @@ public class RobotContainer {
    */
 
   public Command getAutonomousCommand() {
-    return autoSelection.getSelected();
+    // return autoSelection.getSelected();
+    // return Autos.balanceByDistance(m_robotDrive);
+    // return new AutoRotateDegrees(m_robotDrive, 180);
+    return Autos.scoreHighLeaveAndPickup(m_robotDrive, m_altitude, m_extension,
+        m_intake);
   }
 
 }

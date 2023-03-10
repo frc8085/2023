@@ -13,9 +13,11 @@ public class AutoDriveBackwardsMeters extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
   private double m_meters = 0;
+  private double m_speed;
 
-  public AutoDriveBackwardsMeters(DriveSubsystem drive, double meters) {
+  public AutoDriveBackwardsMeters(DriveSubsystem drive, double meters, double speed) {
     m_drive = drive;
+    m_speed = speed;
     // Take the magnitude of meters but ignore the sign
     // Just in case we provide a negative meters to this function by mistake
     m_meters = Math.abs(meters);
@@ -29,7 +31,7 @@ public class AutoDriveBackwardsMeters extends CommandBase {
     m_drive.resetOdometry(new Pose2d());
     m_drive.drive(
         false,
-        AutoConstants.kMaxSpeedMetersPerSecond,
+        m_speed,
         AutoConstants.kTravelBackwards,
         0,
         0,

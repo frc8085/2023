@@ -31,10 +31,11 @@ public class AutoRotateDegrees extends CommandBase {
   public void execute() {
     m_drive.drive(
         false,
-        AutoConstants.kMaxSpeedMetersPerSecond,
+        0.3,
+        // AutoConstants.kMaxSpeedMetersPerSecond,
         0,
         0,
-        m_degrees,
+        -0.3,
         true,
         false);
   }
