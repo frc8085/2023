@@ -28,7 +28,6 @@ public class AutoScoreHighCone extends SequentialCommandGroup {
         new InstantCommand(() -> m_extension.retractExtension())
             .until(m_extension::ExtensionIsInReleasePosition),
         new InstantCommand(() -> m_intake.ejectCone()));
-
   }
 
 }
