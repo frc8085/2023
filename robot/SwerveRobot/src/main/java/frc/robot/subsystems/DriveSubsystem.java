@@ -25,6 +25,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.utilities.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -159,8 +160,13 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public boolean isWithinSafeDrivingLimits() {
-    return m_altitude.getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin &&
-        m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
+    boolean altitudeInSafeLimit = m_altitude.getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin;
+    boolean extenstionInSafeLimit = m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
+
+    // If in Auto, it is safe to drive faster
+    // But if in Teleop, consider us within safe driving limits only if the altitude
+    // and extension are within safe limits
+    return RobotState.isAutonomous() || (altitudeInSafeLimit && extenstionInSafeLimit);
   }
 
   public void stop() {
