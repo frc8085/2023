@@ -6,39 +6,47 @@ package frc.robot.commands;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
-public class AutoDriveForwardMeters extends CommandBase {
+public class AutoNewFinalBalance extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
-  private double m_meters = 0;
+  private double m_speed = .1;
+  private boolean isBalanced = false;
 
-  public AutoDriveForwardMeters(DriveSubsystem drive, double meters) {
+  public AutoNewFinalBalance(DriveSubsystem drive) {
     m_drive = drive;
-    m_meters = meters;
+    // Take the magnitude of meters but ignore the sign
+    // Just in case we provide a negative meters to this function by mistake
     addRequirements(m_drive);
   }
 
-  // Reset the odomotry when the command is scheduled
-  // Then run the drive command to travel forwards
   @Override
   public void initialize() {
-    super.initialize();
-    m_drive.resetOdometry(new Pose2d());
-    m_drive.drive(
-        false,
-        .4,
-        AutoConstants.kTravelForwards,
-        0,
-        0,
-        true,
-        false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    super.execute();
+
+    double currentPitch = m_drive.getPitch();
+    double direction = Math.signum(-currentPitch);
+
+    isBalanced = Math.abs(currentPitch) <= 1;
+
+    m_drive.drive(
+        false,
+        m_speed,
+        direction,
+        0,
+        0,
+        true,
+        false);
+
+    SmartDashboard.putBoolean("FINAL BALANCED", isBalanced);
   }
 
   // Stop driving when the command ends or is interrupted
@@ -50,9 +58,6 @@ public class AutoDriveForwardMeters extends CommandBase {
   // End the command when we reach the desired pose in meters
   @Override
   public boolean isFinished() {
-    double currentPose = m_drive.getPose().getX();
-    // Stop when the current position reaches
-    // the desired forward travel distance in meters
-    return currentPose >= m_meters;
+    return isBalanced;
   }
 }

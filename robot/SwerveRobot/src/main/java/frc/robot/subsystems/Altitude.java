@@ -105,8 +105,8 @@ public class Altitude extends SubsystemBase {
   public void log() {
 
     if (TUNING_MODE) {
-      readPIDTuningFromDashboard();
-      readTuningFromDashboard();
+      // readPIDTuningFromDashboard();
+      // readTuningFromDashboard();
 
       SmartDashboard.putNumber("Altitude Raw encoder read", m_altitudeEncoder.getPosition());
       SmartDashboard.putBoolean("Altitude at Top Position", m_altitudeTopLimit.isPressed());

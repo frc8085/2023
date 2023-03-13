@@ -80,6 +80,22 @@ public final class Autos {
         new AutoScoreHighCone(m_altitude, m_extension, m_intake));
   }
 
+  public static CommandBase scoreHigh3(DriveSubsystem m_drive, Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    return Commands.sequence(
+        new MoveToHighConeDropOff(m_extension, m_altitude)
+            .until(() -> m_extension.ExtensionIsInHighScoringPosition()),
+        new WaitUntilCommand(
+            () -> m_extension.ExtensionIsInHighScoringPosition()),
+        new ParallelCommandGroup(
+            new SequentialCommandGroup(
+                new InstantCommand(() -> m_intake.ejectCone()),
+                new WaitCommand(IntakeConstants.kEjectWaitTime),
+                new InstantCommand(m_intake::stopIntake)),
+            new MoveToTravelAfterScoring(m_extension, m_altitude)));
+  }
+
   public static CommandBase intakeAndHold(Altitude m_altitude,
       Extension m_extension,
       Intake m_intake) {
@@ -192,13 +208,26 @@ public final class Autos {
         initialize(m_drive, m_altitude, m_extension),
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
         new ParallelCommandGroup(
-            new SequentialCommandGroup(new WaitCommand(IntakeConstants.kEjectWaitTime),
-                new InstantCommand(m_intake::stopIntake)),
             new MoveToTravelAfterScoring(m_extension, m_altitude),
-            new AutoDriveBackwardsMeters(m_drive, 4.75, .4),
-            new AutoDriveForwardMeters(m_drive, 2.25),
-            new AutoRotateDegrees(m_drive, 45),
-            new RunCommand(m_drive::lock)));
+            new AutoDriveBackwardsMeters(m_drive, 4.25, .4)),
+        new InstantCommand(m_intake::stopIntake),
+        new AutoDriveForwardMeters(m_drive, 2.75),
+        new AutoRotateDegrees(m_drive, 45),
+        new RunCommand(m_drive::lock));
+  }
+
+  public static CommandBase ScoreLeaveAndBalance(DriveSubsystem m_drive, Altitude m_altitude,
+      Extension m_extension, Intake m_intake) {
+    return Commands.sequence(
+        initialize(m_drive, m_altitude, m_extension),
+        scoreHigh3(m_drive, m_altitude, m_extension, m_intake),
+        new AutoDriveBackwardsMeters(m_drive, 4.25, .4),
+        new InstantCommand(m_intake::stopIntake),
+        new AutoDriveForwardMeters(m_drive, 2.5),
+        new WaitCommand(1),
+        new AutoNewFinalBalance(m_drive),
+        // new AutoRotateDegrees(m_drive, 45),
+        new RunCommand(m_drive::lock));
   }
 
   private Autos() {

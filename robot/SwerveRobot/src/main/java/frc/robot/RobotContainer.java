@@ -135,36 +135,14 @@ public class RobotContainer {
 
   private void configureAuto() {
 
-    // autoSelection.setDefaultOption("(18pt) TEST: Score High, Balance",
-    // Autos.scoreHighAndBalanceByDistance(m_robotDrive, m_altitude, m_extension,
-    // m_intake));
-    // autoSelection.addOption("PRACTICE turn", new AutoRotateDegrees(m_robotDrive,
-    // 180));
-    autoSelection.setDefaultOption("(18pt) RELIABLE: Score High, Balance",
-        Autos.scoreHighAndBalance(m_robotDrive, m_altitude, m_extension, m_intake));
+    autoSelection.setDefaultOption("(21pt) MAIN CHARACTER: Score High, Leave, Dock",
+        Autos.ScoreLeaveAndDock(m_robotDrive, m_altitude, m_extension, m_intake));
+    autoSelection.addOption("(21pt) SUPERHERO: Score High, Leave, Balance",
+        Autos.ScoreLeaveAndBalance(m_robotDrive, m_altitude, m_extension, m_intake));
     autoSelection.addOption("(9pt) SIDEKICK: Score High & Leave",
         Autos.scoreHighAndLeave(m_robotDrive, m_altitude, m_extension, m_intake));
-    autoSelection.addOption("Test",
-        Autos.ScoreLeaveAndDock(m_robotDrive, m_altitude, m_extension, m_intake));
-    // // autoSelection.addOption("TESTING: (9pt) SIDEKICK: Score High & Leave",
-    // Autos.scoreHighLeaveAndPickup(m_robotDrive, m_altitude, m_extension,
-    // m_intake));
-    // autoSelection.addOption("TESTING: Auto Drive and Turn",
-    // new AutoDriveMetersAndTurn(m_robotDrive, -2, 0, .3, 180, .3));
-    // autoSelection.addOption("TESTING: Pose based",
-    // getAutonomousCommandForPose());
-    // This isn't working now
-    // autoSelection.addOption("(15pt) IDEAL SIDEKICK: Score High, Leave, Pickup,
-    // Return and Score Again",
-    // Autos.scoreHighLeavePickupReturnandScore(m_robotDrive, m_altitude,
-    // m_extension, m_intake));
-    // autoSelection.addOption("(21pt) IDEAL: Score High, Leave, Pickup, Balance",
-    // Autos.scoreHighLeavePickupAndBalance(m_robotDrive, m_altitude, m_extension,
-    // m_intake));
-    // autoSelection.addOption("(12pt) MINIMAL: BalanceByDistance",
-    // Autos.balanceByDistance(m_robotDrive));
-    // autoSelection.addOption("(6pt) MINIMAL: Score High",
-    // Autos.scoreHigh(m_robotDrive, m_altitude, m_extension, m_intake));
+    autoSelection.addOption("(18pt) RELIABLE: Score High, Balance",
+        Autos.scoreHighAndBalance(m_robotDrive, m_altitude, m_extension, m_intake));
 
     // Put the chooser on the dashboard
     SmartDashboard.putData("Auto Routine", autoSelection);
