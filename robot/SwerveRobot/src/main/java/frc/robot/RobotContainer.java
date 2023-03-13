@@ -259,11 +259,7 @@ public class RobotContainer {
    */
 
   public Command getAutonomousCommand() {
-    return autoSelection.getSelected();
-    // return Autos.balanceByDistance(m_robotDrive);
-    // return new AutoRotateDegrees(m_robotDrive, 180);
-    // return Autos.scoreHighLeaveAndPickup(m_robotDrive, m_altitude, m_extension,
-    // m_intake);
+    return autoSelection.getSelected().andThen(() -> lockWheels());
   }
 
   public void lockWheels() {
@@ -273,6 +269,7 @@ public class RobotContainer {
   public Command stopIntake() {
     return new InstantCommand(m_intake::stopIntake);
   }
+
   // public Command getAutonomousCommandForPose() {
   // // Create config for trajectory
   // TrajectoryConfig config = new TrajectoryConfig(
