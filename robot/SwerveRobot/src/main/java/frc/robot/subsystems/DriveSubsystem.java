@@ -181,9 +181,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @param forwardDirection
    * @param sidewaysDirection
    * @param rotDirection      Angular rate of the robot.
-   * @param fieldRelative     Whether the provided x and y speeds are relative to
-   *                          the
-   *                          field.
+   * @param fieldRelative     Whether to move relative to the field
+   * @param rateLimit         Whether to use rate limiting
    */
   public void drive(
       boolean speedLimit,
