@@ -22,7 +22,7 @@ public class MoveToTravelAfterIntake extends SequentialCommandGroup {
                 new InstantCommand(() -> m_altitude.keepPosition(AltitudeConstants.kAltitudeTravelPosition)),
                 new WaitUntilCommand(() -> m_altitude.AltitudeIsInScoringPosition()),
                 new InstantCommand(
-                        () -> m_extension.keepPosition(ExtensionConstants.kExtensionPositionFullyRetracted)));
+                        () -> m_extension.keepPosition(ExtensionConstants.kExtensionPositionInchesFullyRetracted)));
 
     }
 }

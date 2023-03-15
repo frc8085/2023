@@ -16,19 +16,19 @@ import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
 public class MoveToTravel extends SequentialCommandGroup {
-  public MoveToTravel(
-      Extension m_extension,
-      Altitude m_altitude) {
-    addCommands(
-        new ConditionalCommand(
-            new InstantCommand(),
-            new SequentialCommandGroup(
-                new InstantCommand(
-                    () -> m_extension.keepPosition(
-                        ExtensionConstants.kExtensionPositionFullyRetracted)),
-                new WaitUntilCommand(() -> m_extension.ExtensionIsInIntakePosition())),
-            () -> m_extension.ExtensionIsInIntakePosition()),
-        new InstantCommand(() -> m_altitude
-            .keepPosition(AltitudeConstants.kAltitudeTravelPosition)));
-  }
+    public MoveToTravel(
+            Extension m_extension,
+            Altitude m_altitude) {
+        addCommands(
+                new ConditionalCommand(
+                        new InstantCommand(),
+                        new SequentialCommandGroup(
+                                new InstantCommand(
+                                        () -> m_extension.keepPosition(
+                                                ExtensionConstants.kExtensionPositionInchesFullyRetracted)),
+                                new WaitUntilCommand(() -> m_extension.ExtensionIsInIntakePosition())),
+                        () -> m_extension.ExtensionIsInIntakePosition()),
+                new InstantCommand(() -> m_altitude
+                        .keepPosition(AltitudeConstants.kAltitudeTravelPosition)));
+    }
 }
