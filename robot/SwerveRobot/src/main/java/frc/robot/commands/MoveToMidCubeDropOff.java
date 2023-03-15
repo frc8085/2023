@@ -16,7 +16,7 @@ public class MoveToMidCubeDropOff extends SequentialCommandGroup {
             Extension m_extension) {
         addCommands(
                 new InstantCommand(() -> m_extension
-                        .keepPosition(ExtensionConstants.kExtensionPositionMidCubeShooter)));
+                        .keepPositionInches(ExtensionConstants.kExtensionPositionInchesMidCubeShooter)));
 
     }
 }

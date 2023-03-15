@@ -24,11 +24,11 @@ public class MoveToTravel extends SequentialCommandGroup {
                         new InstantCommand(),
                         new SequentialCommandGroup(
                                 new InstantCommand(
-                                        () -> m_extension.keepPosition(
+                                        () -> m_extension.keepPositionInches(
                                                 ExtensionConstants.kExtensionPositionInchesFullyRetracted)),
                                 new WaitUntilCommand(() -> m_extension.ExtensionIsInIntakePosition())),
                         () -> m_extension.ExtensionIsInIntakePosition()),
                 new InstantCommand(() -> m_altitude
-                        .keepPosition(AltitudeConstants.kAltitudeTravelPosition)));
+                        .keepPositionDegrees(AltitudeConstants.kAltitudeTravelPositionDegrees)));
     }
 }

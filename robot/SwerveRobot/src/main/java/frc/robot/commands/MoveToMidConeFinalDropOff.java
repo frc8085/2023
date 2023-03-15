@@ -13,6 +13,7 @@ public class MoveToMidConeFinalDropOff extends SequentialCommandGroup {
     public MoveToMidConeFinalDropOff(Altitude m_altitude) {
         addCommands(
                 new InstantCommand(
-                        () -> m_altitude.keepPosition(AltitudeConstants.kAltitudeMidDropOffFinalPosition)));
+                        () -> m_altitude
+                                .keepPositionDegrees(AltitudeConstants.kAltitudeMidDropOffFinalPositionDegrees)));
     }
 }

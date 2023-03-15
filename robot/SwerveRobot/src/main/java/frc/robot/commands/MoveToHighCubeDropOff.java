@@ -18,9 +18,9 @@ public class MoveToHighCubeDropOff extends SequentialCommandGroup {
             Extension m_extension, Altitude m_altitude) {
         addCommands(
                 new InstantCommand(() -> m_extension
-                        .keepPosition(ExtensionConstants.kExtensionPositionHighCubeShooter)),
+                        .keepPositionInches(ExtensionConstants.kExtensionPositionInchesHighCubeShooter)),
                 new InstantCommand(() -> m_altitude
-                        .keepPosition(AltitudeConstants.kAltitudeHighCubeShootPosition)));
+                        .keepPositionDegrees(AltitudeConstants.kAltitudeHighCubeShootPositionDegrees)));
 
     }
 }

@@ -19,10 +19,10 @@ public class MoveToTravelAfterScoring extends SequentialCommandGroup {
             Extension m_extension,
             Altitude m_altitude) {
         addCommands(new InstantCommand(
-                () -> m_extension.keepPosition(ExtensionConstants.kExtensionPositionFullyRetracted)),
+                () -> m_extension.keepPositionInches(ExtensionConstants.kExtensionPositionInchesFullyRetracted)),
                 new WaitUntilCommand(() -> m_extension.ExtensionIsInDropOffReturnPosition()),
                 new InstantCommand(() -> m_altitude
-                        .keepPosition(AltitudeConstants.kAltitudeTravelPosition)));
+                        .keepPositionDegrees(AltitudeConstants.kAltitudeTravelPositionDegrees)));
 
     }
 }

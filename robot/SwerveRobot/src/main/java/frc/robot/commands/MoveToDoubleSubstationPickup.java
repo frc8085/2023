@@ -20,9 +20,9 @@ public class MoveToDoubleSubstationPickup extends SequentialCommandGroup {
             Altitude m_altitude) {
         addCommands(
                 new InstantCommand(
-                        () -> m_extension.keepPosition(ExtensionConstants.kExtensionPositionInchesMidDropOff)),
+                        () -> m_extension.keepPositionInches(ExtensionConstants.kExtensionPositionInchesMidDropOff)),
                 new WaitUntilCommand(() -> m_extension.ExtensionIsInMidScoringPosition()),
-                new InstantCommand(() -> m_altitude.keepPosition(
-                        AltitudeConstants.kAltitudeDoubleSubstationPosition)));
+                new InstantCommand(() -> m_altitude.keepPositionDegrees(
+                        AltitudeConstants.kAltitudeDoubleSubstationPositionDegrees)));
     }
 }

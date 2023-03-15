@@ -19,10 +19,12 @@ public class MoveToTravelAfterIntake extends SequentialCommandGroup {
             Extension m_extension,
             Altitude m_altitude) {
         addCommands(
-                new InstantCommand(() -> m_altitude.keepPosition(AltitudeConstants.kAltitudeTravelPosition)),
+                new InstantCommand(
+                        () -> m_altitude.keepPositionDegrees(AltitudeConstants.kAltitudeTravelPositionDegrees)),
                 new WaitUntilCommand(() -> m_altitude.AltitudeIsInScoringPosition()),
                 new InstantCommand(
-                        () -> m_extension.keepPosition(ExtensionConstants.kExtensionPositionInchesFullyRetracted)));
+                        () -> m_extension
+                                .keepPositionInches(ExtensionConstants.kExtensionPositionInchesFullyRetracted)));
 
     }
 }

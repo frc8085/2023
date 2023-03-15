@@ -11,53 +11,53 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public class AutoNewFinalBalance extends CommandBase {
-  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final DriveSubsystem m_drive;
-  private double m_speed = .1;
-  private boolean isBalanced = false;
+    @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+    private final DriveSubsystem m_drive;
+    private double m_speed = .1;
+    private boolean isBalanced = false;
 
-  public AutoNewFinalBalance(DriveSubsystem drive) {
-    m_drive = drive;
-    // Take the magnitude of meters but ignore the sign
-    // Just in case we provide a negative meters to this function by mistake
-    addRequirements(m_drive);
-  }
+    public AutoNewFinalBalance(DriveSubsystem drive) {
+        m_drive = drive;
+        // Take the magnitude of meters but ignore the sign
+        // Just in case we provide a negative meters to this function by mistake
+        addRequirements(m_drive);
+    }
 
-  @Override
-  public void initialize() {
-  }
+    @Override
+    public void initialize() {
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    super.execute();
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        super.execute();
 
-    double currentPitch = m_drive.getPitch();
-    double direction = Math.signum(-currentPitch);
+        double currentPitch = m_drive.getPitch();
+        double direction = Math.signum(-currentPitch);
 
-    isBalanced = Math.abs(currentPitch) <= 1;
+        isBalanced = Math.abs(currentPitch) <= 1;
 
-    m_drive.drive(
-        false,
-        m_speed,
-        direction,
-        0,
-        0,
-        true,
-        false);
+        m_drive.drive(
+                false,
+                m_speed,
+                direction,
+                0,
+                0,
+                true,
+                false);
 
-    SmartDashboard.putBoolean("FINAL BALANCED", isBalanced);
-  }
+        SmartDashboard.putBoolean("FINAL BALANCED", isBalanced);
+    }
 
-  // Stop driving when the command ends or is interrupted
-  @Override
-  public void end(boolean interrupted) {
-    m_drive.stop();
-  }
+    // Stop driving when the command ends or is interrupted
+    @Override
+    public void end(boolean interrupted) {
+        m_drive.stop();
+    }
 
-  // End the command when we reach the desired pose in meters
-  @Override
-  public boolean isFinished() {
-    return isBalanced;
-  }
+    // End the command when we reach the desired pose in meters
+    @Override
+    public boolean isFinished() {
+        return isBalanced;
+    }
 }

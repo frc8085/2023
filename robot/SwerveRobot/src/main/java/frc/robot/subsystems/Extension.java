@@ -130,7 +130,13 @@ public class Extension extends SubsystemBase {
     }
 
     // Maintain Position
-    public void keepPosition(double positionInches) {
+    public void keepPosition(double position) {
+        m_extensionPIDController.setReference(position, ControlType.kPosition);
+        SmartDashboard.putNumber("Desired Extension position", position);
+    }
+
+    // Maintain Position Inches
+    public void keepPositionInches(double positionInches) {
         // set position in inches, convert to encoder value
         double position;
         position = positionInches * ExtensionConstants.kExtensionRevolutionsPerInch + 1;

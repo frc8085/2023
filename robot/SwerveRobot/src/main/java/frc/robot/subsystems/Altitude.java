@@ -283,6 +283,15 @@ public class Altitude extends SubsystemBase {
         SmartDashboard.putNumber("Altitude Desired position", positionAltitude);
     }
 
+    // Maintain position in degrees
+    public void keepPositionDegrees(double degreesAltitude) {
+        // set degrees in altitude, convert to encoder value)
+        double positionAltitude;
+        positionAltitude = degreesAltitude * AltitudeConstants.kAltitudeRevolutionsPerDegree - 0.1;
+        m_altitudePIDController.setReference(positionAltitude, ControlType.kPosition);
+        SmartDashboard.putNumber("Altitude Desired position", positionAltitude);
+    }
+
     // Tell Us if Altitude as At Set Positions
 
     public boolean AltitudeIsInTravelPosition() {

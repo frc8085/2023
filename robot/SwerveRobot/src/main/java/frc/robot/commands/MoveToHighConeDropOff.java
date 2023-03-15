@@ -19,10 +19,10 @@ public class MoveToHighConeDropOff extends SequentialCommandGroup {
             Altitude m_altitude) {
         addCommands(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> m_altitude.keepPosition(
-                                AltitudeConstants.kAltitudeDropOffPosition)),
+                        new InstantCommand(() -> m_altitude.keepPositionDegrees(
+                                AltitudeConstants.kAltitudeDropOffPositionDegrees)),
                         new InstantCommand(() -> m_extension
-                                .keepPosition(ExtensionConstants.kExtensionPositionHighDropOff))));
+                                .keepPositionInches(ExtensionConstants.kExtensionPositionInchesHighDropOff))));
 
     }
 }
