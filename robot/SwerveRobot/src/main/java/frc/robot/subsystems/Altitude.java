@@ -36,15 +36,24 @@ public class Altitude extends SubsystemBase {
   private SparkMaxLimitSwitch m_altitudeTopLimit;
   private SparkMaxLimitSwitch m_altitudeBottomLimit;
 
-  // PID
-  private SparkMaxPIDController m_altitudePIDController = m_altitudeMotor.getPIDController();
-  static double kPAltitude = 1;
-  static double kIAltitude = 0.0001;
-  static double kDAltitude = 0.1;
-  // static double kIzAltitude = 0;
-  static double kFFAltitude = 0;
-  static double kMaxOutputAltitude = 9;
-  static double kMinOutputAltitude = -.9;
+  // PID for raising
+  private SparkMaxPIDController m_altitudeRaisePIDController = m_altitudeMotor.getPIDController();
+  static double kPAltitudeRaise = 1;
+  static double kIAltitudeRaise = 0.0001;
+  static double kDAltitudeRaise = 0.1;
+  // static double kIzAltitudeRaise = 0;
+  static double kFFAltitudeRaise = 0;
+  static double kMaxOutputAltitudeRaise = 9;
+  static double kMinOutputAltitudeRaise = -.9;
+
+  // PID for lowering
+  private SparkMaxPIDController m_altitudeLowerPIDController = m_altitudeMotor.getPIDController();
+  static double kPAltitudeLower = 1;
+  static double kIAltitudeLower = 0.0001;
+  static double kDAltitudeLower = 0.1;
+  static double kFFAltitudeLower = 0;
+  static double kMaxOutputAltitudeLower = 9;
+  static double kMinOutputAltitudeLower = -.9;
 
   // When INTAKE, extension only in intake position
   // When TRAVEL, extenion only in travel
@@ -65,16 +74,26 @@ public class Altitude extends SubsystemBase {
     m_altitudeMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
     m_altitudeMotor.setOpenLoopRampRate(AltitudeConstants.kAltitudeRampRate);
 
-    m_altitudePIDController.setFeedbackDevice(m_altitudeEncoder);
-    m_altitudePIDController.setP(kPAltitude, 0);
-    m_altitudePIDController.setI(kIAltitude, 0);
-    m_altitudePIDController.setD(kDAltitude, 0);
-    m_altitudePIDController.setFF(kFFAltitude, 0);
-    m_altitudePIDController.setOutputRange(kMinOutputAltitude, kMaxOutputAltitude);
+    m_altitudeRaisePIDController.setFeedbackDevice(m_altitudeEncoder);
+    m_altitudeRaisePIDController.setP(kPAltitudeRaise, 0);
+    m_altitudeRaisePIDController.setI(kIAltitudeRaise, 0);
+    m_altitudeRaisePIDController.setD(kDAltitudeRaise, 0);
+    m_altitudeRaisePIDController.setFF(kFFAltitudeRaise, 0);
+    m_altitudeRaisePIDController.setOutputRange(kMinOutputAltitudeRaise, kMaxOutputAltitudeRaise);
+
+    m_altitudeLowerPIDController.setFeedbackDevice(m_altitudeEncoder);
+    m_altitudeLowerPIDController.setP(kPAltitudeLower, 0);
+    m_altitudeLowerPIDController.setI(kIAltitudeLower, 0);
+    m_altitudeLowerPIDController.setD(kDAltitudeLower, 0);
+    m_altitudeLowerPIDController.setFF(kFFAltitudeLower, 0);
+    m_altitudeLowerPIDController.setOutputRange(kMinOutputAltitudeLower, kMaxOutputAltitudeLower);
 
     // TODO. What should these values be?
-    m_altitudePIDController.setSmartMotionMaxAccel(0.5, 0);
-    m_altitudePIDController.setSmartMotionMaxVelocity(0.5, 0);
+    m_altitudeRaisePIDController.setSmartMotionMaxAccel(0.5, 0);
+    m_altitudeRaisePIDController.setSmartMotionMaxVelocity(0.5, 0);
+
+    m_altitudeLowerPIDController.setSmartMotionMaxAccel(0.5, 0);
+    m_altitudeLowerPIDController.setSmartMotionMaxVelocity(0.5, 0);
 
     /**
      * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
@@ -118,15 +137,25 @@ public class Altitude extends SubsystemBase {
   }
 
   private void addPIDToDashboard() {
-    // Display PID coefficients on SmartDashboard
-    SmartDashboard.putNumber("Altitude P Gain", kPAltitude);
-    SmartDashboard.putNumber("Altitude I Gain", kIAltitude);
-    SmartDashboard.putNumber("Altitude D Gain", kDAltitude);
-    // SmartDashboard.putNumber("Altitude I Zone", kIzAltitude);
-    SmartDashboard.putNumber("Altitude Feed Forward", kFFAltitude);
-    SmartDashboard.putNumber("Altitude Max Output", kMaxOutputAltitude);
-    SmartDashboard.putNumber("Altitude Min Output", kMinOutputAltitude);
-    SmartDashboard.putNumber("Altitude Set Rotations", 0);
+    // Display PID Raise coefficients on SmartDashboard
+    SmartDashboard.putNumber("AltitudeRaise P Gain", kPAltitudeRaise);
+    SmartDashboard.putNumber("AltitudeRaise I Gain", kIAltitudeRaise);
+    SmartDashboard.putNumber("AltitudeRaise D Gain", kDAltitudeRaise);
+    // SmartDashboard.putNumber("AltitudeRaise I Zone", kIzAltitudeRaise);
+    SmartDashboard.putNumber("AltitudeRaise Feed Forward", kFFAltitudeRaise);
+    SmartDashboard.putNumber("AltitudeRaise Max Output", kMaxOutputAltitudeRaise);
+    SmartDashboard.putNumber("AltitudeRaise Min Output", kMinOutputAltitudeRaise);
+    SmartDashboard.putNumber("AltitudeRaise Set Rotations", 0);
+
+    // Display PID Lower coefficients on SmartDashboard
+    SmartDashboard.putNumber("AltitudeLower P Gain", kPAltitudeLower);
+    SmartDashboard.putNumber("AltitudeLower I Gain", kIAltitudeLower);
+    SmartDashboard.putNumber("AltitudeLower D Gain", kDAltitudeLower);
+    // SmartDashboard.putNumber("AltitudeLower I Zone", kIzAltitudeLower);
+    SmartDashboard.putNumber("AltitudeLower Feed Forward", kFFAltitudeLower);
+    SmartDashboard.putNumber("AltitudeLower Max Output", kMaxOutputAltitudeLower);
+    SmartDashboard.putNumber("AltitudeLower Min Output", kMinOutputAltitudeLower);
+    SmartDashboard.putNumber("AltitudeLower Set Rotations", 0);
   }
 
   private void addTuningtoDashboard() {
@@ -156,52 +185,52 @@ public class Altitude extends SubsystemBase {
         AltitudeConstants.kAltitudeMidDropOffFinalPosition);
 
     if ((SingleSubstationAltitude != AltitudeConstants.kAltitudeSingleSubstationPosition)) {
-      m_altitudePIDController.setP(SingleSubstationAltitude);
+      keepPosition(SingleSubstationAltitude);
       AltitudeConstants.kAltitudeSingleSubstationPosition = SingleSubstationAltitude;
     }
     if ((HighDropOffAltitude != AltitudeConstants.kAltitudeHighDropOffPosition)) {
-      m_altitudePIDController.setP(HighDropOffAltitude);
+      keepPosition(HighDropOffAltitude);
       AltitudeConstants.kAltitudeHighDropOffPosition = SingleSubstationAltitude;
     }
     if ((HighDropOffFinalAltitude != AltitudeConstants.kAltitudeHighDropOffFinalPosition)) {
-      m_altitudePIDController.setP(HighDropOffFinalAltitude);
+      keepPosition(HighDropOffFinalAltitude);
       AltitudeConstants.kAltitudeHighDropOffFinalPosition = SingleSubstationAltitude;
     }
     if ((MidDropOffAltitude != AltitudeConstants.kAltitudeMidDropOffPosition)) {
-      m_altitudePIDController.setP(MidDropOffAltitude);
+      keepPosition(MidDropOffAltitude);
       AltitudeConstants.kAltitudeMidDropOffPosition = SingleSubstationAltitude;
     }
     if ((MidDropOffFinalAltitude != AltitudeConstants.kAltitudeMidDropOffFinalPosition)) {
-      m_altitudePIDController.setP(MidDropOffFinalAltitude);
+      keepPosition(MidDropOffFinalAltitude);
       AltitudeConstants.kAltitudeMidDropOffFinalPosition = SingleSubstationAltitude;
     }
 
   }
 
-  private void readPIDTuningFromDashboard() {
+  private void readRaisePIDTuningFromDashboard() {
 
     // Read PID Coefficients from SmartDashboard
-    double pAltitude = SmartDashboard.getNumber("Altitude P Gain", 0);
-    double iAltitude = SmartDashboard.getNumber("Altitude I Gain", 0);
-    double dAltitude = SmartDashboard.getNumber("Altitude D Gain", 0);
-    // double izAltitude = SmartDashboard.getNumber("Altitude I Zone", 0);
-    double ffAltitude = SmartDashboard.getNumber("Altitude Feed Forward", 0);
-    double maxAltitude = SmartDashboard.getNumber("Altitude Max Output", 0);
-    double minAltitude = SmartDashboard.getNumber("Altitude Min Output", 0);
+    double pAltitudeRaise = SmartDashboard.getNumber("AltitudeRaise P Gain", 0);
+    double iAltitudeRaise = SmartDashboard.getNumber("AltitudeRaise I Gain", 0);
+    double dAltitudeRaise = SmartDashboard.getNumber("AltitudeRaise D Gain", 0);
+    // double izAltitudeRaise = SmartDashboard.getNumber("AltitudeRaise I Zone", 0);
+    double ffAltitudeRaise = SmartDashboard.getNumber("AltitudeRaise Feed Forward", 0);
+    double maxAltitudeRaise = SmartDashboard.getNumber("AltitudeRaise Max Output", 0);
+    double minAltitudeRaise = SmartDashboard.getNumber("AltitudeRaise Min Output", 0);
 
     // if PID coefficients on SmartDashboard have changed, write new values to
     // controller
-    if ((pAltitude != kPAltitude)) {
-      m_altitudePIDController.setP(pAltitude);
-      kPAltitude = pAltitude;
+    if ((pAltitudeRaise != kPAltitudeRaise)) {
+      m_altitudeRaisePIDController.setP(pAltitudeRaise);
+      kPAltitudeRaise = pAltitudeRaise;
     }
-    if ((iAltitude != kIAltitude)) {
-      m_altitudePIDController.setI(iAltitude);
-      kIAltitude = iAltitude;
+    if ((iAltitudeRaise != kIAltitudeRaise)) {
+      m_altitudeRaisePIDController.setI(iAltitudeRaise);
+      kIAltitudeRaise = iAltitudeRaise;
     }
-    if ((dAltitude != kDAltitude)) {
-      m_altitudePIDController.setD(dAltitude);
-      kDAltitude = dAltitude;
+    if ((dAltitudeRaise != kDAltitudeRaise)) {
+      m_altitudeRaisePIDController.setD(dAltitudeRaise);
+      kDAltitudeRaise = dAltitudeRaise;
     }
 
     /**
@@ -211,15 +240,53 @@ public class Altitude extends SubsystemBase {
      * }
      */
 
-    if ((ffAltitude != kFFAltitude)) {
-      m_altitudePIDController.setFF(ffAltitude);
-      kFFAltitude = ffAltitude;
+    if ((ffAltitudeRaise != kFFAltitudeRaise)) {
+      m_altitudeRaisePIDController.setFF(ffAltitudeRaise);
+      kFFAltitudeRaise = ffAltitudeRaise;
     }
 
-    if ((maxAltitude != kMaxOutputAltitude) || (minAltitude != kMinOutputAltitude)) {
-      m_altitudePIDController.setOutputRange(minAltitude, maxAltitude);
-      kMinOutputAltitude = minAltitude;
-      kMaxOutputAltitude = maxAltitude;
+    if ((maxAltitudeRaise != kMaxOutputAltitudeRaise) || (minAltitudeRaise != kMinOutputAltitudeRaise)) {
+      m_altitudeRaisePIDController.setOutputRange(minAltitudeRaise, maxAltitudeRaise);
+      kMinOutputAltitudeRaise = minAltitudeRaise;
+      kMaxOutputAltitudeRaise = maxAltitudeRaise;
+    }
+  }
+
+  private void readLowerPIDTuningFromDashboard() {
+
+    // Read PID Coefficients from SmartDashboard
+    double pAltitudeLower = SmartDashboard.getNumber("AltitudeLower P Gain", 0);
+    double iAltitudeLower = SmartDashboard.getNumber("AltitudeLower I Gain", 0);
+    double dAltitudeLower = SmartDashboard.getNumber("AltitudeLower D Gain", 0);
+    // double izAltitudeLower = SmartDashboard.getNumber("AltitudeLower I Zone", 0);
+    double ffAltitudeLower = SmartDashboard.getNumber("AltitudeLower Feed Forward", 0);
+    double maxAltitudeLower = SmartDashboard.getNumber("AltitudeLower Max Output", 0);
+    double minAltitudeLower = SmartDashboard.getNumber("AltitudeLower Min Output", 0);
+
+    // if PID coefficients on SmartDashboard have changed, write new values to
+    // controller
+    if ((pAltitudeLower != kPAltitudeLower)) {
+      m_altitudeLowerPIDController.setP(pAltitudeLower);
+      kPAltitudeLower = pAltitudeLower;
+    }
+    if ((iAltitudeLower != kIAltitudeLower)) {
+      m_altitudeLowerPIDController.setI(iAltitudeLower);
+      kIAltitudeLower = iAltitudeLower;
+    }
+    if ((dAltitudeLower != kDAltitudeLower)) {
+      m_altitudeLowerPIDController.setD(dAltitudeLower);
+      kDAltitudeLower = dAltitudeLower;
+    }
+
+    if ((ffAltitudeLower != kFFAltitudeLower)) {
+      m_altitudeLowerPIDController.setFF(ffAltitudeLower);
+      kFFAltitudeLower = ffAltitudeLower;
+    }
+
+    if ((maxAltitudeLower != kMaxOutputAltitudeLower) || (minAltitudeLower != kMinOutputAltitudeLower)) {
+      m_altitudeLowerPIDController.setOutputRange(minAltitudeLower, maxAltitudeLower);
+      kMinOutputAltitudeLower = minAltitudeLower;
+      kMaxOutputAltitudeLower = maxAltitudeLower;
     }
   }
 
@@ -234,7 +301,8 @@ public class Altitude extends SubsystemBase {
     AltitudeIsInIntakePosition();
 
     if (TUNING_MODE) {
-      readPIDTuningFromDashboard();
+      readRaisePIDTuningFromDashboard();
+      readLowerPIDTuningFromDashboard();
       readTuningFromDashboard();
       log();
 
@@ -259,12 +327,12 @@ public class Altitude extends SubsystemBase {
   /** ALTITUDE **/
   // Run the Altitude motor forward
   public void raiseAltitude() {
-    m_altitudeMotor.set(AltitudeConstants.kAltitudeSpeed);
+    m_altitudeMotor.set(AltitudeConstants.kAltitudeRaiseSpeed);
   }
 
   // Run the Altitude motor in reverse
   public void lowerAltitude() {
-    m_altitudeMotor.set(-AltitudeConstants.kAltitudeSpeed);
+    m_altitudeMotor.set(-AltitudeConstants.kAltitudeLowerSpeed);
   }
 
   // Stop the Altitude
@@ -277,9 +345,23 @@ public class Altitude extends SubsystemBase {
     return m_altitudeEncoder.getPosition();
   }
 
-  // Maintain position
+  /**
+   * Move to and stay at a certain altitude
+   * Use the Raising PID coefficients if we are going up
+   * Otherwise use the Lowering PID coefficients
+   * 
+   * @param positionAltitude The desired altitude
+   **/
+
   public void keepPosition(double positionAltitude) {
-    m_altitudePIDController.setReference(positionAltitude, ControlType.kPosition);
+    boolean raising = getCurrentAltitude() <= positionAltitude;
+
+    if (raising) {
+      m_altitudeRaisePIDController.setReference(positionAltitude, ControlType.kPosition);
+    } else {
+      m_altitudeLowerPIDController.setReference(positionAltitude, ControlType.kPosition);
+    }
+
     SmartDashboard.putNumber("Altitude Desired position", positionAltitude);
   }
 

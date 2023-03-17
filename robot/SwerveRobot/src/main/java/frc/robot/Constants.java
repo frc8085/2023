@@ -86,7 +86,8 @@ public final class Constants {
   public static final class AltitudeConstants {
     public static int kAltitudeMotorPort = 5;
     public static double kAltitudeStopSpeed = 0;
-    public static double kAltitudeSpeed = 0.2;
+    public static double kAltitudeRaiseSpeed = 0.2;
+    public static double kAltitudeLowerSpeed = 0.2;
     public static double kAltitudeRampRate = 1;
     public static double kAltitudePositionTolerance = 1;
 
