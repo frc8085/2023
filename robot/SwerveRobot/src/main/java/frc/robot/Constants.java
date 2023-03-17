@@ -58,7 +58,8 @@ public final class Constants {
 
   public static final class ExtensionConstants {
     public static int kExtensionMotorPort = 7;
-    public static double kExtensionSpeed = 0.25;
+    public static double kExtensionExtendSpeed = 0.25;
+    public static double kExtensionRetractSpeed = 0.25;
     public static double kExtensionRampRate = 0;
     public static double kExtensionPositionTolerance = 1;
 
