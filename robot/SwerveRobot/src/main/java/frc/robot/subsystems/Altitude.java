@@ -20,7 +20,7 @@ import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Altitude extends SubsystemBase {
-  private boolean TUNING_MODE = false;
+  private boolean TUNING_MODE = true;
 
   private Extension m_extension;
   /** Creates a new Altitude. */
@@ -36,8 +36,9 @@ public class Altitude extends SubsystemBase {
   private SparkMaxLimitSwitch m_altitudeTopLimit;
   private SparkMaxLimitSwitch m_altitudeBottomLimit;
 
-  // PID for raising
   private SparkMaxPIDController m_altitudePIDController = m_altitudeMotor.getPIDController();
+
+  // Raise PID coefficients
   static int kRaisePIDSlot = 0;
   static double kPRaise = 1;
   static double kIRaise = 0.0001;
@@ -47,7 +48,7 @@ public class Altitude extends SubsystemBase {
   static double kMaxOutputRaise = 9;
   static double kMinOutputRaise = -.9;
 
-  // PID for lowering
+  // Lower PID coefficients
   static int kLowerPIDSlot = 1;
   static double kPLower = 1;
   static double kILower = 0.0001;
@@ -77,9 +78,7 @@ public class Altitude extends SubsystemBase {
 
     m_altitudePIDController.setFeedbackDevice(m_altitudeEncoder);
 
-    /**
-     * Set PID settings for raising using the Raise slot
-     */
+    // ** RAISE PID: Use Raise coefficients and slotID for Raise PID */
     m_altitudePIDController.setP(kPRaise, kRaisePIDSlot);
     m_altitudePIDController.setI(kIRaise, kRaisePIDSlot);
     m_altitudePIDController.setD(kDRaise, kRaisePIDSlot);
@@ -91,9 +90,7 @@ public class Altitude extends SubsystemBase {
     m_altitudePIDController.setSmartMotionMaxAccel(0.5, kLowerPIDSlot);
     m_altitudePIDController.setSmartMotionMaxVelocity(0.5, kLowerPIDSlot);
 
-    /**
-     * Set PID settings for lowering using the Lower slot
-     */
+    // ** LOWER PID: Use Lower coefficients and slotID for Lower PID
     m_altitudePIDController.setP(kPLower, kLowerPIDSlot);
     m_altitudePIDController.setI(kILower, kLowerPIDSlot);
     m_altitudePIDController.setD(kDLower, kLowerPIDSlot);
@@ -132,14 +129,15 @@ public class Altitude extends SubsystemBase {
   public void log() {
 
     if (TUNING_MODE) {
-      // readPIDTuningFromDashboard();
-      // readTuningFromDashboard();
-
       SmartDashboard.putNumber("Altitude Raw encoder read", m_altitudeEncoder.getPosition());
       SmartDashboard.putBoolean("Altitude at Top Position", m_altitudeTopLimit.isPressed());
       SmartDashboard.putBoolean("Altitude at Bottom Position", m_altitudeBottomLimit.isPressed());
       SmartDashboard.putBoolean("Altitude is in Travel Position", AltitudeIsInTravelPosition());
       SmartDashboard.putNumber("Current altitude", getCurrentAltitude());
+
+      readRaisePIDTuningFromDashboard();
+      readLowerPIDTuningFromDashboard();
+      readTuningFromDashboard();
     }
 
   }
@@ -294,21 +292,13 @@ public class Altitude extends SubsystemBase {
   /** Call log method every loop. */
   @Override
   public void periodic() {
+    log();
 
     enforceSafeExtensions();
 
     // resetAltitudeEncoderAtTopLimit();
     AltitudeIsInTravelPosition();
     AltitudeIsInIntakePosition();
-
-    if (TUNING_MODE) {
-      readRaisePIDTuningFromDashboard();
-      readLowerPIDTuningFromDashboard();
-      readTuningFromDashboard();
-      log();
-
-    }
-
   }
 
   /** Resets the Altitude encoder to currently read a position of 0. */
@@ -363,6 +353,7 @@ public class Altitude extends SubsystemBase {
     m_altitudePIDController.setReference(positionAltitude, ControlType.kPosition, slotID);
 
     if (TUNING_MODE) {
+      SmartDashboard.putString("ALTITUDE MODE", raising ? "RAISING" : "LOWERING");
       SmartDashboard.putNumber("Altitude Desired position", positionAltitude);
     }
   }
