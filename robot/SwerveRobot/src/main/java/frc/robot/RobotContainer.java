@@ -24,6 +24,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoDriveMeters;
 import frc.robot.commands.AutoDriveMetersAndTurn;
+import frc.robot.commands.AutoEngage;
 import frc.robot.commands.AutoRotateDegrees;
 import frc.robot.commands.Autos;
 import frc.robot.commands.MoveToMidConeDropOff;
@@ -143,7 +144,7 @@ public class RobotContainer {
         Autos.scoreHighAndLeave(m_robotDrive, m_altitude, m_extension, m_intake));
     autoSelection.addOption("(18pt) RELIABLE: Score High, Balance",
         Autos.scoreHighAndBalance(m_robotDrive, m_altitude, m_extension, m_intake));
-
+    autoSelection.addOption("TEST: PID Balance only", new AutoEngage(m_robotDrive));
     // Put the chooser on the dashboard
     SmartDashboard.putData("Auto Routine", autoSelection);
   }

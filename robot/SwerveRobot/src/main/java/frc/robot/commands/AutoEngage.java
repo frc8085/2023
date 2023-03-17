@@ -8,7 +8,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -64,6 +63,14 @@ public class AutoEngage extends PIDCommand {
     // Get everything in a safe starting state.
     m_drive.resetOdometry(new Pose2d());
     m_drive.zeroHeading();
+  }
+
+  @Override
+  public void execute() {
+    super.execute();
+    if (TUNING_MODE) {
+      readPIDTuningFromDashboard();
+    }
   }
 
   @Override
