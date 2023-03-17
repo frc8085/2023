@@ -137,7 +137,7 @@ public class Altitude extends SubsystemBase {
 
       readRaisePIDTuningFromDashboard();
       readLowerPIDTuningFromDashboard();
-      readTuningFromDashboard();
+      // readTuningFromDashboard();
     }
 
   }
