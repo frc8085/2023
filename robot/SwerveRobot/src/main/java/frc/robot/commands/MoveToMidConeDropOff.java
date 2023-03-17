@@ -18,9 +18,9 @@ public class MoveToMidConeDropOff extends SequentialCommandGroup {
             Extension m_extension,
             Altitude m_altitude) {
         addCommands(new ParallelCommandGroup(
-                new InstantCommand(() -> m_altitude.keepPosition(
-                        AltitudeConstants.kAltitudeDropOffPosition)),
+                new InstantCommand(() -> m_altitude.keepPositionDegrees(
+                        AltitudeConstants.kAltitudeDropOffPositionDegrees)),
                 new InstantCommand(() -> m_extension
-                        .keepPosition(ExtensionConstants.kExtensionPositionMidDropOff))));
+                        .keepPositionInches(ExtensionConstants.kExtensionPositionInchesMidDropOff))));
     }
 }

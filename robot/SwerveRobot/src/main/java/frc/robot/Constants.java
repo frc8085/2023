@@ -65,6 +65,15 @@ public final class Constants {
 
     public static final double kMaxExtensionSpeedMetersPerSecond = 0.25;
 
+    // Estimates, fix this once we get exact measurements
+    public static final double kExtensionLengthInches = 48;
+    public static final double kExtensionLengthRevolutions = 141;
+
+    // Convert length of travel to encoder rotations, where encoder reading of 1 is
+    // 0 inches and reading of 140 is 48 inches
+    public static final double kExtensionRevolutionsPerInch = (kExtensionLengthRevolutions - 1)
+        / kExtensionLengthInches;
+
     // Range for safe Travel Extension <20
     public static double kExtensionSafeMax = 10;
 
@@ -77,6 +86,16 @@ public final class Constants {
     public static double kExtensionPositionSingleSubstation = 41;
     public static double kExtensionPositionMidCubeShooter = 60;
     public static double kExtensionPositionHighCubeShooter = 70;
+
+    // Converted 2.14.23 Encoder readings into inches
+    public static double kExtensionPositionInchesFullyRetracted = 1 / kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionInchesIntakeOut = 38 / kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionInchesMidDropOff = 85 / kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionInchesHighDropOff = 134 / kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionInchesHighDropOffReturn = 99 / kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionInchesSingleSubstation = 40 / kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionInchesMidCubeShooter = 59 / kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionInchesHighCubeShooter = 69 / kExtensionRevolutionsPerInch;
 
     public static double kExtensionSafeExtensionMax = kExtensionPositionIntakeOut + kExtensionPositionTolerance;
 
@@ -95,6 +114,15 @@ public final class Constants {
     public static final double kMaxAltitudeSpeedMetersPerSecond = .05;
     public static final double kMaxLimitedAltitudeSpeedMetersPerSecond = .01;
 
+    // Estimates, fix this once we get exact measurements
+    public static final double kAltitudeTotalDegrees = 90;
+    public static final double kAltitudeTotalRevolutions = 5.4;
+
+    // Convert angle of travel to encoder rotations, where encoder reading of .1 is
+    // 0 degrees and reading of 5.5 is 90 degrees
+    public static final double kAltitudeRevolutionsPerDegree = -(kAltitudeTotalRevolutions)
+        / kAltitudeTotalDegrees;
+
     // encoder readings of altitude as of 2.14.2023
     // Altitude at Top Position
     public static double kAltitudeTravelPosition = -0.05;
@@ -108,15 +136,34 @@ public final class Constants {
     public static double kAltitudeHighDropOffFinalPosition = -3.25;
     // Altitude at position that it releases the Mid cone
     public static double kAltitudeMidDropOffFinalPosition = -3.35;
-
     // Altitude at high cube shoot Altitude
     public static double kAltitudeHighCubeShootPosition = -1;
-
     // Altitude at Bottom Position
     public static double kAltitudeIntakePosition = -5.5;
     // Altitude at Shelf Position
     public static double kAltitudeDoubleSubstationPosition = -2.85;
     public static double kAltitudeSingleSubstationPosition = -1.55;
+
+    // angle conversions for 2.14.2023 altitude readings
+    // Altitude at Top Position
+    public static double kAltitudeTravelPositionDegrees = -.1 / kAltitudeRevolutionsPerDegree;
+    // Altitude at DropOff Position
+    public static double kAltitudeDropOffPositionDegrees = (-2.15 + .1) / kAltitudeRevolutionsPerDegree;
+    // Altitude when delivering high cone that it lowers to after extending fully
+    public static double kAltitudeHighDropOffPositionDegrees = (-2.9 + 0.1) / kAltitudeRevolutionsPerDegree;
+    // Altitude at position that it releases the cone
+    public static double kAltitudeMidDropOffPositionDegrees = (-3.0 + 0.1) / kAltitudeRevolutionsPerDegree;
+    // Altitude at position that it releases the High cone
+    public static double kAltitudeHighDropOffFinalPositionDegrees = (-3.25 + 0.1) / kAltitudeRevolutionsPerDegree;
+    // Altitude at position that it releases the Mid cone
+    public static double kAltitudeMidDropOffFinalPositionDegrees = (-3.35 + 0.1) / kAltitudeRevolutionsPerDegree;
+    // Altitude at high cube shoot Altitude
+    public static double kAltitudeHighCubeShootPositionDegrees = (-1 + 0.1) / kAltitudeRevolutionsPerDegree;
+    // Altitude at Bottom Position
+    public static double kAltitudeIntakePositionDegrees = (-5.5 + 0.1) / kAltitudeRevolutionsPerDegree;
+    // Altitude at Shelf Position
+    public static double kAltitudeDoubleSubstationPositionDegrees = (-2.85 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeSingleSubstationPositionDegrees = (-1.55 + 0.1) / kAltitudeRevolutionsPerDegree;
 
     // Altitude Error Tolerance
     public static double kAltitudeError = 0.05;

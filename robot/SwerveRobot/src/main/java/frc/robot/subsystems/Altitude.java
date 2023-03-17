@@ -61,11 +61,11 @@ public class Altitude extends SubsystemBase {
   // When TRAVEL, extenion only in travel
   public void enforceSafeExtensions() {
     if (AltitudeIsInIntakePosition()) {
-      m_extension.keepPosition(ExtensionConstants.kExtensionPositionIntakeOut);
+      m_extension.keepPositionInches(ExtensionConstants.kExtensionPositionInchesIntakeOut);
     }
 
     // if (AltitudeIsInTravelPosition()) {
-    // m_extension.keepPosition(ExtensionConstants.kExtensionPositionFullyRetracted);
+    // m_extension.keepPosition(ExtensionConstants.kExtensionPositionInchesFullyRetracted);
     // }
 
   }
@@ -356,6 +356,15 @@ public class Altitude extends SubsystemBase {
       SmartDashboard.putString("ALTITUDE MODE", raising ? "RAISING" : "LOWERING");
       SmartDashboard.putNumber("Altitude Desired position", positionAltitude);
     }
+  }
+
+  // Maintain position in degrees
+  public void keepPositionDegrees(double degreesAltitude) {
+    // set degrees in altitude, convert to encoder value)
+    double positionAltitude;
+    positionAltitude = degreesAltitude * AltitudeConstants.kAltitudeRevolutionsPerDegree - 0.1;
+    m_altitudePIDController.setReference(positionAltitude, ControlType.kPosition);
+    SmartDashboard.putNumber("Altitude Desired position", positionAltitude);
   }
 
   // Tell Us if Altitude as At Set Positions
