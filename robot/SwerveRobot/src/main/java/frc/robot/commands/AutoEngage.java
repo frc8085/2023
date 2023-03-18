@@ -42,7 +42,7 @@ public class AutoEngage extends PIDCommand {
                         output,
                         // If reading positive pitch, drive backwards.
                         // If reading negative pitch, drive forwards
-                        Math.signum(-drive.getPitch()),
+                        Math.signum(drive.getPitch()),
                         0,
                         0,
                         true,
