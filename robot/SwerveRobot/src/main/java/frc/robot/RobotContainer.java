@@ -161,7 +161,12 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .toggleOnTrue(new RunCommand(() -> m_robotDrive.lock(), m_robotDrive));
 
+    new JoystickButton(m_driverController, Button.kY.value)
+                .onTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+
+
     final Trigger testWaitUntil = m_operatorController.povRight();
+
 
     /** OPERATOR COMMANDS **/
     // final Trigger startButton = m_operatorController.start();

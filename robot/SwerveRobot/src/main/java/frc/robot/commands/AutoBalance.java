@@ -15,8 +15,8 @@ public class AutoBalance extends CommandBase {
   private final DriveSubsystem m_drive;
   private double currentPitch;
   private int iteration = 1;
-  private int scalingFactor = 500;
-  private double speed = .4;
+  private int scalingFactor = 100;
+  private double startingSpeed = .4;
 
   public AutoBalance(DriveSubsystem drive) {
     m_drive = drive;
@@ -41,14 +41,17 @@ public class AutoBalance extends CommandBase {
 
     boolean isBalanced = Math.abs(currentPitch) <= 2;
 
+    double speed = startingSpeed / (1 + iteration / scalingFactor);
+    System.out.println("CURRENT SPEED: " + speed);
+
     if (isBalanced) {
       m_drive.lock();
     } else {
       m_drive.drive(
           false,
-          speed / (1 + iteration / scalingFactor),
-          AutoConstants.kMaxSpeedMetersPerSecond,
+          speed,
           Math.signum(-currentPitch),
+          0,
           0,
           true,
           false);
