@@ -8,6 +8,7 @@ import frc.robot.subsystems.DriveSubsystem;
 
 import java.util.Arrays;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -37,6 +38,9 @@ public class AutoDriveCustomPID extends CommandBase {
 
   @Override
   public void initialize() {
+    m_drive.resetOdometry(new Pose2d());
+    m_drive.zeroHeading();
+
     if (TUNING_MODE) {
       SmartDashboard.putNumber("CustomBalance P Gain", kP);
     }
@@ -56,7 +60,8 @@ public class AutoDriveCustomPID extends CommandBase {
     m_drive.drive(
         false,
         outputSpeed, // error * kP
-        Math.signum(-currentPitch),
+        // Math.signum(-currentPitch),
+        -1,
         0, 0, true, false);
 
     log();
@@ -101,6 +106,12 @@ public class AutoDriveCustomPID extends CommandBase {
 
     isBalanced = Math.abs(averageReading) < 1;
 
-    return isBalanced;
+    // TEST 1 - drive 2 meters
+    boolean traveledTwoMeters = Math.abs(m_drive.getPose().getX()) >= 2;
+
+    // TEST 2 - drive until 0 degrees (instantaneous measurement)
+    boolean instantaneousBalance = Math.abs(currentPitch) <= 1;
+
+    return traveledTwoMeters;
   }
 }

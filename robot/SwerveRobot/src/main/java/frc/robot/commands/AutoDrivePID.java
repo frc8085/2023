@@ -25,14 +25,14 @@ public class AutoDrivePID extends PIDCommand {
 
     static double kP = 10;
     static double kI = 0;
-    static double kD = 0.001;
+    static double kD = 1;
 
     /**
      * Create a new AutoDrivePID command.
      */
     public AutoDrivePID(DriveSubsystem drive, double meters) {
         super(new PIDController(kP, kI, kD),
-                // Close loop on pitch degrees
+                // Close loop on velocity
                 drive::getCurrentVelocity,
                 // Set reference to target
                 metersPerSecond,
@@ -43,8 +43,7 @@ public class AutoDrivePID extends PIDCommand {
                         output,
                         // If reading positive pitch, drive backwards.
                         // If reading negative pitch, drive forwards
-                        Math.signum(
-                                meters),
+                        Math.signum(meters),
                         0,
                         0,
                         true,
