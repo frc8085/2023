@@ -134,8 +134,11 @@ public class RobotContainer {
                 autoSelection.addOption(
                                 "TEST: Drive slow 1 meter",
                                 new AutoDriveBackwardsMeters(m_robotDrive, 1, .2 / 4.8));
-
+                // we travel 2 meteres in 3 seconds
                 // Put the chooser on the dashboard
+
+                // .67 m/s
+                // .33
                 SmartDashboard.putData("Auto Routine", autoSelection);
 
         }
