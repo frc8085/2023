@@ -14,8 +14,8 @@ import static frc.robot.Constants.AltitudeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
-public class MoveToTravelAfterScoring extends SequentialCommandGroup {
-  public MoveToTravelAfterScoring(
+public class AutoMoveToTravelAfterScoring extends SequentialCommandGroup {
+  public AutoMoveToTravelAfterScoring(
       Extension m_extension,
       Altitude m_altitude) {
     addCommands(new InstantCommand(
