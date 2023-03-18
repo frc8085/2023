@@ -13,8 +13,8 @@ public class TestWaitUntil extends SequentialCommandGroup {
     public TestWaitUntil(
             Altitude m_altitude) {
         addCommands(
-                new InstantCommand(() -> m_altitude.raiseAltitude()),
-                new WaitUntilCommand(() -> m_altitude.AltitudeIsInTravelPosition()),
+                new InstantCommand(() -> m_altitude.raiseAltitude())
+                        .until(() -> m_altitude.AltitudeIsInTravelPosition()),
                 new InstantCommand(() -> m_altitude.stopAltitude()));
     }
 }
