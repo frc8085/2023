@@ -140,14 +140,12 @@ public class Altitude extends SubsystemBase {
             readRaisePIDTuningFromDashboard();
             readLowerPIDTuningFromDashboard();
             // readTuningFromDashboard();
-            if (AltitudeIsInMidDropOffFinalPosition()) {
-                System.out.println("Altitude in MID DROP OFF FINAL position");
-            }
+
         }
 
     }
 
-    public void logPoisitionsReached() {
+    public void logPositionsReached() {
         if (AltitudeIsInHighCubeShootPosition()) {
             System.out.println("Altitude in HIGH CUBE SHOOT position");
         }

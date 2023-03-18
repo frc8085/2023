@@ -90,6 +90,10 @@ public class Extension extends SubsystemBase {
             SmartDashboard.putNumber("Extension Current position", getCurrentExtensionPosition());
             addPIDToDashboard();
             readExtensionPIDTuningFromDashboard();
+
+            if (ExtensionIsInHighScoringPosition()) {
+                System.out.println("Extension in HIGH SCORING position");
+            }
         }
     }
 
@@ -134,7 +138,7 @@ public class Extension extends SubsystemBase {
         }
     }
 
-    public void logPoisitionsReached() {
+    public void logPositionsReached() {
         if (ExtensionIsInDropOffReturnPosition()) {
             System.out.println("Extension in DROP OFF RETURN position");
         }
