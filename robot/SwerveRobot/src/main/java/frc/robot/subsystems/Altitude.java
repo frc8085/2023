@@ -20,7 +20,7 @@ import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Altitude extends SubsystemBase {
-  private boolean TUNING_MODE = false;
+  private boolean TUNING_MODE = true;
 
   private Extension m_extension;
   /** Creates a new Altitude. */
@@ -50,7 +50,7 @@ public class Altitude extends SubsystemBase {
 
   // Lower PID coefficients
   static int kLowerPIDSlot = 1;
-  static double kPLower = 1;
+  static double kPLower = .5;
   static double kILower = 0.0001;
   static double kDLower = 0.1;
   static double kFFLower = 0;
@@ -172,7 +172,7 @@ public class Altitude extends SubsystemBase {
     SmartDashboard.putNumber("Raise I Gain", kIRaise);
     SmartDashboard.putNumber("Raise D Gain", kDRaise);
     // SmartDashboard.putNumber("Raise I Zone", kIzRaise);
-    SmartDashboard.putNumber("Raise Feed Forward", kFFRaise);
+    // SmartDashboard.putNumber("Raise Feed Forward", kFFRaise);
     SmartDashboard.putNumber("Raise Max Output", kMaxOutputRaise);
     SmartDashboard.putNumber("Raise Min Output", kMinOutputRaise);
     SmartDashboard.putNumber("Raise Set Rotations", 0);
@@ -182,7 +182,7 @@ public class Altitude extends SubsystemBase {
     SmartDashboard.putNumber("Lower I Gain", kILower);
     SmartDashboard.putNumber("Lower D Gain", kDLower);
     // SmartDashboard.putNumber("Lower I Zone", kIzLower);
-    SmartDashboard.putNumber("Lower Feed Forward", kFFLower);
+    // SmartDashboard.putNumber("Lower Feed Forward", kFFLower);
     SmartDashboard.putNumber("Lower Max Output", kMaxOutputLower);
     SmartDashboard.putNumber("Lower Min Output", kMinOutputLower);
     SmartDashboard.putNumber("Lower Set Rotations", 0);
