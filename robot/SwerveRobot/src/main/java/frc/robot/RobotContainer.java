@@ -32,6 +32,7 @@ import frc.robot.commands.MoveToTravelAfterIntake;
 import frc.robot.commands.MoveToTravelAfterScoring;
 import frc.robot.commands.ScoreBasedOnPosition;
 import frc.robot.commands.ScoreHighCube;
+import frc.robot.commands.TestWaitUntil;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
@@ -151,15 +152,15 @@ public class RobotContainer {
         final Trigger setDoubleSubstationButton = m_operatorController.povUp();
         final Trigger setSingleSubstationButton = m_operatorController.povDown();
 
-        final Trigger testExtension = m_operatorController.povRight();
+        final Trigger testWaitUntil = m_operatorController.povRight();
 
         final Trigger ExtendButton = m_operatorController.axisLessThan(5, -.25);
         final Trigger RetractButton = m_operatorController.axisGreaterThan(5, .25);
         final Trigger RaiseButton = m_operatorController.axisLessThan(1, -.25);
         final Trigger LowerButton = m_operatorController.axisGreaterThan(1, .25);
 
-        testExtension.onTrue(new InstantCommand(
-                () -> m_extension.keepPositionInches(ExtensionConstants.kExtensionPositionInchesIntakeOut)));
+        testWaitUntil.onTrue(
+                new TestWaitUntil(m_altitude));
 
         // startButton.onTrue(new ResetPositionToStart(m_altitude, m_extension));
 
