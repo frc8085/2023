@@ -18,50 +18,50 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
  * averaged values of the left and right encoders.
  */
 public class AutoTurnToDegreeGyro extends PIDCommand {
-    private final DriveSubsystem m_drive;
+  private final DriveSubsystem m_drive;
 
-    static double kP = 0.01;
-    static double kI = 0;
-    static double kD = 0.001;
+  static double kP = 0.04;
+  static double kI = 0.004;
+  static double kD = 0.001;
 
-    /**
-     * Create a new TurnToDegreeGyro command.
-     *
-     * @param distance The distance to drive (inches)
-     */
-    public AutoTurnToDegreeGyro(double degree, DriveSubsystem drive) {
-        super(new PIDController(kP, kI, kD),
-                // Close loop on heading
-                drive::getHeading,
-                // Set reference to target
-                degree,
-                // Pipe output to turn robot
-                output -> drive.turn(output));
+  /**
+   * Create a new TurnToDegreeGyro command.
+   *
+   * @param distance The distance to drive (inches)
+   */
+  public AutoTurnToDegreeGyro(double degree, DriveSubsystem drive) {
+    super(new PIDController(kP, kI, kD),
+        // Close loop on heading
+        drive::getHeading,
+        // Set reference to target
+        degree,
+        // Pipe output to turn robot
+        output -> drive.turn(output));
 
-        // Require the drive
-        m_drive = drive;
-        addRequirements(m_drive);
+    // Require the drive
+    m_drive = drive;
+    addRequirements(m_drive);
 
-        getController().setTolerance(AutoConstants.kAutoGyroTolerance);
-    }
+    getController().setTolerance(AutoConstants.kAutoGyroTolerance);
+  }
 
-    @Override
-    public void execute() {
-        super.execute();
-    }
+  @Override
+  public void execute() {
+    super.execute();
+  }
 
-    // Called just before this Command runs the first time
-    @Override
-    public void initialize() {
-        // Get everything in a safe starting state.
-        m_drive.resetOdometry(new Pose2d());
-        m_drive.zeroHeading();
-        super.initialize();
-    }
+  // Called just before this Command runs the first time
+  @Override
+  public void initialize() {
+    // Get everything in a safe starting state.
+    m_drive.resetOdometry(new Pose2d());
+    m_drive.zeroHeading();
+    super.initialize();
+  }
 
-    // Make this return true when this Command no longer needs to run execute()
-    @Override
-    public boolean isFinished() {
-        return getController().atSetpoint();
-    }
+  // Make this return true when this Command no longer needs to run execute()
+  @Override
+  public boolean isFinished() {
+    return getController().atSetpoint();
+  }
 }
