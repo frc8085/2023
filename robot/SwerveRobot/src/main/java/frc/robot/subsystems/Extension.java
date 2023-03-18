@@ -18,7 +18,7 @@ import static frc.robot.Constants.ExtensionConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Extension extends SubsystemBase {
-  private boolean TUNING_MODE = true;
+  private boolean TUNING_MODE = false;
 
   /** Creates a new Extension. */
 
@@ -35,13 +35,13 @@ public class Extension extends SubsystemBase {
 
   // PID
   private SparkMaxPIDController m_extensionPIDController = m_extensionMotor.getPIDController();
-  static double kPExtension = .05;
+  static double kPExtension = .035;
   static double kIExtension = 0;
   static double kDExtension = 0;
   static double kFFExtension = 0;
 
-  static double kMaxOutputExtension = 0.85;
-  static double kMinOutputExtension = -0.85;
+  static double kMaxOutputExtension = 0.8;
+  static double kMinOutputExtension = -1;
 
   public boolean ExtensionRetractionLimitHit() {
     return isRetractionLimitHit();

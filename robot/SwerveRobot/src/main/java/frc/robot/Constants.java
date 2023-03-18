@@ -67,35 +67,41 @@ public final class Constants {
 
     // Estimates, fix this once we get exact measurements
     public static final double kExtensionLengthInches = 50;
-    public static final double kExtensionLengthRevolutions = 145;
+    public static final double kExtensionLengthRevolutions = 82;
 
-    // Convert length of travel to encoder rotations, where encoder reading of 1 is
-    // 0 inches and reading of 140 is 48 inches
-    public static final double kExtensionRevolutionsPerInch = (kExtensionLengthRevolutions - 1)
+    // Convert length of travel to encoder rotations, where encoder reading of 0 is
+    // 0 inches and reading of 82 is 48 inches
+    public static final double kExtensionRevolutionsPerInch = (kExtensionLengthRevolutions)
         / kExtensionLengthInches;
 
     // Range for safe Travel Extension <20
     public static double kExtensionSafeMax = 10;
 
-    // encoder readings of Extension position as of 2.14.2023
-    public static double kExtensionPositionFullyRetracted = 1;
-    public static double kExtensionPositionIntakeOut = 39;
-    public static double kExtensionPositionMidDropOff = 86;
-    public static double kExtensionPositionHighDropOff = 135;
-    public static double kExtensionPositionHighDropOffReturn = 100;
-    public static double kExtensionPositionSingleSubstation = 41;
-    public static double kExtensionPositionMidCubeShooter = 60;
-    public static double kExtensionPositionHighCubeShooter = 70;
-
     // Converted 2.14.23 Encoder readings into inches
-    public static double kExtensionPositionInchesFullyRetracted = 1 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesIntakeOut = 38 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesMidDropOff = 85 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesHighDropOff = 134 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesHighDropOffReturn = 99 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesSingleSubstation = 40 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesMidCubeShooter = 59 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesHighCubeShooter = 69 / kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionInchesFullyRetracted = 0;
+    public static double kExtensionPositionInchesIntakeOut = 13.1;
+    public static double kExtensionPositionInchesMidDropOff = 29.3;
+    public static double kExtensionPositionInchesHighDropOff = 46.2;
+    public static double kExtensionPositionInchesHighDropOffReturn = 34.1;
+    public static double kExtensionPositionInchesSingleSubstation = 13.8;
+    public static double kExtensionPositionInchesMidCubeShooter = 20.3;
+    public static double kExtensionPositionInchesHighCubeShooter = 23.8;
+
+    // encoder readings of Extension position as of 3.18.2023
+    public static double kExtensionPositionFullyRetracted = 0;
+    public static double kExtensionPositionIntakeOut = kExtensionPositionInchesIntakeOut * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionMidDropOff = kExtensionPositionInchesMidDropOff
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionHighDropOff = kExtensionPositionInchesHighDropOff
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionHighDropOffReturn = kExtensionPositionInchesHighDropOffReturn
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionSingleSubstation = kExtensionPositionInchesSingleSubstation
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionMidCubeShooter = kExtensionPositionInchesMidCubeShooter
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionHighCubeShooter = kExtensionPositionInchesHighCubeShooter
+        * kExtensionRevolutionsPerInch;
 
     public static double kExtensionSafeExtensionMax = kExtensionPositionIntakeOut + kExtensionPositionTolerance;
 
