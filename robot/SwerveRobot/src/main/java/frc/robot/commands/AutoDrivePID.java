@@ -19,7 +19,9 @@ import frc.robot.subsystems.DriveSubsystem;
 public class AutoDrivePID extends PIDCommand {
     private boolean TUNING_MODE = true;
     private final DriveSubsystem m_drive;
-    private static double metersTolerance = 0.2;
+    private static double metersPerSecondTolerance = 0.2;
+    private static double metersPerSecond = .1;
+    private static double m_meters;
 
     static double kP = 0.01;
     static double kI = 0;
@@ -33,15 +35,16 @@ public class AutoDrivePID extends PIDCommand {
                 // Close loop on pitch degrees
                 drive::getX,
                 // Set reference to target
-                meters,
+                metersPerSecond,
                 // Pipe output to drive robot
                 output -> drive.drive(
                         false,
                         // The PID output to control our speed
-                        output,
+                        metersPerSecond,
                         // If reading positive pitch, drive backwards.
                         // If reading negative pitch, drive forwards
-                        Math.signum(meters),
+                        Math.signum(
+                                meters),
                         0,
                         0,
                         true,
@@ -49,10 +52,11 @@ public class AutoDrivePID extends PIDCommand {
 
         // Require the drive
         m_drive = drive;
+        m_meters = meters;
         addRequirements(m_drive);
 
         // Set desired pitch tolerance in degrees
-        getController().setTolerance(metersTolerance);
+        // getController().setTolerance(metersPerSecondTolerance);
     }
 
     // Called just before this Command runs the first time
@@ -83,7 +87,14 @@ public class AutoDrivePID extends PIDCommand {
     public boolean isFinished() {
         // TODO: Test. If we fail to balance, make sure we still lock our wheels in Auto
         boolean timeToLock = Timer.getMatchTime() < 1.5;
-        return timeToLock || getController().atSetpoint();
+        boolean atSetpoint = false;
+        if (m_meters > 0) {
+            atSetpoint = m_drive.getX() >= m_meters;
+        } else {
+            atSetpoint = m_drive.getX() <= m_meters;
+        }
+
+        return timeToLock || atSetpoint;
     }
 
     private void addPIDToDashboard() {

@@ -313,6 +313,13 @@ public class DriveSubsystem extends SubsystemBase {
         m_rearRight.resetEncoders();
     }
 
+    public double getCurrentVelocity() {
+        return ((m_frontLeft.m_drivingEncoder.getVelocity() +
+                m_rearLeft.m_drivingEncoder.getVelocity() +
+                m_frontRight.m_drivingEncoder.getVelocity() +
+                m_rearRight.m_drivingEncoder.getVelocity()) / 4);
+    }
+
     /** Zeroes the heading of the robot. */
     public void zeroHeading() {
         m_gyro.reset();
