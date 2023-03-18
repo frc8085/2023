@@ -18,10 +18,10 @@ public class MoveToIntake extends SequentialCommandGroup {
             Extension m_extension,
             Altitude m_altitude) {
         addCommands(new ParallelCommandGroup(
-                new InstantCommand(() -> m_altitude.keepPosition(
-                        AltitudeConstants.kAltitudeIntakePosition)),
+                new InstantCommand(() -> m_altitude.keepPositionDegrees(
+                        AltitudeConstants.kAltitudeIntakePositionDegrees)),
                 new InstantCommand(() -> m_extension
-                        .keepPosition(ExtensionConstants.kExtensionPositionIntakeOut))));
+                        .keepPositionInches(ExtensionConstants.kExtensionPositionInchesIntakeOut))));
 
     }
 }

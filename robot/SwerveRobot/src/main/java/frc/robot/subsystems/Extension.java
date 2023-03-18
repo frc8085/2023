@@ -35,10 +35,13 @@ public class Extension extends SubsystemBase {
 
   // PID
   private SparkMaxPIDController m_extensionPIDController = m_extensionMotor.getPIDController();
-  static double kPExtension = .05;
+  static double kPExtension = .035;
   static double kIExtension = 0;
   static double kDExtension = 0;
   static double kFFExtension = 0;
+
+  static double kMaxOutputExtension = 0.8;
+  static double kMinOutputExtension = -.8;
 
   public boolean ExtensionRetractionLimitHit() {
     return isRetractionLimitHit();
@@ -55,7 +58,7 @@ public class Extension extends SubsystemBase {
     m_extensionPIDController.setI(kIExtension, 0);
     m_extensionPIDController.setD(kDExtension, 0);
     m_extensionPIDController.setFF(kFFExtension, 0);
-    m_extensionPIDController.setOutputRange(-0.85, 0.85);
+    m_extensionPIDController.setOutputRange(kMinOutputExtension, kMaxOutputExtension);
 
     /**
      * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
@@ -78,12 +81,81 @@ public class Extension extends SubsystemBase {
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
     if (TUNING_MODE) {
-      SmartDashboard.putNumber("Extension Raw encoder read", m_extensionEncoder.getPosition());
-      SmartDashboard.putBoolean("Fully Extended", m_extensionLimit.isPressed());
-      SmartDashboard.putBoolean("Fully Retracted", m_retractionLimit.isPressed());
-      SmartDashboard.putBoolean("Extension Travel Position", ExtensionIsInTravelPosition());
-      SmartDashboard.putBoolean("Extension Intake Position", ExtensionIsInIntakePosition());
-      SmartDashboard.putNumber("Current position", getCurrentExtensionPosition());
+      // SmartDashboard.putBoolean("Fully Extended", m_extensionLimit.isPressed());
+      // SmartDashboard.putBoolean("Fully Retracted", m_retractionLimit.isPressed());
+      // SmartDashboard.putBoolean("Extension Travel Position",
+      // ExtensionIsInTravelPosition());
+      // SmartDashboard.putBoolean("Extension Intake Position",
+      // ExtensionIsInIntakePosition());
+      SmartDashboard.putNumber("Extension Current position", getCurrentExtensionPosition());
+      addPIDToDashboard();
+      readExtensionPIDTuningFromDashboard();
+
+      if (ExtensionIsInHighScoringPosition()) {
+        System.out.println("Extension in HIGH SCORING position");
+      }
+    }
+  }
+
+  private void addPIDToDashboard() {
+    // Display PID Extension coefficients on SmartDashboard
+    SmartDashboard.putNumber("Extension P Gain", kPExtension);
+    SmartDashboard.putNumber("Extension I Gain", kIExtension);
+    SmartDashboard.putNumber("Extension D Gain", kDExtension);
+    SmartDashboard.putNumber("Extension Max Output", kMaxOutputExtension);
+    SmartDashboard.putNumber("Extension Min Output", kMinOutputExtension);
+
+  }
+
+  private void readExtensionPIDTuningFromDashboard() {
+
+    // Read PID Coefficients from SmartDashboard
+    double pExtension = SmartDashboard.getNumber("Extension P Gain", 0);
+    double iExtension = SmartDashboard.getNumber("Extension I Gain", 0);
+    double dExtension = SmartDashboard.getNumber("Extension D Gain", 0);
+    double maxExtension = SmartDashboard.getNumber("Extension Max Output", 0);
+    double minExtension = SmartDashboard.getNumber("Extension Min Output", 0);
+
+    // if PID coefficients on SmartDashboard have changed, write new values to
+    // controller. Make sure to use the PID Extension slot
+    if ((pExtension != kPExtension)) {
+      m_extensionPIDController.setP(pExtension);
+      kPExtension = pExtension;
+    }
+    if ((iExtension != kIExtension)) {
+      m_extensionPIDController.setI(iExtension);
+      kIExtension = iExtension;
+    }
+    if ((dExtension != kDExtension)) {
+      m_extensionPIDController.setD(dExtension);
+      kDExtension = dExtension;
+    }
+
+    if ((maxExtension != kMaxOutputExtension) || (minExtension != kMinOutputExtension)) {
+      m_extensionPIDController.setOutputRange(minExtension, maxExtension);
+      kMinOutputExtension = minExtension;
+      kMaxOutputExtension = maxExtension;
+    }
+  }
+
+  public void logPositionsReached() {
+    if (ExtensionIsInDropOffReturnPosition()) {
+      System.out.println("Extension in DROP OFF RETURN position");
+    }
+    if (ExtensionIsInHighCubeShootPosition()) {
+      System.out.println("Extension in HIGH CUBE SHOOT position");
+    }
+    if (ExtensionIsInHighScoringPosition()) {
+      System.out.println("Extension in HIGH SCORING position");
+    }
+    if (ExtensionIsInIntakePosition()) {
+      System.out.println("Extension in INTAKE position");
+    }
+    if (ExtensionIsInMidCubeShootPosition()) {
+      System.out.println("Extension in MID CUBE SHOOT position");
+    }
+    if (ExtensionIsInReleasePosition()) {
+      System.out.println("Extension in RELEASE position");
     }
   }
 
@@ -111,12 +183,12 @@ public class Extension extends SubsystemBase {
   /** ELEVATOR Extension **/
   // Run the elevator Extension motor forward
   public void extendExtension() {
-    m_extensionMotor.set(ExtensionConstants.kExtensionSpeed);
+    m_extensionMotor.set(ExtensionConstants.kExtensionExtendSpeed);
   }
 
   // Run the elevator Extension motor in reverse
   public void retractExtension() {
-    m_extensionMotor.set(-ExtensionConstants.kExtensionSpeed);
+    m_extensionMotor.set(-ExtensionConstants.kExtensionRetractSpeed);
   }
 
   // Stop the elevator Extension
@@ -132,7 +204,23 @@ public class Extension extends SubsystemBase {
   // Maintain Position
   public void keepPosition(double position) {
     m_extensionPIDController.setReference(position, ControlType.kPosition);
-    SmartDashboard.putNumber("Desired Extension position", position);
+    if (TUNING_MODE) {
+      SmartDashboard.putNumber("Desired Extension position", position);
+      System.out.println("Keep EXTENSION " + position);
+    }
+  }
+
+  // Maintain Position Inches
+  public void keepPositionInches(double positionInches) {
+    // set position in inches, convert to encoder value
+    double position;
+    position = positionInches * ExtensionConstants.kExtensionRevolutionsPerInch + 1;
+
+    m_extensionPIDController.setReference(position, ControlType.kPosition);
+    if (TUNING_MODE) {
+      SmartDashboard.putNumber("Desired Extension position", position);
+      System.out.println("Keep EXTENSION " + position);
+    }
   }
 
   // Tell Us if Extension as At Positions

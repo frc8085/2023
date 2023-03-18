@@ -19,8 +19,8 @@ public class MoveToSingleSubstationPickup extends SequentialCommandGroup {
             Altitude m_altitude) {
         addCommands(new ParallelCommandGroup(
                 new InstantCommand(() -> m_extension
-                        .keepPosition(ExtensionConstants.kExtensionPositionSingleSubstation)),
-                new InstantCommand(() -> m_altitude.keepPosition(
-                        AltitudeConstants.kAltitudeSingleSubstationPosition))));
+                        .keepPositionInches(ExtensionConstants.kExtensionPositionInchesSingleSubstation)),
+                new InstantCommand(() -> m_altitude.keepPositionDegrees(
+                        AltitudeConstants.kAltitudeSingleSubstationPositionDegrees))));
     }
 }

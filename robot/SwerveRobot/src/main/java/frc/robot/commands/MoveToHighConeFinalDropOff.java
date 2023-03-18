@@ -13,6 +13,7 @@ public class MoveToHighConeFinalDropOff extends SequentialCommandGroup {
     public MoveToHighConeFinalDropOff(Altitude m_altitude) {
         addCommands(
                 new InstantCommand(
-                        () -> m_altitude.keepPosition(AltitudeConstants.kAltitudeHighDropOffFinalPosition)));
+                        () -> m_altitude
+                                .keepPositionDegrees(AltitudeConstants.kAltitudeHighDropOffFinalPositionDegrees)));
     }
 }

@@ -18,11 +18,12 @@ public class MoveToHighConeDropOff extends SequentialCommandGroup {
             Extension m_extension,
             Altitude m_altitude) {
         addCommands(
+                new InstantCommand(() -> System.out.println("**START Move to HIGH CONE drop off**")),
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> m_altitude.keepPosition(
-                                AltitudeConstants.kAltitudeDropOffPosition)),
+                        new InstantCommand(() -> m_altitude.keepPositionDegrees(
+                                AltitudeConstants.kAltitudeDropOffPositionDegrees)),
                         new InstantCommand(() -> m_extension
-                                .keepPosition(ExtensionConstants.kExtensionPositionHighDropOff))));
+                                .keepPositionInches(ExtensionConstants.kExtensionPositionInchesHighDropOff))));
 
     }
 }
