@@ -140,8 +140,9 @@ public class Altitude extends SubsystemBase {
             readRaisePIDTuningFromDashboard();
             readLowerPIDTuningFromDashboard();
             // readTuningFromDashboard();
-
-            logPoisitionsReached();
+            if (AltitudeIsInMidDropOffFinalPosition()) {
+                System.out.println("Altitude in MID DROP OFF FINAL position");
+            }
         }
 
     }

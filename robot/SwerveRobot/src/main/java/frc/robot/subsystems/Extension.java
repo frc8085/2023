@@ -85,7 +85,6 @@ public class Extension extends SubsystemBase {
             // SmartDashboard.putBoolean("Extension Intake Position",
             // ExtensionIsInIntakePosition());
             SmartDashboard.putNumber("Extension Current position", getCurrentExtensionPosition());
-            logPoisitionsReached();
         }
     }
 
