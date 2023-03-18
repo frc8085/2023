@@ -129,47 +129,54 @@ public final class Constants {
     public static final double kAltitudeRevolutionsPerDegree = -(kAltitudeTotalRevolutions)
         / kAltitudeTotalDegrees;
 
-    // encoder readings of altitude as of 2.14.2023
-    // Altitude at Top Position
-    public static double kAltitudeTravelPosition = -0.05;
-    // Altitude at DropOff Position
-    public static double kAltitudeDropOffPosition = -2.15;
-    // Altitude when delivering high cone that it lowers to after extending fully
-    public static double kAltitudeHighDropOffPosition = -2.9;
-    // Altitude at position that it releases the cone
-    public static double kAltitudeMidDropOffPosition = -3.0;
-    // Altitude at position that it releases the High cone
-    public static double kAltitudeHighDropOffFinalPosition = -3.25;
-    // Altitude at position that it releases the Mid cone
-    public static double kAltitudeMidDropOffFinalPosition = -3.35;
-    // Altitude at high cube shoot Altitude
-    public static double kAltitudeHighCubeShootPosition = -1;
-    // Altitude at Bottom Position
-    public static double kAltitudeIntakePosition = -5.5;
-    // Altitude at Shelf Position
-    public static double kAltitudeDoubleSubstationPosition = -2.85;
-    public static double kAltitudeSingleSubstationPosition = -1.55;
-
     // angle conversions for 2.14.2023 altitude readings
     // Altitude at Top Position
-    public static double kAltitudeTravelPositionDegrees = -.1 / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeTravelPositionDegrees = 0;
     // Altitude at DropOff Position
-    public static double kAltitudeDropOffPositionDegrees = (-2.15 + .1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeDropOffPositionDegrees = 27;
     // Altitude when delivering high cone that it lowers to after extending fully
-    public static double kAltitudeHighDropOffPositionDegrees = (-2.9 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeHighDropOffPositionDegrees = 36.8;
     // Altitude at position that it releases the cone
-    public static double kAltitudeMidDropOffPositionDegrees = (-3.0 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeMidDropOffPositionDegrees = 38.2;
     // Altitude at position that it releases the High cone
-    public static double kAltitudeHighDropOffFinalPositionDegrees = (-3.25 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeHighDropOffFinalPositionDegrees = 41.4;
     // Altitude at position that it releases the Mid cone
-    public static double kAltitudeMidDropOffFinalPositionDegrees = (-3.35 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeMidDropOffFinalPositionDegrees = 42.8;
     // Altitude at high cube shoot Altitude
-    public static double kAltitudeHighCubeShootPositionDegrees = (-1 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeHighCubeShootPositionDegrees = 11.8;
     // Altitude at Bottom Position
-    public static double kAltitudeIntakePositionDegrees = (-5.5 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeIntakePositionDegrees = 71.1;
     // Altitude at Shelf Position
-    public static double kAltitudeDoubleSubstationPositionDegrees = (-2.85 + 0.1) / kAltitudeRevolutionsPerDegree;
-    public static double kAltitudeSingleSubstationPositionDegrees = (-1.55 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeDoubleSubstationPositionDegrees = 36.2;
+    public static double kAltitudeSingleSubstationPositionDegrees = 19.1;
+
+    // encoder readings of altitude as of 2.14.2023
+    // Altitude at Top Position
+    public static double kAltitudeTravelPosition = kAltitudeTravelPositionDegrees * kAltitudeRevolutionsPerDegree;
+    // Altitude at DropOff Position
+    public static double kAltitudeDropOffPosition = kAltitudeDropOffPositionDegrees * kAltitudeRevolutionsPerDegree;
+    // Altitude when delivering high cone that it lowers to after extending fully
+    public static double kAltitudeHighDropOffPosition = kAltitudeHighDropOffPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at position that it releases the cone
+    public static double kAltitudeMidDropOffPosition = kAltitudeMidDropOffPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at position that it releases the High cone
+    public static double kAltitudeHighDropOffFinalPosition = kAltitudeHighDropOffFinalPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at position that it releases the Mid cone
+    public static double kAltitudeMidDropOffFinalPosition = kAltitudeMidDropOffFinalPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at high cube shoot Altitude
+    public static double kAltitudeHighCubeShootPosition = kAltitudeHighCubeShootPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at Bottom Position
+    public static double kAltitudeIntakePosition = kAltitudeIntakePositionDegrees * kAltitudeRevolutionsPerDegree;
+    // Altitude at Shelf Position
+    public static double kAltitudeDoubleSubstationPosition = kAltitudeDoubleSubstationPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeSingleSubstationPosition = kAltitudeSingleSubstationPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
 
     // Altitude Error Tolerance
     public static double kAltitudeError = 0.05;
