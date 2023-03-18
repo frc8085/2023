@@ -35,6 +35,7 @@ import frc.robot.commands.MoveToTravelAfterIntake;
 import frc.robot.commands.MoveToTravelAfterScoring;
 import frc.robot.commands.ScoreBasedOnPosition;
 import frc.robot.commands.ScoreHighCube;
+import frc.robot.commands.TestWaitUntil;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
@@ -160,8 +161,7 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .toggleOnTrue(new RunCommand(() -> m_robotDrive.lock(), m_robotDrive));
 
-    new JoystickButton(m_driverController, Button.kY.value)
-        .onTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+    final Trigger testWaitUntil = m_operatorController.povRight();
 
     /** OPERATOR COMMANDS **/
     // final Trigger startButton = m_operatorController.start();
@@ -177,7 +177,8 @@ public class RobotContainer {
     final Trigger RaiseButton = m_operatorController.axisLessThan(1, -.25);
     final Trigger LowerButton = m_operatorController.axisGreaterThan(1, .25);
 
-    // startButton.onTrue(new ResetPositionToStart(m_altitude, m_extension));
+    testWaitUntil.onTrue(
+        new TestWaitUntil(m_altitude));
 
     // Intake button will run the intake then hold game piece when released
     intakeButton.whileTrue(new IntakeCargo(m_altitude, m_extension, m_intake))

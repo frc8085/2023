@@ -103,7 +103,7 @@ public final class Autos {
                 new InstantCommand(() -> m_intake.ejectCone()),
                 new WaitCommand(IntakeConstants.kEjectWaitTime),
                 new InstantCommand(m_intake::stopIntake)),
-            new MoveToTravelAfterScoring(m_extension, m_altitude)));
+            new AutoMoveToTravelAfterScoring(m_extension, m_altitude)));
   }
 
   public static CommandBase intakeAndHold(Altitude m_altitude,
@@ -125,7 +125,7 @@ public final class Autos {
             new SequentialCommandGroup(
                 new WaitCommand(IntakeConstants.kEjectWaitTime),
                 new InstantCommand(m_intake::stopIntake)),
-            new MoveToTravelAfterScoring(m_extension, m_altitude),
+            new AutoMoveToTravelAfterScoring(m_extension, m_altitude),
             balanceByDistance(m_drive)));
   }
 
@@ -136,7 +136,7 @@ public final class Autos {
         initialize(m_drive, m_altitude, m_extension),
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
         new ParallelCommandGroup(
-            new MoveToTravelAfterScoring(m_extension, m_altitude),
+            new AutoMoveToTravelAfterScoring(m_extension, m_altitude),
             balance(m_drive)),
         new InstantCommand(m_intake::stopIntake));
   }
@@ -148,7 +148,7 @@ public final class Autos {
         initialize(m_drive, m_altitude, m_extension),
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
         new ParallelCommandGroup(
-            new MoveToTravelAfterScoring(m_extension, m_altitude),
+            new AutoMoveToTravelAfterScoring(m_extension, m_altitude),
             new AutoDriveBackwardsMeters(m_drive, 4.75, .4)),
         new InstantCommand(m_intake::stopIntake));
   }
@@ -208,7 +208,7 @@ public final class Autos {
             new SequentialCommandGroup(
                 new WaitCommand(IntakeConstants.kEjectWaitTime),
                 new InstantCommand(m_intake::stopIntake)),
-            new MoveToTravelAfterScoring(m_extension, m_altitude),
+            new AutoMoveToTravelAfterScoring(m_extension, m_altitude),
             new AutoDriveBackwardsMeters(m_drive, 2.25, .4)),
         new AutoRotateDegrees(m_drive, 180),
         new PrepareIntake(m_extension, m_altitude),
@@ -253,7 +253,7 @@ public final class Autos {
         initialize(m_drive, m_altitude, m_extension),
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
         new ParallelCommandGroup(
-            new MoveToTravelAfterScoring(m_extension, m_altitude),
+            new AutoMoveToTravelAfterScoring(m_extension, m_altitude),
             balance2(m_drive)),
         new InstantCommand(m_intake::stopIntake));
   }
@@ -264,7 +264,7 @@ public final class Autos {
         initialize(m_drive, m_altitude, m_extension),
         scoreHigh(m_drive, m_altitude, m_extension, m_intake),
         new ParallelCommandGroup(
-            new MoveToTravelAfterScoring(m_extension, m_altitude),
+            new AutoMoveToTravelAfterScoring(m_extension, m_altitude),
             new AutoDriveBackwardsMeters(m_drive, 4.25, .4)),
         new InstantCommand(m_intake::stopIntake),
         new AutoDriveForwardMeters(m_drive, 2.75, .4),

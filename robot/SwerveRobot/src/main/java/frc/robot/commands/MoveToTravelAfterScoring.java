@@ -4,12 +4,7 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-
-import static frc.robot.Constants.ExtensionConstants;
-import static frc.robot.Constants.AltitudeConstants;
 
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
@@ -18,11 +13,12 @@ public class MoveToTravelAfterScoring extends SequentialCommandGroup {
   public MoveToTravelAfterScoring(
       Extension m_extension,
       Altitude m_altitude) {
-    addCommands(new InstantCommand(
-        () -> m_extension.keepPositionInches(ExtensionConstants.kExtensionPositionInchesFullyRetracted)),
-        // new WaitUntilCommand(() -> m_extension.ExtensionIsInDropOffReturnPosition()),
-        new InstantCommand(() -> m_altitude
-            .keepPositionDegrees(AltitudeConstants.kAltitudeTravelPositionDegrees)));
+    addCommands(
+
+        new MoveToDropoffToScore(m_extension),
+        new MoveToTravelAfterDropoff(m_extension, m_altitude)
+
+    );
 
   }
 }
