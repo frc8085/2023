@@ -83,7 +83,7 @@ public final class Constants {
     public static double kExtensionPositionInchesMidDropOff = 29.3;
     public static double kExtensionPositionInchesHighDropOff = 46.2;
     public static double kExtensionPositionInchesHighDropOffReturn = 34.1;
-    public static double kExtensionPositionInchesSingleSubstation = 13.8;
+    public static double kExtensionPositionInchesSingleSubstation = 6;
     public static double kExtensionPositionInchesMidCubeShooter = 20.3;
     public static double kExtensionPositionInchesHighCubeShooter = 23.8;
 
@@ -131,7 +131,7 @@ public final class Constants {
 
     // angle conversions for 2.14.2023 altitude readings
     // Altitude at Top Position
-    public static double kAltitudeTravelPositionDegrees = 0;
+    public static double kAltitudeTravelPositionDegrees = 1;
     // Altitude at DropOff Position
     public static double kAltitudeDropOffPositionDegrees = 27;
     // Altitude when delivering high cone that it lowers to after extending fully
@@ -148,7 +148,7 @@ public final class Constants {
     public static double kAltitudeIntakePositionDegrees = 71.1;
     // Altitude at Shelf Position
     public static double kAltitudeDoubleSubstationPositionDegrees = 36.2;
-    public static double kAltitudeSingleSubstationPositionDegrees = 19.1;
+    public static double kAltitudeSingleSubstationPositionDegrees = 9.;
 
     // encoder readings of altitude as of 2.14.2023
     // Altitude at Top Position
