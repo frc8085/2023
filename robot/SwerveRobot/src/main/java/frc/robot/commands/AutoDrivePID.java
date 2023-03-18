@@ -19,9 +19,8 @@ import frc.robot.subsystems.DriveSubsystem;
 public class AutoDrivePID extends PIDCommand {
     private boolean TUNING_MODE = true;
     private final DriveSubsystem m_drive;
-    private static double metersPerSecondTolerance = 0.1;
-    private static double metersPerSecond = .05;
-    private static double m_meters;
+    private static double m_meters = 2;
+    private static double metersTolerance = .2;
 
     static double kP = 10;
     static double kI = 0;
@@ -33,9 +32,9 @@ public class AutoDrivePID extends PIDCommand {
     public AutoDrivePID(DriveSubsystem drive, double meters) {
         super(new PIDController(kP, kI, kD),
                 // Close loop on velocity
-                drive::getCurrentVelocity,
+                drive::getX,
                 // Set reference to target
-                metersPerSecond,
+                meters,
                 // Pipe output to drive robot
                 output -> drive.drive(
                         false,
@@ -55,7 +54,7 @@ public class AutoDrivePID extends PIDCommand {
         addRequirements(m_drive);
 
         // Set desired pitch tolerance in degrees
-        // getController().setTolerance(metersPerSecondTolerance);
+        getController().setTolerance(metersTolerance);
     }
 
     // Called just before this Command runs the first time
@@ -84,18 +83,7 @@ public class AutoDrivePID extends PIDCommand {
     // Make this return true when this Command no longer needs to run execute()
     @Override
     public boolean isFinished() {
-        // TODO: Test. If we fail to balance, make sure we still lock our wheels in Auto
-        // boolean timeToLock = Timer.getMatchTime() < 1.5;
-        boolean atSetpoint = false;
-        // Math.abs(m_drive.getPitch()) < 1;
-
-        if (m_meters > 0) {
-            atSetpoint = m_drive.getX() >= m_meters;
-        } else {
-            atSetpoint = m_drive.getX() <= m_meters;
-        }
-
-        return atSetpoint;
+        return getController().atSetpoint();
     }
 
     private void addPIDToDashboard() {
