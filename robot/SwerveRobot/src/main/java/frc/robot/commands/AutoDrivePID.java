@@ -19,11 +19,11 @@ import frc.robot.subsystems.DriveSubsystem;
 public class AutoDrivePID extends PIDCommand {
     private boolean TUNING_MODE = true;
     private final DriveSubsystem m_drive;
-    private static double metersPerSecondTolerance = 0.2;
-    private static double metersPerSecond = .1;
+    private static double metersPerSecondTolerance = 0.1;
+    private static double metersPerSecond = .05;
     private static double m_meters;
 
-    static double kP = 0.1;
+    static double kP = 10;
     static double kI = 0;
     static double kD = 0.001;
 
@@ -33,14 +33,14 @@ public class AutoDrivePID extends PIDCommand {
     public AutoDrivePID(DriveSubsystem drive, double meters) {
         super(new PIDController(kP, kI, kD),
                 // Close loop on pitch degrees
-                drive::getX,
+                drive::getCurrentVelocity,
                 // Set reference to target
                 metersPerSecond,
                 // Pipe output to drive robot
                 output -> drive.drive(
                         false,
                         // The PID output to control our speed
-                        metersPerSecond,
+                        output,
                         // If reading positive pitch, drive backwards.
                         // If reading negative pitch, drive forwards
                         Math.signum(
@@ -87,13 +87,14 @@ public class AutoDrivePID extends PIDCommand {
     public boolean isFinished() {
         // TODO: Test. If we fail to balance, make sure we still lock our wheels in Auto
         // boolean timeToLock = Timer.getMatchTime() < 1.5;
-        boolean atSetpoint = Math.abs(m_drive.getPitch()) < 1;
-        // false;
-        // if (m_meters > 0) {
-        // atSetpoint = m_drive.getX() >= m_meters;
-        // } else {
-        // atSetpoint = m_drive.getX() <= m_meters;
-        // }
+        boolean atSetpoint = false;
+        // Math.abs(m_drive.getPitch()) < 1;
+
+        if (m_meters > 0) {
+            atSetpoint = m_drive.getX() >= m_meters;
+        } else {
+            atSetpoint = m_drive.getX() <= m_meters;
+        }
 
         return atSetpoint;
     }
