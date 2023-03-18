@@ -21,7 +21,7 @@ public class AutoDriveCustomPID extends CommandBase {
   private boolean isBalanced = false;
 
   private double setpointMetersPerSecond = 0.1; // Desired speed in m/s
-  private double kP = 0.1; // Proportional gain
+  private double kP = 1; // Proportional gain
 
   private int readingIndex = 0;
   private int windowSize = 20;
