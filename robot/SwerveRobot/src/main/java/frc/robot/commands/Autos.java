@@ -183,7 +183,6 @@ public final class Autos {
         new ScoreHighCube(m_altitude, m_extension, m_intake)
 
     );
-    // new AutoDriveForwardMeters(m_drive, 1, .4)
 
   }
 
