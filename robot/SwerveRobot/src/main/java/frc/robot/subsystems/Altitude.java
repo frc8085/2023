@@ -431,6 +431,13 @@ public class Altitude extends SubsystemBase {
             - AltitudeConstants.kAltitudePositionTolerance;
   };
 
+  public boolean AltitudeIsInHighDropOffPosition() {
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeHighDropOffPosition
+        + AltitudeConstants.kAltitudePositionTolerance &&
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeHighDropOffPosition
+            - AltitudeConstants.kAltitudePositionTolerance;
+  };
+
   public boolean AltitudeIsInMidDropOffFinalPosition() {
     return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeMidDropOffFinalPosition
         + AltitudeConstants.kAltitudePositionTolerance &&
