@@ -21,7 +21,7 @@ public class AutoDriveCustomPID extends CommandBase {
   private boolean isBalanced = false;
 
   private double setpointMetersPerSecond = 0.1; // Desired speed in m/s
-  private double kP = 1; // Proportional gain
+  private double kP = 8; // Proportional gain
 
   private int readingIndex = 0;
   private int windowSize = 20;
@@ -55,11 +55,12 @@ public class AutoDriveCustomPID extends CommandBase {
 
     double currentSpeedMetersPerSecond = m_drive.getCurrentVelocity();
     double error = setpointMetersPerSecond - currentSpeedMetersPerSecond;
-    double outputSpeed = error * kP;
+    double outputSpeed = Math.min(error * kP, 4.8);
+    double scaledSpeed = outputSpeed / 4.8;
 
     m_drive.drive(
         false,
-        outputSpeed, // error * kP
+        scaledSpeed, // error * kP
         // Math.signum(-currentPitch),
         -1,
         0, 0, true, false);
