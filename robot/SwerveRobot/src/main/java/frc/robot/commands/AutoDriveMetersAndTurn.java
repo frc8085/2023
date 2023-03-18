@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class AutoDriveMetersAndTurn extends CommandBase {
@@ -20,6 +21,10 @@ public class AutoDriveMetersAndTurn extends CommandBase {
     boolean forwardReached = false;
     boolean sidewaysReached = false;
     boolean turnComplete = false;
+
+    double currentForwardPose;
+    double currentSidewaysPose;
+    double currentDegrees;
 
     public AutoDriveMetersAndTurn(DriveSubsystem drive, double forwardMeters, double sidewaysMeters, double speed,
             double degrees, double rotationSpeed) {
@@ -55,6 +60,15 @@ public class AutoDriveMetersAndTurn extends CommandBase {
                 turnComplete ? 0 : Math.signum(m_degrees) * -m_rotationSpeed,
                 true,
                 false);
+
+        currentForwardPose = m_drive.getPose().getX();
+        currentSidewaysPose = m_drive.getPose().getY();
+        currentDegrees = m_drive.getHeading();
+
+        SmartDashboard.putNumber("Forward Pose", currentForwardPose);
+        SmartDashboard.putNumber("Sidways Pose", currentSidewaysPose);
+        SmartDashboard.putNumber("Degrees", currentDegrees);
+
     }
 
     // Stop driving when the command ends or is interrupted
@@ -66,9 +80,6 @@ public class AutoDriveMetersAndTurn extends CommandBase {
     // End the command when we reach the desired pose in meters
     @Override
     public boolean isFinished() {
-        double currentForwardPose = m_drive.getPose().getX();
-        double currentSidewaysPose = m_drive.getPose().getY();
-        double currentDegrees = m_drive.getHeading();
         // Stop when the current position reaches
         // the desired backwards travel distance in meters
 
