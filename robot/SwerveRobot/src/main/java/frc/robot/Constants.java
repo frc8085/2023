@@ -66,8 +66,8 @@ public final class Constants {
     public static final double kMaxExtensionSpeedMetersPerSecond = 0.25;
 
     // Estimates, fix this once we get exact measurements
-    public static final double kExtensionLengthInches = 48;
-    public static final double kExtensionLengthRevolutions = 141;
+    public static final double kExtensionLengthInches = 50;
+    public static final double kExtensionLengthRevolutions = 145;
 
     // Convert length of travel to encoder rotations, where encoder reading of 1 is
     // 0 inches and reading of 140 is 48 inches
