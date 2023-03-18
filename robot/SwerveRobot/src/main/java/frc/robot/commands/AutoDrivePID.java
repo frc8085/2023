@@ -88,18 +88,18 @@ public class AutoDrivePID extends PIDCommand {
 
     private void addPIDToDashboard() {
         // Display PID coefficients on SmartDashboard
-        SmartDashboard.putNumber("Balance P Gain", kP);
-        SmartDashboard.putNumber("Balance I Gain", kI);
-        SmartDashboard.putNumber("Balance D Gain", kD);
+        SmartDashboard.putNumber("DrivePID P Gain", kP);
+        SmartDashboard.putNumber("DrivePID I Gain", kI);
+        SmartDashboard.putNumber("DrivePID D Gain", kD);
 
     }
 
     // Allows us to fine tune PID from the dashboard
     private void readPIDTuningFromDashboard() {
         // Read PID Coefficients from SmartDashboard
-        double p = SmartDashboard.getNumber("Balance P Gain", kP);
-        double i = SmartDashboard.getNumber("Balance I Gain", kI);
-        double d = SmartDashboard.getNumber("Balance D Gain", kD);
+        double p = SmartDashboard.getNumber("DrivePID P Gain", kP);
+        double i = SmartDashboard.getNumber("DrivePID I Gain", kI);
+        double d = SmartDashboard.getNumber("DrivePID D Gain", kD);
 
         // If PID coefficients on SmartDashboard have changed, write new values to
         // controller
