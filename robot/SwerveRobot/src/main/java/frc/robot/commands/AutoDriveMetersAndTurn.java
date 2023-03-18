@@ -65,9 +65,7 @@ public class AutoDriveMetersAndTurn extends CommandBase {
         currentSidewaysPose = m_drive.getPose().getY();
         currentDegrees = m_drive.getHeading();
 
-        SmartDashboard.putNumber("Forward Pose", currentForwardPose);
-        SmartDashboard.putNumber("Sidways Pose", currentSidewaysPose);
-        SmartDashboard.putNumber("Degrees", currentDegrees);
+        System.out.println("Forward Pose " + currentForwardPose);
 
     }
 
