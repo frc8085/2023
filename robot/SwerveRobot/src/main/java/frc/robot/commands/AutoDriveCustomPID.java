@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class AutoDriveCustomPID extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+
+  private final boolean TUNING_MODE = true;
+
   private final DriveSubsystem m_drive;
   private boolean isBalanced = false;
 
@@ -34,6 +37,9 @@ public class AutoDriveCustomPID extends CommandBase {
 
   @Override
   public void initialize() {
+    if (TUNING_MODE) {
+      SmartDashboard.putNumber("CustomBalance P Gain", kP);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,7 +59,26 @@ public class AutoDriveCustomPID extends CommandBase {
         Math.signum(-currentPitch),
         0, 0, true, false);
 
+    log();
+  }
+
+  private void log() {
     SmartDashboard.putBoolean("FINAL BALANCED", isBalanced);
+
+    if (TUNING_MODE) {
+      SmartDashboard.putNumberArray("Pitch readings", readings);
+      SmartDashboard.putNumber("Pitch: Current", currentPitch);
+      SmartDashboard.putNumber("Pitch: Average", averageReading);
+
+      // Read proportional gain from
+      double p = SmartDashboard.getNumber("CustomBalance P Gain", kP);
+
+      // If PID coefficients on SmartDashboard have changed, write new values to
+      // controller
+      if ((p != kP)) {
+        kP = p;
+      }
+    }
   }
 
   // Stop driving when the command ends or is interrupted
