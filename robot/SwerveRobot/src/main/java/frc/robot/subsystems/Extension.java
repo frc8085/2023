@@ -5,17 +5,17 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ExtensionConstants;
-import frc.robot.Constants.SubsystemMotorConstants;
+import static frc.robot.Constants.ExtensionConstants;
+import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Extension extends SubsystemBase {
   private boolean TUNING_MODE = true;
@@ -35,24 +35,10 @@ public class Extension extends SubsystemBase {
 
   // PID
   private SparkMaxPIDController m_extensionPIDController = m_extensionMotor.getPIDController();
-
-  // Extend PID coefficients
-  static int kExtendPIDSlot = 0;
-  static double kPExtend = .05;
-  static double kIExtend = 0;
-  static double kDExtend = 0;
-  static double kFFExtend = 0;
-  static double kMinOutputExtend = -0.85;
-  static double kMaxOutputExtend = 0.85;
-
-  // Retract PID coefficients
-  static int kRetractPIDSlot = 1;
-  static double kPRetract = .05;
-  static double kIRetract = 0;
-  static double kDRetract = 0;
-  static double kFFRetract = 0;
-  static double kMinOutputRetract = -0.85;
-  static double kMaxOutputRetract = 0.85;
+  static double kPExtension = .05;
+  static double kIExtension = 0;
+  static double kDExtension = 0;
+  static double kFFExtension = 0;
 
   public boolean ExtensionRetractionLimitHit() {
     return isRetractionLimitHit();
@@ -65,20 +51,11 @@ public class Extension extends SubsystemBase {
     m_extensionMotor.setOpenLoopRampRate(ExtensionConstants.kExtensionRampRate);
 
     m_extensionPIDController.setFeedbackDevice(m_extensionEncoder);
-
-    // ** EXTEND PID: Use Extend coefficients and slotID for Extend PID */
-    m_extensionPIDController.setP(kPExtend, kExtendPIDSlot);
-    m_extensionPIDController.setI(kIExtend, kExtendPIDSlot);
-    m_extensionPIDController.setD(kDExtend, kExtendPIDSlot);
-    m_extensionPIDController.setFF(kFFExtend, kExtendPIDSlot);
-    m_extensionPIDController.setOutputRange(kMinOutputExtend, kMaxOutputExtend, kExtendPIDSlot);
-
-    // ** RETRACT PID: Use Extend coefficients and slotID for Extend PID */
-    m_extensionPIDController.setP(kPRetract, kRetractPIDSlot);
-    m_extensionPIDController.setI(kIRetract, kRetractPIDSlot);
-    m_extensionPIDController.setD(kDRetract, kRetractPIDSlot);
-    m_extensionPIDController.setFF(kFFRetract, kRetractPIDSlot);
-    m_extensionPIDController.setOutputRange(kMinOutputRetract, kMaxOutputRetract, kRetractPIDSlot);
+    m_extensionPIDController.setP(kPExtension, 0);
+    m_extensionPIDController.setI(kIExtension, 0);
+    m_extensionPIDController.setD(kDExtension, 0);
+    m_extensionPIDController.setFF(kFFExtension, 0);
+    m_extensionPIDController.setOutputRange(-0.85, 0.85);
 
     /**
      * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
@@ -98,13 +75,6 @@ public class Extension extends SubsystemBase {
     m_extensionMotor.burnFlash();
   }
 
-  /** Call log method every loop. */
-  @Override
-  public void periodic() {
-    log();
-    ExtensionRetractionLimitHit();
-  }
-
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
     if (TUNING_MODE) {
@@ -114,85 +84,20 @@ public class Extension extends SubsystemBase {
       // ExtensionIsInTravelPosition());
       // SmartDashboard.putBoolean("Extension Intake Position",
       // ExtensionIsInIntakePosition());
-      SmartDashboard.putNumber("Extension Current position",
-          getCurrentExtensionPosition());
-
-      readExtendPIDTuningFromDashboard();
-      readRetractPIDTuningFromDashboard();
+      SmartDashboard.putNumber("Extension Current position", getCurrentExtensionPosition());
     }
   }
 
-  private void readExtendPIDTuningFromDashboard() {
-    // Read Extend PID Coefficients from SmartDashboard
-    double pExtend = SmartDashboard.getNumber("Extend P Gain", 0);
-    double iExtend = SmartDashboard.getNumber("Extend I Gain", 0);
-    double dExtend = SmartDashboard.getNumber("Extend D Gain", 0);
-    double ffExtend = SmartDashboard.getNumber("Extend Feed Forward", 0);
-    double maxExtend = SmartDashboard.getNumber("Extend Max Output", 0);
-    double minExtend = SmartDashboard.getNumber("Extend Min Output", 0);
-
-    // if PID coefficients on SmartDashboard have changed, write new values to
-    // controller. Make sure to use the PID Extend slot
-    if ((pExtend != kPExtend)) {
-      m_extensionPIDController.setP(pExtend, kExtendPIDSlot);
-      kPExtend = pExtend;
-    }
-    if ((iExtend != kIExtend)) {
-      m_extensionPIDController.setI(iExtend, kExtendPIDSlot);
-      kIExtend = iExtend;
-    }
-    if ((dExtend != kDExtend)) {
-      m_extensionPIDController.setD(dExtend, kExtendPIDSlot);
-      kDExtend = dExtend;
-    }
-
-    if ((ffExtend != kFFExtend)) {
-      m_extensionPIDController.setFF(ffExtend, kExtendPIDSlot);
-      kFFExtend = ffExtend;
-    }
-
-    if ((maxExtend != kMaxOutputExtend) || (minExtend != kMinOutputExtend)) {
-      m_extensionPIDController.setOutputRange(minExtend, maxExtend, kExtendPIDSlot);
-      kMinOutputExtend = minExtend;
-      kMaxOutputExtend = maxExtend;
-    }
+  /** Call log method every loop. */
+  @Override
+  public void periodic() {
+    log();
+    ExtensionRetractionLimitHit();
   }
 
-  private void readRetractPIDTuningFromDashboard() {
-    // Read PID Coefficients from SmartDashboard
-    double pRetract = SmartDashboard.getNumber("Retract P Gain", 0);
-    double iRetract = SmartDashboard.getNumber("Retract I Gain", 0);
-    double dRetract = SmartDashboard.getNumber("Retract D Gain", 0);
-    // double izRetract = SmartDashboard.getNumber("Retract I Zone", 0);
-    double ffRetract = SmartDashboard.getNumber("Retract Feed Forward", 0);
-    double maxRetract = SmartDashboard.getNumber("Retract Max Output", 0);
-    double minRetract = SmartDashboard.getNumber("Retract Min Output", 0);
-
-    // if PID coefficients on SmartDashboard have changed, write new values to
-    // controller. Make sure to use the PID Retract slot
-    if ((pRetract != kPRetract)) {
-      m_extensionPIDController.setP(pRetract, kRetractPIDSlot);
-      kPRetract = pRetract;
-    }
-    if ((iRetract != kIRetract)) {
-      m_extensionPIDController.setI(iRetract, kRetractPIDSlot);
-      kIRetract = iRetract;
-    }
-    if ((dRetract != kDRetract)) {
-      m_extensionPIDController.setD(dRetract, kRetractPIDSlot);
-      kDRetract = dRetract;
-    }
-
-    if ((ffRetract != kFFRetract)) {
-      m_extensionPIDController.setFF(ffRetract, kRetractPIDSlot);
-      kFFRetract = ffRetract;
-    }
-
-    if ((maxRetract != kMaxOutputRetract) || (minRetract != kMinOutputRetract)) {
-      m_extensionPIDController.setOutputRange(minRetract, maxRetract, kRetractPIDSlot);
-      kMinOutputRetract = minRetract;
-      kMaxOutputRetract = maxRetract;
-    }
+  /** Resets the Extension encoder to currently read a position of 0. */
+  public void reset() {
+    m_extensionEncoder.setPosition(0);
   }
 
   // Reset the Extension Encoder when the Retraction Limit is pressed
@@ -225,52 +130,20 @@ public class Extension extends SubsystemBase {
     return m_extensionEncoder.getPosition();
   }
 
-  /**
-   * Move to and stay at a certain extension encoder value
-   * Use the Extend PID coefficients if we are going up
-   * Otherwise use the Retract PID coefficients
-   * 
-   * @param position The desired extension
-   **/
+  // Maintain Position
   public void keepPosition(double position) {
-    boolean extending = getCurrentExtensionPosition() <= position;
-    // int slotID = extending ? kExtendPIDSlot : kRetractPIDSlot;
-    int slotID = kExtendPIDSlot;
-    // Set the position using the correct SlotID for desired PID controller
-    // (extend vs retract)
-    m_extensionPIDController.setReference(position, ControlType.kPosition, slotID);
-
-    if (TUNING_MODE) {
-      SmartDashboard.putString("EXTENSION MODE", extending ? "EXTENDING" : "RETRACTING");
-      SmartDashboard.putNumber("Desired Extension position", position);
-    }
-
+    m_extensionPIDController.setReference(position, ControlType.kPosition);
+    SmartDashboard.putNumber("Desired Extension position", position);
   }
 
-  /**
-   * Move to and stay at a certain extension in inches
-   * Use the Extend PID coefficients if we are going up
-   * Otherwise use the Retract PID coefficients
-   * 
-   * @param position The desired extension
-   **/
+  // Maintain Position Inches
   public void keepPositionInches(double positionInches) {
     // set position in inches, convert to encoder value
     double position;
     position = positionInches * ExtensionConstants.kExtensionRevolutionsPerInch + 1;
 
-    boolean extending = getCurrentExtensionPosition() <= position;
-    // int slotID = extending ? kExtendPIDSlot : kRetractPIDSlot;
-    int slotID = kExtendPIDSlot;
-
-    // Set the position using the correct SlotID for desired PID controller
-    // (extend vs retract)
-    m_extensionPIDController.setReference(position, ControlType.kPosition, slotID);
-
-    if (TUNING_MODE) {
-      SmartDashboard.putString("EXTENSION MODE", extending ? "EXTENDING" : "RETRACTING");
-      SmartDashboard.putNumber("Desired Extension position", position);
-    }
+    m_extensionPIDController.setReference(position, ControlType.kPosition);
+    SmartDashboard.putNumber("Desired Extension position", position);
   }
 
   // Tell Us if Extension as At Positions

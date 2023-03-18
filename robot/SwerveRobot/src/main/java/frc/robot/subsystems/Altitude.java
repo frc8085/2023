@@ -45,7 +45,7 @@ public class Altitude extends SubsystemBase {
   static double kDRaise = 0.1;
   // static double kIzRaise = 0;
   static double kFFRaise = 0;
-  static double kMaxOutputRaise = 9;
+  static double kMaxOutputRaise = .9;
   static double kMinOutputRaise = -.9;
 
   // Lower PID coefficients
@@ -54,7 +54,7 @@ public class Altitude extends SubsystemBase {
   static double kILower = 0.0001;
   static double kDLower = 0.1;
   static double kFFLower = 0;
-  static double kMaxOutputLower = 9;
+  static double kMaxOutputLower = .9;
   static double kMinOutputLower = -.9;
 
   // When INTAKE, extension only in intake position
