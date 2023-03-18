@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoDriveBackwardsMeters;
 import frc.robot.commands.AutoDriveCustomPID;
 import frc.robot.commands.AutoDrivePID;
 import frc.robot.commands.AutoEngage;
@@ -130,6 +131,9 @@ public class RobotContainer {
                 autoSelection.addOption("TEST: PID Balance only", new AutoEngage(m_robotDrive));
                 autoSelection.addOption("TEST: PID DRIVE only", new AutoDrivePID(m_robotDrive, -2));
                 autoSelection.addOption("TEST: CUSTOM PID balance", new AutoDriveCustomPID(m_robotDrive));
+                autoSelection.addOption(
+                                "TEST: Drive slow 1 meter",
+                                new AutoDriveBackwardsMeters(m_robotDrive, 1, .05 / 4.5));
 
                 // Put the chooser on the dashboard
                 SmartDashboard.putData("Auto Routine", autoSelection);
