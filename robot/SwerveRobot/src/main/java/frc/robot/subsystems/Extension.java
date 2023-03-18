@@ -40,6 +40,9 @@ public class Extension extends SubsystemBase {
     static double kDExtension = 0;
     static double kFFExtension = 0;
 
+    static double kMaxOutputExtension = 0.85;
+    static double kMinOutputExtension = -0.85;
+
     public boolean ExtensionRetractionLimitHit() {
         return isRetractionLimitHit();
     }
@@ -55,7 +58,7 @@ public class Extension extends SubsystemBase {
         m_extensionPIDController.setI(kIExtension, 0);
         m_extensionPIDController.setD(kDExtension, 0);
         m_extensionPIDController.setFF(kFFExtension, 0);
-        m_extensionPIDController.setOutputRange(-0.85, 0.85);
+        m_extensionPIDController.setOutputRange(kMinOutputExtension, kMaxOutputExtension);
 
         /**
          * A SparkMaxLimitSwitch object is constructed using the getForwardLimitSwitch()
@@ -85,6 +88,49 @@ public class Extension extends SubsystemBase {
             // SmartDashboard.putBoolean("Extension Intake Position",
             // ExtensionIsInIntakePosition());
             SmartDashboard.putNumber("Extension Current position", getCurrentExtensionPosition());
+            addPIDToDashboard();
+            readExtensionPIDTuningFromDashboard();
+        }
+    }
+
+    private void addPIDToDashboard() {
+        // Display PID Extension coefficients on SmartDashboard
+        SmartDashboard.putNumber("Extension P Gain", kPExtension);
+        SmartDashboard.putNumber("Extension I Gain", kIExtension);
+        SmartDashboard.putNumber("Extension D Gain", kDExtension);
+        SmartDashboard.putNumber("Extension Max Output", kMaxOutputExtension);
+        SmartDashboard.putNumber("Extension Min Output", kMinOutputExtension);
+
+    }
+
+    private void readExtensionPIDTuningFromDashboard() {
+
+        // Read PID Coefficients from SmartDashboard
+        double pExtension = SmartDashboard.getNumber("Extension P Gain", 0);
+        double iExtension = SmartDashboard.getNumber("Extension I Gain", 0);
+        double dExtension = SmartDashboard.getNumber("Extension D Gain", 0);
+        double maxExtension = SmartDashboard.getNumber("Extension Max Output", 0);
+        double minExtension = SmartDashboard.getNumber("Extension Min Output", 0);
+
+        // if PID coefficients on SmartDashboard have changed, write new values to
+        // controller. Make sure to use the PID Extension slot
+        if ((pExtension != kPExtension)) {
+            m_extensionPIDController.setP(pExtension);
+            kPExtension = pExtension;
+        }
+        if ((iExtension != kIExtension)) {
+            m_extensionPIDController.setI(iExtension);
+            kIExtension = iExtension;
+        }
+        if ((dExtension != kDExtension)) {
+            m_extensionPIDController.setD(dExtension);
+            kDExtension = dExtension;
+        }
+
+        if ((maxExtension != kMaxOutputExtension) || (minExtension != kMinOutputExtension)) {
+            m_extensionPIDController.setOutputRange(minExtension, maxExtension);
+            kMinOutputExtension = minExtension;
+            kMaxOutputExtension = maxExtension;
         }
     }
 
