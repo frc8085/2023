@@ -43,6 +43,7 @@ public class AutoDriveBackwardsMeters extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("Moving Back " + m_drive.getPose().getX());
   }
 
   // Stop driving when the command ends or is interrupted
@@ -58,6 +59,6 @@ public class AutoDriveBackwardsMeters extends CommandBase {
     System.out.println("POSEX " + currentPose);
     // Stop when the current position reaches
     // the desired backwards travel distance in meters
-    return currentPose <= -1 * m_meters;
+    return Math.abs(currentPose) >= Math.abs(m_meters);
   }
 }

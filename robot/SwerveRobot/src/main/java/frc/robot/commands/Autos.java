@@ -175,7 +175,7 @@ public final class Autos {
         new MoveToTravel(m_extension, m_altitude),
         new WaitUntilCommand(
             () -> m_extension.ExtensionIsInTravelPosition()),
-        new AutoDriveBackwardsMeters(m_drive, 3.5, .4),
+        new AutoDriveForwardMeters(m_drive, 3.5, .4),
         new AutoTurnToDegreeGyro(170, m_drive),
         new MoveToHighCubeDropOff(m_extension, m_altitude),
         new WaitUntilCommand(
@@ -193,7 +193,7 @@ public final class Autos {
       Intake m_intake) {
     return Commands.sequence(
         new IntakeCargo(m_altitude, m_extension, m_intake),
-        new AutoDriveForwardMeters(m_drive, .75, .2),
+        new AutoDriveBackwardsMeters(m_drive, .75, .2),
         new InstantCommand(() -> m_intake.holdCargo()));
   }
 

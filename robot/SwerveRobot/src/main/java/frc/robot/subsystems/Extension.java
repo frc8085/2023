@@ -18,7 +18,7 @@ import static frc.robot.Constants.ExtensionConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Extension extends SubsystemBase {
-  private boolean TUNING_MODE = true;
+  private boolean TUNING_MODE = false;
 
   /** Creates a new Extension. */
 

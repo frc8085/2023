@@ -31,7 +31,7 @@ public class AutoDriveForwardMeters extends CommandBase {
     m_drive.drive(
         false,
         m_speed,
-        AutoConstants.kTravelBackwards,
+        AutoConstants.kTravelForwards,
         0,
         0,
         true,
@@ -41,6 +41,7 @@ public class AutoDriveForwardMeters extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("Moving Forward " + m_drive.getPose().getX());
   }
 
   // Stop driving when the command ends or is interrupted
@@ -55,6 +56,6 @@ public class AutoDriveForwardMeters extends CommandBase {
     double currentPose = m_drive.getPose().getX();
     // Stop when the current position reaches
     // the desired forward travel distance in meters
-    return currentPose >= m_meters;
+    return Math.abs(currentPose) >= Math.abs(m_meters);
   }
 }
