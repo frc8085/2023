@@ -133,7 +133,7 @@ public class RobotContainer {
                 autoSelection.addOption("TEST: CUSTOM PID balance", new AutoDriveCustomPID(m_robotDrive));
                 autoSelection.addOption(
                                 "TEST: Drive slow 1 meter",
-                                new AutoDriveBackwardsMeters(m_robotDrive, 1, .05 / 4.5));
+                                new AutoDriveBackwardsMeters(m_robotDrive, 1, .2 / 4.8));
 
                 // Put the chooser on the dashboard
                 SmartDashboard.putData("Auto Routine", autoSelection);
