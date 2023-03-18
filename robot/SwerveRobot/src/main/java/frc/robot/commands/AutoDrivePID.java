@@ -1,0 +1,120 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.commands;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.subsystems.DriveSubsystem;
+
+/**
+ * Drive until we balance. Uses a local PID controller to
+ * run a simple PID loop that is only enabled while this command is running.
+ * The input is the current pitch reading from our Gyro
+ */
+public class AutoDrivePID extends PIDCommand {
+    private boolean TUNING_MODE = true;
+    private final DriveSubsystem m_drive;
+    private static double metersTolerance = 0.2;
+
+    static double kP = 0.01;
+    static double kI = 0;
+    static double kD = 0.001;
+
+    /**
+     * Create a new AutoDrivePID command.
+     */
+    public AutoDrivePID(DriveSubsystem drive, double meters) {
+        super(new PIDController(kP, kI, kD),
+                // Close loop on pitch degrees
+                drive::getX,
+                // Set reference to target
+                meters,
+                // Pipe output to drive robot
+                output -> drive.drive(
+                        false,
+                        // The PID output to control our speed
+                        output,
+                        // If reading positive pitch, drive backwards.
+                        // If reading negative pitch, drive forwards
+                        Math.signum(meters),
+                        0,
+                        0,
+                        true,
+                        false));
+
+        // Require the drive
+        m_drive = drive;
+        addRequirements(m_drive);
+
+        // Set desired pitch tolerance in degrees
+        getController().setTolerance(metersTolerance);
+    }
+
+    // Called just before this Command runs the first time
+    @Override
+    public void initialize() {
+        super.initialize();
+        addPIDToDashboard();
+        // Get everything in a safe starting state.
+        m_drive.resetOdometry(new Pose2d());
+        m_drive.zeroHeading();
+    }
+
+    @Override
+    public void execute() {
+        super.execute();
+        if (TUNING_MODE) {
+            readPIDTuningFromDashboard();
+        }
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+    }
+
+    // Make this return true when this Command no longer needs to run execute()
+    @Override
+    public boolean isFinished() {
+        // TODO: Test. If we fail to balance, make sure we still lock our wheels in Auto
+        boolean timeToLock = Timer.getMatchTime() < 1.5;
+        return timeToLock || getController().atSetpoint();
+    }
+
+    private void addPIDToDashboard() {
+        // Display PID coefficients on SmartDashboard
+        SmartDashboard.putNumber("Balance P Gain", kP);
+        SmartDashboard.putNumber("Balance I Gain", kI);
+        SmartDashboard.putNumber("Balance D Gain", kD);
+
+    }
+
+    // Allows us to fine tune PID from the dashboard
+    private void readPIDTuningFromDashboard() {
+        // Read PID Coefficients from SmartDashboard
+        double p = SmartDashboard.getNumber("Balance P Gain", kP);
+        double i = SmartDashboard.getNumber("Balance I Gain", kI);
+        double d = SmartDashboard.getNumber("Balance D Gain", kD);
+
+        // If PID coefficients on SmartDashboard have changed, write new values to
+        // controller
+        if ((p != kP)) {
+            getController().setP(p);
+            kP = p;
+        }
+        if ((i != kI)) {
+            getController().setI(i);
+            kI = i;
+        }
+        if ((d != kD)) {
+            getController().setD(d);
+            kD = d;
+        }
+    }
+
+}
