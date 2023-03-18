@@ -23,7 +23,7 @@ public class AutoDrivePID extends PIDCommand {
     private static double metersPerSecond = .1;
     private static double m_meters;
 
-    static double kP = 0.01;
+    static double kP = 0.1;
     static double kI = 0;
     static double kD = 0.001;
 
@@ -86,7 +86,7 @@ public class AutoDrivePID extends PIDCommand {
     @Override
     public boolean isFinished() {
         // TODO: Test. If we fail to balance, make sure we still lock our wheels in Auto
-        boolean timeToLock = Timer.getMatchTime() < 1.5;
+        // boolean timeToLock = Timer.getMatchTime() < 1.5;
         boolean atSetpoint = false;
         if (m_meters > 0) {
             atSetpoint = m_drive.getX() >= m_meters;
@@ -94,7 +94,7 @@ public class AutoDrivePID extends PIDCommand {
             atSetpoint = m_drive.getX() <= m_meters;
         }
 
-        return timeToLock || atSetpoint;
+        return atSetpoint;
     }
 
     private void addPIDToDashboard() {
