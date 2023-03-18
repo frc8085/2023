@@ -87,12 +87,13 @@ public class AutoDrivePID extends PIDCommand {
     public boolean isFinished() {
         // TODO: Test. If we fail to balance, make sure we still lock our wheels in Auto
         // boolean timeToLock = Timer.getMatchTime() < 1.5;
-        boolean atSetpoint = false;
-        if (m_meters > 0) {
-            atSetpoint = m_drive.getX() >= m_meters;
-        } else {
-            atSetpoint = m_drive.getX() <= m_meters;
-        }
+        boolean atSetpoint = Math.abs(m_drive.getPitch()) < 1;
+        // false;
+        // if (m_meters > 0) {
+        // atSetpoint = m_drive.getX() >= m_meters;
+        // } else {
+        // atSetpoint = m_drive.getX() <= m_meters;
+        // }
 
         return atSetpoint;
     }
