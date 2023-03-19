@@ -43,7 +43,7 @@ public class AutoSidekick extends SequentialCommandGroup {
 
         new ParallelCommandGroup(
             new RaiseLower(m_altitude, AltitudeConstants.kAltitudeTravelPosition),
-            new WaitUntilCommand(()-> m_altitude.AltitudeIsInScoringPosition())),
+            new WaitUntilCommand(() -> m_altitude.AltitudeIsInScoringPosition()),
             new Extend(m_extension, ExtensionConstants.kExtensionPositionFullyRetracted))
 
     //
