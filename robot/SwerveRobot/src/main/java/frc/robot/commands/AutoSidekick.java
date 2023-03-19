@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -12,7 +13,10 @@ import frc.robot.subsystems.Intake;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 /** An example command that uses an example subsystem. */
@@ -25,12 +29,18 @@ public class AutoSidekick extends SequentialCommandGroup {
         addCommands(
 
                 // 1. score
-                new MoveToMidConeDropOff(m_extension, m_altitude)
-                        .until(() -> m_extension.ExtensionIsInMidScoringPosition()),
+                new MoveToMidConeDropOff(m_extension, m_altitude),
                 new WaitUntilCommand(() -> m_extension.ExtensionIsInMidScoringPosition()),
                 new MoveToMidConeFinalDropOff(m_altitude),
                 new WaitUntilCommand(0.5),
-                new ScoreMidCone(m_altitude, m_extension, m_intake)
+                // new InstantCommand(() -> m_extension.retractExtension())
+                // .until(m_extension::ExtensionIsInReleasePosition),
+                new ParallelCommandGroup(
+                        new SequentialCommandGroup(
+                                new InstantCommand(() -> m_intake.ejectCone()),
+                                new WaitCommand(IntakeConstants.kEjectWaitTime),
+                                new InstantCommand(m_intake::stopIntake)),
+                        new MoveToTravelAfterScoring(m_extension, m_altitude))
         //
 
         );
