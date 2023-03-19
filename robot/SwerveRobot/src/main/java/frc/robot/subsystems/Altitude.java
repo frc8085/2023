@@ -19,6 +19,8 @@ import frc.robot.Constants.ExtensionConstants;
 import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
+import java.util.function.BooleanSupplier;
+
 public class Altitude extends SubsystemBase {
   private boolean TUNING_MODE = false;
 

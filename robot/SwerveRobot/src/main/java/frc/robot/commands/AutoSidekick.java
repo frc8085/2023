@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 /** An example command that uses an example subsystem. */
 public class AutoSidekick extends SequentialCommandGroup {
@@ -24,7 +25,14 @@ public class AutoSidekick extends SequentialCommandGroup {
         addCommands(
 
                 // 1. score
-                new MoveToMidConeDropOff(m_extension, m_altitude));
+                new MoveToMidConeDropOff(m_extension, m_altitude),
+                new WaitUntilCommand(() -> m_extension.ExtensionIsInMidScoringPosition()),
+                new MoveToMidConeFinalDropOff(m_altitude),
+                new WaitUntilCommand(() -> m_altitude.AltitudeIsInMidDropOffFinalPosition()),
+                new ScoreMidCone(m_altitude, m_extension, m_intake)
+        //
+
+        );
 
         // 2. drive back 3m & turn 180
         // 3. move tontake down
