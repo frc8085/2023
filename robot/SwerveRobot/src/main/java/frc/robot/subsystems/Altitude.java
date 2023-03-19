@@ -52,7 +52,7 @@ public class Altitude extends SubsystemBase {
 
   // Lower PID coefficients
   static int kLowerPIDSlot = 1;
-  static double kPLower = 1;
+  static double kPLower = .5;
   static double kILower = 0.0001;
   static double kDLower = 0.1;
   static double kFFLower = 0;
