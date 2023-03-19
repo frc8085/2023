@@ -25,10 +25,11 @@ public class AutoSidekick extends SequentialCommandGroup {
         addCommands(
 
                 // 1. score
-                new MoveToMidConeDropOff(m_extension, m_altitude),
+                new MoveToMidConeDropOff(m_extension, m_altitude)
+                        .until(() -> m_extension.ExtensionIsInMidScoringPosition()),
                 new WaitUntilCommand(() -> m_extension.ExtensionIsInMidScoringPosition()),
                 new MoveToMidConeFinalDropOff(m_altitude),
-                new WaitUntilCommand(() -> m_altitude.AltitudeIsInMidDropOffFinalPosition()),
+                new WaitUntilCommand(0.5),
                 new ScoreMidCone(m_altitude, m_extension, m_intake)
         //
 
