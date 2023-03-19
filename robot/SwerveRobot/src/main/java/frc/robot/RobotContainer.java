@@ -21,6 +21,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoSidekick;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.IntakeCargoFromDoubleSubstation;
 import frc.robot.commands.IntakeCargoFromSingleSubstation;
@@ -128,6 +129,10 @@ public class RobotContainer {
                 final Trigger RetractButton = m_operatorController.axisGreaterThan(5, .25);
                 final Trigger RaiseButton = m_operatorController.axisLessThan(1, -.25);
                 final Trigger LowerButton = m_operatorController.axisGreaterThan(1, .25);
+
+                final Trigger testAuto = m_operatorController.povLeft();
+
+                testAuto.onTrue(new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake));
 
                 testExtension.onTrue(new InstantCommand(
                                 () -> m_extension.keepPositionInches(
