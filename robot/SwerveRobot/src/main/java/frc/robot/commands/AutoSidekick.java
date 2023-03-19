@@ -53,6 +53,8 @@ public class AutoSidekick extends SequentialCommandGroup {
         new InstantCommand(() -> m_intake.ejectCone()),
         new WaitCommand(.5),
         new InstantCommand(() -> m_intake.stopIntake()),
+        // TODO: start moving slowly back then fully retract then turn and go the rest
+        // of the way
         new ParallelCommandGroup(
             new MoveToTravelAfterScoring(m_extension, m_altitude),
             travelAndSpin(m_drive))
