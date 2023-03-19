@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import frc.robot.Constants.DriveConstants;
@@ -79,6 +80,14 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
+    log();
+
+  }
+
+  private void log() {
+    SmartDashboard.putNumber("Heading", getHeading());
+    SmartDashboard.putNumber("X Pose", getPose().getX());
+    SmartDashboard.putNumber("Y Pose", getPose().getY());
   }
 
   /**
