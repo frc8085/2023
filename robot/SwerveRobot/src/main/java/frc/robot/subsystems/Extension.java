@@ -80,6 +80,9 @@ public class Extension extends SubsystemBase {
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
+
+    SmartDashboard.putNumber("Extension Current position", getCurrentExtensionPosition());
+
     if (TUNING_MODE) {
       // SmartDashboard.putBoolean("Fully Extended", m_extensionLimit.isPressed());
       // SmartDashboard.putBoolean("Fully Retracted", m_retractionLimit.isPressed());
@@ -87,7 +90,6 @@ public class Extension extends SubsystemBase {
       // ExtensionIsInTravelPosition());
       // SmartDashboard.putBoolean("Extension Intake Position",
       // ExtensionIsInIntakePosition());
-      SmartDashboard.putNumber("Extension Current position", getCurrentExtensionPosition());
       addPIDToDashboard();
       readExtensionPIDTuningFromDashboard();
 

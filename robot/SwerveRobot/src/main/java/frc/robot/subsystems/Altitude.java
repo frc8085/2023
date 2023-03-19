@@ -127,6 +127,7 @@ public class Altitude extends SubsystemBase {
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
+    SmartDashboard.putNumber("Altitude: Current reading", getCurrentAltitude());
 
     if (TUNING_MODE) {
       // SmartDashboard.putBoolean("Altitude at Top Position",
@@ -135,7 +136,6 @@ public class Altitude extends SubsystemBase {
       // m_altitudeBottomLimit.isPressed());
       // SmartDashboard.putBoolean("Altitude is in Travel Position",
       // AltitudeIsInTravelPosition());
-      SmartDashboard.putNumber("Altitude: Current reading", getCurrentAltitude());
 
       readRaisePIDTuningFromDashboard();
       readLowerPIDTuningFromDashboard();

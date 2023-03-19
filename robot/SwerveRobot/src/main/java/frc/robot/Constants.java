@@ -61,36 +61,42 @@ public final class Constants {
     public static final double kMaxExtensionSpeedMetersPerSecond = 0.25;
 
     // Estimates, fix this once we get exact measurements
-    public static final double kExtensionLengthInches = 48;
-    public static final double kExtensionLengthRevolutions = 141;
+    public static final double kExtensionLengthInches = 50;
+    public static final double kExtensionLengthRevolutions = 82;
 
-    // Convert length of travel to encoder rotations, where encoder reading of 1 is
-    // 0 inches and reading of 140 is 48 inches
-    public static final double kExtensionRevolutionsPerInch = (kExtensionLengthRevolutions - 1)
+    // Convert length of travel to encoder rotations, where encoder reading of 0 is
+    // 0 inches and reading of 82 is 48 inches
+    public static final double kExtensionRevolutionsPerInch = (kExtensionLengthRevolutions)
         / kExtensionLengthInches;
 
     // Range for safe Travel Extension <20
     public static double kExtensionSafeMax = 10;
 
-    // encoder readings of Extension position as of 2.14.2023
-    public static double kExtensionPositionFullyRetracted = 1;
-    public static double kExtensionPositionIntakeOut = 39;
-    public static double kExtensionPositionMidDropOff = 86;
-    public static double kExtensionPositionHighDropOff = 135;
-    public static double kExtensionPositionHighDropOffReturn = 100;
-    public static double kExtensionPositionSingleSubstation = 41;
-    public static double kExtensionPositionMidCubeShooter = 60;
-    public static double kExtensionPositionHighCubeShooter = 70;
-
     // Converted 2.14.23 Encoder readings into inches
-    public static double kExtensionPositionInchesFullyRetracted = 1 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesIntakeOut = 38 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesMidDropOff = 85 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesHighDropOff = 134 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesHighDropOffReturn = 99 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesSingleSubstation = 40 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesMidCubeShooter = 59 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesHighCubeShooter = 69 / kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionInchesFullyRetracted = 0;
+    public static double kExtensionPositionInchesIntakeOut = 13.1;
+    public static double kExtensionPositionInchesMidDropOff = 29.3;
+    public static double kExtensionPositionInchesHighDropOff = 46.2;
+    public static double kExtensionPositionInchesHighDropOffReturn = 34.1;
+    public static double kExtensionPositionInchesSingleSubstation = 6;
+    public static double kExtensionPositionInchesMidCubeShooter = 20.3;
+    public static double kExtensionPositionInchesHighCubeShooter = 23.8;
+
+    // encoder readings of Extension position as of 3.18.2023
+    public static double kExtensionPositionFullyRetracted = 0;
+    public static double kExtensionPositionIntakeOut = kExtensionPositionInchesIntakeOut * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionMidDropOff = kExtensionPositionInchesMidDropOff
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionHighDropOff = kExtensionPositionInchesHighDropOff
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionHighDropOffReturn = kExtensionPositionInchesHighDropOffReturn
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionSingleSubstation = kExtensionPositionInchesSingleSubstation
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionMidCubeShooter = kExtensionPositionInchesMidCubeShooter
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionHighCubeShooter = kExtensionPositionInchesHighCubeShooter
+        * kExtensionRevolutionsPerInch;
 
     public static double kExtensionSafeExtensionMax = kExtensionPositionIntakeOut + kExtensionPositionTolerance;
 
@@ -118,47 +124,54 @@ public final class Constants {
     public static final double kAltitudeRevolutionsPerDegree = -(kAltitudeTotalRevolutions)
         / kAltitudeTotalDegrees;
 
-    // encoder readings of altitude as of 2.14.2023
-    // Altitude at Top Position
-    public static double kAltitudeTravelPosition = -0.05;
-    // Altitude at DropOff Position
-    public static double kAltitudeDropOffPosition = -2.15;
-    // Altitude when delivering high cone that it lowers to after extending fully
-    public static double kAltitudeHighDropOffPosition = -2.9;
-    // Altitude at position that it releases the cone
-    public static double kAltitudeMidDropOffPosition = -3.0;
-    // Altitude at position that it releases the High cone
-    public static double kAltitudeHighDropOffFinalPosition = -3.25;
-    // Altitude at position that it releases the Mid cone
-    public static double kAltitudeMidDropOffFinalPosition = -3.35;
-    // Altitude at high cube shoot Altitude
-    public static double kAltitudeHighCubeShootPosition = -1;
-    // Altitude at Bottom Position
-    public static double kAltitudeIntakePosition = -5.5;
-    // Altitude at Shelf Position
-    public static double kAltitudeDoubleSubstationPosition = -2.85;
-    public static double kAltitudeSingleSubstationPosition = -1.55;
-
     // angle conversions for 2.14.2023 altitude readings
     // Altitude at Top Position
-    public static double kAltitudeTravelPositionDegrees = -.1 / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeTravelPositionDegrees = 1;
     // Altitude at DropOff Position
-    public static double kAltitudeDropOffPositionDegrees = (-2.15 + .1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeDropOffPositionDegrees = 27;
     // Altitude when delivering high cone that it lowers to after extending fully
-    public static double kAltitudeHighDropOffPositionDegrees = (-2.9 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeHighDropOffPositionDegrees = 36.8;
     // Altitude at position that it releases the cone
-    public static double kAltitudeMidDropOffPositionDegrees = (-3.0 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeMidDropOffPositionDegrees = 38.2;
     // Altitude at position that it releases the High cone
-    public static double kAltitudeHighDropOffFinalPositionDegrees = (-3.25 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeHighDropOffFinalPositionDegrees = 41.4;
     // Altitude at position that it releases the Mid cone
-    public static double kAltitudeMidDropOffFinalPositionDegrees = (-3.35 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeMidDropOffFinalPositionDegrees = 42.8;
     // Altitude at high cube shoot Altitude
-    public static double kAltitudeHighCubeShootPositionDegrees = (-1 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeHighCubeShootPositionDegrees = 11.8;
     // Altitude at Bottom Position
-    public static double kAltitudeIntakePositionDegrees = (-5.5 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeIntakePositionDegrees = 71.1;
     // Altitude at Shelf Position
-    public static double kAltitudeDoubleSubstationPositionDegrees = (-2.85 + 0.1) / kAltitudeRevolutionsPerDegree;
-    public static double kAltitudeSingleSubstationPositionDegrees = (-1.55 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeDoubleSubstationPositionDegrees = 36.2;
+    public static double kAltitudeSingleSubstationPositionDegrees = 9.;
+
+    // encoder readings of altitude as of 2.14.2023
+    // Altitude at Top Position
+    public static double kAltitudeTravelPosition = kAltitudeTravelPositionDegrees * kAltitudeRevolutionsPerDegree;
+    // Altitude at DropOff Position
+    public static double kAltitudeDropOffPosition = kAltitudeDropOffPositionDegrees * kAltitudeRevolutionsPerDegree;
+    // Altitude when delivering high cone that it lowers to after extending fully
+    public static double kAltitudeHighDropOffPosition = kAltitudeHighDropOffPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at position that it releases the cone
+    public static double kAltitudeMidDropOffPosition = kAltitudeMidDropOffPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at position that it releases the High cone
+    public static double kAltitudeHighDropOffFinalPosition = kAltitudeHighDropOffFinalPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at position that it releases the Mid cone
+    public static double kAltitudeMidDropOffFinalPosition = kAltitudeMidDropOffFinalPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at high cube shoot Altitude
+    public static double kAltitudeHighCubeShootPosition = kAltitudeHighCubeShootPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at Bottom Position
+    public static double kAltitudeIntakePosition = kAltitudeIntakePositionDegrees * kAltitudeRevolutionsPerDegree;
+    // Altitude at Shelf Position
+    public static double kAltitudeDoubleSubstationPosition = kAltitudeDoubleSubstationPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeSingleSubstationPosition = kAltitudeSingleSubstationPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
 
     // Altitude Error Tolerance
     public static double kAltitudeError = 0.05;
