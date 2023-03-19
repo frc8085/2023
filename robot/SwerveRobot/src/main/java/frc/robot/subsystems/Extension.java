@@ -183,6 +183,10 @@ public class Extension extends SubsystemBase {
   }
 
   /** ELEVATOR Extension **/
+  public void moveExtension(double speed) {
+    m_extensionMotor.set(speed);
+  }
+
   // Run the elevator Extension motor forward
   public void extendExtension() {
     m_extensionMotor.set(ExtensionConstants.kExtensionExtendSpeed);

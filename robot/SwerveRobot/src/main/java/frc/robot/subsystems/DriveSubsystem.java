@@ -133,6 +133,10 @@ public class DriveSubsystem extends SubsystemBase {
     drive(0, 0, 0, 0, false, false);
   }
 
+  public void turn(double speed) {
+    drive(0, 0, 0, speed, true, false);
+  }
+
   /**
    * Method to drive the robot using joystick info.
    *

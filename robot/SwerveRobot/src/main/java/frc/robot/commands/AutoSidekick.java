@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
@@ -29,18 +30,7 @@ public class AutoSidekick extends SequentialCommandGroup {
         addCommands(
 
                 // 1. score
-                new MoveToMidConeDropOff(m_extension, m_altitude),
-                new WaitUntilCommand(() -> m_extension.ExtensionIsInMidScoringPosition()),
-                new MoveToMidConeFinalDropOff(m_altitude),
-                new WaitUntilCommand(0.5),
-                // new InstantCommand(() -> m_extension.retractExtension())
-                // .until(m_extension::ExtensionIsInReleasePosition),
-                new ParallelCommandGroup(
-                        new SequentialCommandGroup(
-                                new InstantCommand(() -> m_intake.ejectCone()),
-                                new WaitCommand(IntakeConstants.kEjectWaitTime),
-                                new InstantCommand(m_intake::stopIntake)),
-                        new MoveToTravelAfterScoring(m_extension, m_altitude))
+                new Extend(m_extension, ExtensionConstants.kExtensionPositionMidDropOff)
         //
 
         );
