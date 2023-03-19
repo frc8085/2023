@@ -59,10 +59,11 @@ import java.util.List;
  */
 public class RobotContainer {
         // The robot's subsystems
-        private final DriveSubsystem m_robotDrive = new DriveSubsystem();
         private final Extension m_extension = new Extension();
         private final Altitude m_altitude = new Altitude(m_extension);
         private final Intake m_intake = new Intake();
+        private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_altitude, m_extension);
+
         // The driver's controller
         XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
         CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);

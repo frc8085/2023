@@ -184,6 +184,8 @@ public final class Constants {
   }
 
   public static final class DriveConstants {
+    public static final double kSafeSpeedLimit = 0.30; // % of max speed
+
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.8;

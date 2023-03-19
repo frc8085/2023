@@ -13,14 +13,22 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+
+import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ExtensionConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
+  private boolean TUNING_MODE = false;
+  private Altitude m_altitude;
+  private Extension m_extension;
+
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -66,7 +74,9 @@ public class DriveSubsystem extends SubsystemBase {
       });
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem() {
+  public DriveSubsystem(Altitude Altitude, Extension Extension) {
+    m_altitude = Altitude;
+    m_extension = Extension;
   }
 
   @Override
@@ -134,13 +144,15 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
   public void drive(double speed, double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+    double speedCommanded = isWithinSafeDrivingLimits() ? speed : DriveConstants.kSafeSpeedLimit;
     double xSpeedCommanded;
     double ySpeedCommanded;
 
     if (rateLimit) {
       // Convert XY to polar for rate limiting
-      double inputTranslationDir = Math.atan2(speed * ySpeed, speed * xSpeed);
-      double inputTranslationMag = Math.sqrt(Math.pow(speed * xSpeed, 2) + Math.pow(speed * ySpeed, 2));
+      double inputTranslationDir = Math.atan2(speedCommanded * ySpeed, speedCommanded * xSpeed);
+      double inputTranslationMag = Math
+          .sqrt(Math.pow(speedCommanded * xSpeed, 2) + Math.pow(speedCommanded * ySpeed, 2));
 
       // Calculate the direction slew rate based on an estimate of the lateral
       // acceleration
@@ -178,8 +190,8 @@ public class DriveSubsystem extends SubsystemBase {
       m_currentRotation = m_rotLimiter.calculate(rot);
 
     } else {
-      xSpeedCommanded = speed * xSpeed;
-      ySpeedCommanded = speed * ySpeed;
+      xSpeedCommanded = speedCommanded * xSpeed;
+      ySpeedCommanded = speedCommanded * ySpeed;
       m_currentRotation = rot;
     }
 
@@ -254,5 +266,15 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  public boolean isWithinSafeDrivingLimits() {
+    boolean altitudeInSafeLimit = m_altitude.getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin;
+    boolean extenstionInSafeLimit = m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
+
+    // If in Auto, it is safe to drive faster
+    // But if in Teleop, consider us within safe driving limits only if the altitude
+    // and extension are within safe limits
+    return RobotState.isAutonomous() || (altitudeInSafeLimit && extenstionInSafeLimit);
   }
 }
