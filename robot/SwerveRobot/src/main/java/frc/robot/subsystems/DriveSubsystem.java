@@ -117,6 +117,13 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
+   * Method to stop the robot
+   */
+  public void stop() {
+    drive(0, 0, 0, 0, false, false);
+  }
+
+  /**
    * Method to drive the robot using joystick info.
    *
    * @param xSpeed        Speed of the robot in the x direction (forward).
