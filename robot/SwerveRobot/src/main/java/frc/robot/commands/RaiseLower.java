@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 public class RaiseLower extends PIDCommand {
   private final Altitude m_altitude;
 
-  static double kP = .5;
+  static double kP = .75;
   static double kI = .0001;
   static double kD = .1;
 
