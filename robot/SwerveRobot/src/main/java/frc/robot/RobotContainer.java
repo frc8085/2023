@@ -21,6 +21,8 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.IntakeCargoFromSingleSubstation;
+import frc.robot.commands.MoveToTravelAfterScoring;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
@@ -138,12 +140,12 @@ public class RobotContainer {
                 // new InstantCommand(() -> m_intake.holdCargo()),
                 // new MoveToTravelAfterScoring(m_extension, m_altitude)));
 
-                // setSingleSubstationButton
-                // .whileTrue(new IntakeCargoFromSingleSubstation(m_altitude, m_extension,
-                // m_intake))
-                // .onFalse(new ParallelCommandGroup(
-                // new InstantCommand(() -> m_intake.holdCargo()),
-                // new MoveToTravelAfterScoring(m_extension, m_altitude)));
+                setSingleSubstationButton
+                                .whileTrue(new IntakeCargoFromSingleSubstation(m_altitude, m_extension,
+                                                m_intake))
+                                .onFalse(new ParallelCommandGroup(
+                                                new InstantCommand(() -> m_intake.holdCargo()),
+                                                new MoveToTravelAfterScoring(m_extension, m_altitude)));
 
                 // ejectButton.onTrue(new ScoreBasedOnPosition(m_altitude, m_extension,
                 // m_intake));
