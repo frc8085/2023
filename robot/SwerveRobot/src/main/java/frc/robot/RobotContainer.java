@@ -21,8 +21,18 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.IntakeCargo;
+import frc.robot.commands.IntakeCargoFromDoubleSubstation;
 import frc.robot.commands.IntakeCargoFromSingleSubstation;
+import frc.robot.commands.MoveToHighConeDropOff;
+import frc.robot.commands.MoveToMidConeDropOff;
+import frc.robot.commands.MoveToTravel;
+import frc.robot.commands.MoveToTravelAfterIntake;
 import frc.robot.commands.MoveToTravelAfterScoring;
+import frc.robot.commands.PrepareIntake;
+import frc.robot.commands.ScoreBasedOnPosition;
+import frc.robot.commands.ScoreHighCube;
+import frc.robot.commands.ScoreMidCube;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
@@ -127,21 +137,21 @@ public class RobotContainer {
                                 new InstantCommand(() -> m_extension.reset())));
 
                 // Intake button will run the intake then hold game piece when released
-                // intakeButton.whileTrue(new IntakeCargo(m_altitude, m_extension, m_intake))
-                // .onFalse(new ParallelCommandGroup(
-                // new InstantCommand(() -> m_intake.holdCargo()),
-                // new MoveToTravelAfterIntake(m_extension, m_altitude)));
+                intakeButton.whileTrue(new IntakeCargo(m_altitude, m_extension, m_intake))
+                                .onFalse(new ParallelCommandGroup(
+                                                new InstantCommand(() -> m_intake.holdCargo()),
+                                                new MoveToTravelAfterIntake(m_extension, m_altitude)));
 
                 manualIntakeButton.whileTrue(
                                 new InstantCommand(() -> m_intake.intakeCube()))
                                 .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
 
-                // setDoubleSubstationButton
-                // .whileTrue(new IntakeCargoFromDoubleSubstation(m_altitude, m_extension,
-                // m_intake))
-                // .onFalse(new ParallelCommandGroup(
-                // new InstantCommand(() -> m_intake.holdCargo()),
-                // new MoveToTravelAfterScoring(m_extension, m_altitude)));
+                setDoubleSubstationButton
+                                .whileTrue(new IntakeCargoFromDoubleSubstation(m_altitude, m_extension,
+                                                m_intake))
+                                .onFalse(new ParallelCommandGroup(
+                                                new InstantCommand(() -> m_intake.holdCargo()),
+                                                new MoveToTravelAfterScoring(m_extension, m_altitude)));
 
                 setSingleSubstationButton
                                 .whileTrue(new IntakeCargoFromSingleSubstation(m_altitude, m_extension,
@@ -150,11 +160,11 @@ public class RobotContainer {
                                                 new InstantCommand(() -> m_intake.holdCargo()),
                                                 new MoveToTravelAfterScoring(m_extension, m_altitude)));
 
-                // ejectButton.onTrue(new ScoreBasedOnPosition(m_altitude, m_extension,
-                // m_intake));
+                ejectButton.onTrue(new ScoreBasedOnPosition(m_altitude, m_extension,
+                                m_intake));
 
-                // highCubeEjectButton.onTrue(new ScoreHighCube(m_altitude, m_extension,
-                // m_intake));
+                highCubeEjectButton.onTrue(new ScoreHighCube(m_altitude, m_extension,
+                                m_intake));
 
                 // midCubeEjectButton.onTrue(new ScoreMidCube(m_altitude, m_extension,
                 // m_intake));
@@ -183,31 +193,26 @@ public class RobotContainer {
                 final Trigger prepareHighDropOffButton = m_operatorController.b();
                 final Trigger prepareMidDropOffButton = m_operatorController.x();
                 final Trigger prepareTravelButton = m_operatorController.y();
-                // final Trigger prepareIntakeButton = m_operatorController.a();
-                // final Trigger prepareShelfPickupButton = m_operatorController.start();
                 final Trigger prepareHoldCargo = m_operatorController.a();
 
-                // prepareMidDropOffButton.onTrue(new MoveToMidConeDropOff(m_extension,
-                // m_altitude))
-                // .onFalse(new SequentialCommandGroup(
-                // new WaitUntilCommand(
-                // () -> m_extension.ExtensionIsInMidScoringPosition()),
-                // new InstantCommand(
-                // () -> m_altitude.keepPosition(
-                // AltitudeConstants.kAltitudeMidDropOffPosition))));
+                prepareMidDropOffButton.onTrue(new MoveToMidConeDropOff(m_extension,
+                                m_altitude))
+                                .onFalse(new SequentialCommandGroup(
+                                                new WaitUntilCommand(
+                                                                () -> m_extension.ExtensionIsInMidScoringPosition()),
+                                                new InstantCommand(
+                                                                () -> m_altitude.keepPosition(
+                                                                                AltitudeConstants.kAltitudeMidDropOffPosition))));
 
-                // prepareHighDropOffButton.onTrue(new MoveToHighConeDropOff(m_extension,
-                // m_altitude))
-                // .onFalse(new SequentialCommandGroup(
-                // new WaitUntilCommand(
-                // () -> m_extension.ExtensionIsInHighScoringPosition()),
-                // new InstantCommand(
-                // () -> m_altitude.keepPosition(
-                // AltitudeConstants.kAltitudeHighDropOffPosition))));
-                // prepareTravelButton.onTrue(new MoveToTravel(m_extension, m_altitude));
-                // prepareIntakeButton.onTrue(new PrepareIntake(m_extension, m_altitude));
-
-                // }
+                prepareHighDropOffButton.onTrue(new MoveToHighConeDropOff(m_extension,
+                                m_altitude))
+                                .onFalse(new SequentialCommandGroup(
+                                                new WaitUntilCommand(
+                                                                () -> m_extension.ExtensionIsInHighScoringPosition()),
+                                                new InstantCommand(
+                                                                () -> m_altitude.keepPosition(
+                                                                                AltitudeConstants.kAltitudeHighDropOffPosition))));
+                prepareTravelButton.onTrue(new MoveToTravel(m_extension, m_altitude));
 
         }
 
