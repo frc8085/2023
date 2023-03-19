@@ -113,6 +113,7 @@ public final class Constants {
     public static double kAltitudeLowerSpeed = 0.2;
     public static double kAltitudeRampRate = 1;
     public static double kAltitudePositionTolerance = 1;
+    public static double kAutoAltitudePositionTolerance = .1;
 
     public static final double kMaxAltitudeSpeedMetersPerSecond = .05;
     public static final double kMaxLimitedAltitudeSpeedMetersPerSecond = .01;

@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import frc.robot.Constants.AltitudeConstants;
 import frc.robot.subsystems.Altitude;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 
@@ -40,7 +41,7 @@ public class RaiseLower extends PIDCommand {
     m_altitude = altitude;
     addRequirements(m_altitude);
 
-    getController().setTolerance(.5);
+    getController().setTolerance(AltitudeConstants.kAutoAltitudePositionTolerance);
   }
 
   @Override
