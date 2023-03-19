@@ -357,6 +357,11 @@ public class Altitude extends SubsystemBase {
     m_altitudeMotor.set(0);
   }
 
+  // Manually move altitude
+  public void moveAltitude(double speed) {
+    m_altitudeMotor.set(speed);
+  }
+
   // Returns the current altitude
   public double getCurrentAltitude() {
     return m_altitudeEncoder.getPosition();

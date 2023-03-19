@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Altitude;
@@ -30,7 +31,9 @@ public class AutoSidekick extends SequentialCommandGroup {
         addCommands(
 
                 // 1. score
-                new Extend(m_extension, ExtensionConstants.kExtensionPositionMidDropOff)
+                new Extend(m_extension, ExtensionConstants.kExtensionPositionMidDropOff),
+                new RaiseLower(m_altitude, AltitudeConstants.kAltitudeDropOffPosition)
+
         //
 
         );

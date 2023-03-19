@@ -5,11 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.ExtensionConstants;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Extension;
+import frc.robot.subsystems.Altitude;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 
 /**
@@ -19,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
  * input is the
  * averaged values of the left and right encoders.
  */
-public class Extend extends PIDCommand {
-    private final Extension m_extension;
+public class RaiseLower extends PIDCommand {
+    private final Altitude m_altitude;
 
     static double kP = 0.05;
     static double kI = 0;
@@ -31,18 +27,18 @@ public class Extend extends PIDCommand {
      *
      * @param distance The distance to drive (inches)
      */
-    public Extend(Extension extension, double position) {
+    public RaiseLower(Altitude altitude, double position) {
         super(new PIDController(kP, kI, kD),
                 // Close loop on heading
-                extension::getCurrentExtensionPosition,
+                altitude::getCurrentAltitude,
                 // Set reference to target
                 position,
                 // Pipe output to turn robot
-                output -> extension.moveExtension(output));
+                output -> altitude.moveAltitude(output));
 
         // Require the drive
-        m_extension = extension;
-        addRequirements(m_extension);
+        m_altitude = altitude;
+        addRequirements(m_altitude);
 
         getController().setTolerance(5);
     }
