@@ -87,9 +87,9 @@ public class RobotContainer {
                                 new RunCommand(
                                                 () -> m_robotDrive.drive(
                                                                 m_driverController.getRightTriggerAxis(),
-                                                                -MathUtil.applyDeadband(m_driverController.getLeftY(),
+                                                                MathUtil.applyDeadband(m_driverController.getLeftY(),
                                                                                 OIConstants.kDriveDeadband),
-                                                                -MathUtil.applyDeadband(m_driverController.getLeftX(),
+                                                                MathUtil.applyDeadband(m_driverController.getLeftX(),
                                                                                 OIConstants.kDriveDeadband),
                                                                 -MathUtil.applyDeadband(m_driverController.getRightX(),
                                                                                 OIConstants.kDriveDeadband),
@@ -134,6 +134,9 @@ public class RobotContainer {
 
                 testAuto.onTrue(new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake));
 
+                testExtension.onTrue(new InstantCommand(
+                                () -> m_extension.keepPositionInches(
+                                                ExtensionConstants.kExtensionPositionInchesIntakeOut)));
                 testExtension.onTrue(new InstantCommand(
                                 () -> m_extension.keepPositionInches(
                                                 ExtensionConstants.kExtensionPositionInchesIntakeOut)));
