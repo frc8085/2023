@@ -28,6 +28,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -101,7 +102,7 @@ public class RobotContainer {
                                                 m_robotDrive));
 
                 /** OPERATOR COMMANDS **/
-                // final Trigger startButton = m_operatorController.start();
+                final Trigger startButton = m_operatorController.start();
                 final Trigger intakeButton = m_operatorController.rightTrigger();
                 final Trigger manualIntakeButton = m_operatorController.rightBumper();
                 final Trigger ejectButton = m_operatorController.leftTrigger();
@@ -121,7 +122,9 @@ public class RobotContainer {
                                 () -> m_extension.keepPositionInches(
                                                 ExtensionConstants.kExtensionPositionInchesIntakeOut)));
 
-                // startButton.onTrue(new ResetPositionToStart(m_altitude, m_extension));
+                startButton.onTrue(Commands.sequence(
+                                new InstantCommand(() -> m_altitude.reset()),
+                                new InstantCommand(() -> m_extension.reset())));
 
                 // Intake button will run the intake then hold game piece when released
                 // intakeButton.whileTrue(new IntakeCargo(m_altitude, m_extension, m_intake))
