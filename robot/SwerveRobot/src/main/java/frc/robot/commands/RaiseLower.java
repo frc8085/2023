@@ -16,47 +16,47 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
  * averaged values of the left and right encoders.
  */
 public class RaiseLower extends PIDCommand {
-    private final Altitude m_altitude;
+  private final Altitude m_altitude;
 
-    static double kP = 0.05;
-    static double kI = 0;
-    static double kD = 0;
+  static double kP = .5;
+  static double kI = .0001;
+  static double kD = .1;
 
-    /**
-     * Create a new TurnToDegreeGyro command.
-     *
-     * @param distance The distance to drive (inches)
-     */
-    public RaiseLower(Altitude altitude, double position) {
-        super(new PIDController(kP, kI, kD),
-                // Close loop on heading
-                altitude::getCurrentAltitude,
-                // Set reference to target
-                position,
-                // Pipe output to turn robot
-                output -> altitude.moveAltitude(output));
+  /**
+   * Create a new TurnToDegreeGyro command.
+   *
+   * @param distance The distance to drive (inches)
+   */
+  public RaiseLower(Altitude altitude, double position) {
+    super(new PIDController(kP, kI, kD),
+        // Close loop on heading
+        altitude::getCurrentAltitude,
+        // Set reference to target
+        position,
+        // Pipe output to turn robot
+        output -> altitude.moveAltitude(output));
 
-        // Require the drive
-        m_altitude = altitude;
-        addRequirements(m_altitude);
+    // Require the drive
+    m_altitude = altitude;
+    addRequirements(m_altitude);
 
-        getController().setTolerance(5);
-    }
+    getController().setTolerance(.5);
+  }
 
-    @Override
-    public void execute() {
-        super.execute();
-    }
+  @Override
+  public void execute() {
+    super.execute();
+  }
 
-    // Called just before this Command runs the first time
-    @Override
-    public void initialize() {
-        super.initialize();
-    }
+  // Called just before this Command runs the first time
+  @Override
+  public void initialize() {
+    super.initialize();
+  }
 
-    // Make this return true when this Command no longer needs to run execute()
-    @Override
-    public boolean isFinished() {
-        return getController().atSetpoint();
-    }
+  // Make this return true when this Command no longer needs to run execute()
+  @Override
+  public boolean isFinished() {
+    return getController().atSetpoint();
+  }
 }

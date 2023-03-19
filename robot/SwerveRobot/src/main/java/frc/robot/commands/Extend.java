@@ -44,7 +44,7 @@ public class Extend extends PIDCommand {
         m_extension = extension;
         addRequirements(m_extension);
 
-        getController().setTolerance(5);
+        getController().setTolerance(ExtensionConstants.kAutoExtensionPositionTolerance);
     }
 
     @Override

@@ -23,27 +23,27 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 /** An example command that uses an example subsystem. */
 public class AutoSidekick extends SequentialCommandGroup {
-    public AutoSidekick(
-            DriveSubsystem m_drive,
-            Altitude m_altitude,
-            Extension m_extension,
-            Intake m_intake) {
-        addCommands(
+  public AutoSidekick(
+      DriveSubsystem m_drive,
+      Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    addCommands(
 
-                // 1. score
-                new Extend(m_extension, ExtensionConstants.kExtensionPositionMidDropOff),
-                new RaiseLower(m_altitude, AltitudeConstants.kAltitudeDropOffPosition)
+        // 1. score
+        // new Extend(m_extension, ExtensionConstants.kExtensionPositionMidDropOff),
+        new RaiseLower(m_altitude, AltitudeConstants.kAltitudeDropOffPosition)
 
-        //
+    //
 
-        );
+    );
 
-        // 2. drive back 3m & turn 180
-        // 3. move tontake down
-        // 4. drive forward 2 meters
-        // 5. travel position
-        // 6. drive to 1 turn 180
-        // 7. shoot
+    // 2. drive back 3m & turn 180
+    // 3. move tontake down
+    // 4. drive forward 2 meters
+    // 5. travel position
+    // 6. drive to 1 turn 180
+    // 7. shoot
 
-    }
+  }
 }
