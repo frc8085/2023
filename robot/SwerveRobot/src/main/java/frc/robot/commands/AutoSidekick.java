@@ -34,7 +34,12 @@ public class AutoSidekick extends SequentialCommandGroup {
         new ParallelCommandGroup(
             new Extend(m_extension, ExtensionConstants.kExtensionPositionHighDropOff),
             new RaiseLower(m_altitude, AltitudeConstants.kAltitudeHighDropOffFinalPosition)),
-        new ScoreHighCone(m_altitude, m_extension, m_intake)
+        new Extend(m_extension,
+            ExtensionConstants.kExtensionPositionMidDropOff - ExtensionConstants.kExtensionConeRetractDistance),
+        // new ScoreHighCone(m_altitude, m_extension, m_intake)
+        new InstantCommand(() -> m_intake.ejectCone()),
+        new WaitCommand(IntakeConstants.kEjectWaitTime),
+        new InstantCommand(() -> m_intake.stopIntake())
 
     //
 
