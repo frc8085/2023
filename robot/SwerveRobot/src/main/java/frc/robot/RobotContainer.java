@@ -113,6 +113,9 @@ public class RobotContainer {
                                                 () -> m_robotDrive.lock(),
                                                 m_robotDrive));
 
+                new JoystickButton(m_driverController, Button.kStart.value)
+                                .onTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+
                 /** OPERATOR COMMANDS **/
                 final Trigger startButton = m_operatorController.start();
                 final Trigger intakeButton = m_operatorController.rightTrigger();
