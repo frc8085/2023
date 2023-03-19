@@ -31,8 +31,9 @@ public class AutoSidekick extends SequentialCommandGroup {
     addCommands(
 
         // 1. score
-        new Extend(m_extension, ExtensionConstants.kExtensionPositionMidDropOff),
-        new RaiseLower(m_altitude, AltitudeConstants.kAltitudeDropOffPosition)
+        new ParallelCommandGroup(
+            new Extend(m_extension, ExtensionConstants.kExtensionPositionMidDropOff),
+            new RaiseLower(m_altitude, AltitudeConstants.kAltitudeDropOffPosition))
 
     //
 
