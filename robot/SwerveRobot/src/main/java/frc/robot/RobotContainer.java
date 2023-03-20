@@ -21,7 +21,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AutoSidekick;
+import frc.robot.commands.Autos.Sidekick.AutoSidekick;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.IntakeCargoFromDoubleSubstation;
 import frc.robot.commands.IntakeCargoFromSingleSubstation;

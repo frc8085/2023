@@ -2,14 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
-
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.Altitude;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Extension;
-import frc.robot.subsystems.Intake;
+package frc.robot.commands.Autos.Sidekick;
 
 import java.util.List;
 
@@ -22,26 +15,38 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Constants.AltitudeConstants;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ExtensionConstants;
+import frc.robot.commands.Extend;
+import frc.robot.commands.RaiseLower;
+import frc.robot.subsystems.Altitude;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Extension;
 
 /** An example command that uses an example subsystem. */
-public class AutoSidekickReturnToScore extends SequentialCommandGroup {
-    public AutoSidekickReturnToScore(
+public class AutoSidekickMoveToPickup extends SequentialCommandGroup {
+    public AutoSidekickMoveToPickup(
             DriveSubsystem m_drive,
             Altitude m_altitude,
-            Extension m_extension,
-            Intake m_intake) {
+            Extension m_extension) {
         addCommands(
+                // 1. score
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> m_intake.holdCargo()),
-                        new MoveToTravelAfterIntake(m_extension, m_altitude)),
-                returnToScore(m_drive));
+                        travelBackwardsThenSpin(m_drive),
+                        new SequentialCommandGroup(
+                                new RaiseLower(m_altitude, AltitudeConstants.kAltitudeIntakePosition),
+                                new WaitUntilCommand(() -> m_altitude.AltitudeIsInScoringPosition()),
+                                new Extend(m_extension, ExtensionConstants.kExtensionPositionFullyRetracted))));
+
     }
 
-    public Command returnToScore(DriveSubsystem m_drive) {
+    public Command travelBackwardsThenSpin(DriveSubsystem m_drive) {
         // Create config for trajectory
         TrajectoryConfig config = new TrajectoryConfig(
                 AutoConstants.kMaxSpeedMetersPerSecond,
@@ -52,28 +57,27 @@ public class AutoSidekickReturnToScore extends SequentialCommandGroup {
         // Travel backwards through our trajectory
         config.setReversed(true);
 
-        // An example trajectory to follow. All units in meters.
-        Trajectory returnToScoreOne = TrajectoryGenerator.generateTrajectory(
+        // First trajectory. All units in meters.
+        Trajectory trajectoryOne = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-                // Pass through these two interior waypoints, making an 's' curve path
+                new Pose2d(0, 0, Rotation2d.fromDegrees(-180)),
                 // NOTE: MUST have a waypoint. CANNOT be a straight line.
                 List.of(new Translation2d(.5, 0.01)),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(1, 0, Rotation2d.fromDegrees(0)),
+                new Pose2d(1, 0, Rotation2d.fromDegrees(-180)),
                 config);
 
-        Trajectory returnToScoreTwo = TrajectoryGenerator.generateTrajectory(
+        // First trajectory. All units in meters.
+        Trajectory trajectoryTwo = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(1, 0, Rotation2d.fromDegrees(0)),
-                // Pass through these two interior waypoints, making an 's' curve path
+                new Pose2d(1, 0, Rotation2d.fromDegrees(-180)),
                 // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                List.of(new Translation2d(2.5, 0.01)),
+                List.of(new Translation2d(2, 0.01)),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(4, 0, Rotation2d.fromDegrees(-180)),
+                new Pose2d(3, 0, Rotation2d.fromDegrees(0)),
                 config);
 
-        var concatTraj = returnToScoreOne.concatenate(returnToScoreTwo);
+        var concatTraj = trajectoryOne.concatenate(trajectoryTwo);
 
         var thetaController = new ProfiledPIDController(
                 AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);

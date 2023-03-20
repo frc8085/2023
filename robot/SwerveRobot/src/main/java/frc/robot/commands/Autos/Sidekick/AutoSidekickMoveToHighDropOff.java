@@ -1,4 +1,8 @@
-package frc.robot.commands;
+package frc.robot.commands.Autos.Sidekick;
+
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 // Copyright (c) FIRST and other WPILib contributors.
 
 // Open Source Software; you can modify and/or share it under the terms of
@@ -6,11 +10,10 @@ package frc.robot.commands;
 
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.ExtensionConstants;
+import frc.robot.commands.Extend;
+import frc.robot.commands.RaiseLower;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
-
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 // Move to High Drop Off position
 public class AutoSidekickMoveToHighDropOff extends SequentialCommandGroup {
