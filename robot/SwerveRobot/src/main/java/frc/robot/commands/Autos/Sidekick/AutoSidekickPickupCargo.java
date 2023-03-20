@@ -41,11 +41,11 @@ public class AutoSidekickPickupCargo extends SequentialCommandGroup {
                         () -> m_altitude.AltitudeIsInIntakePosition() &&
                                 m_extension.ExtensionIsInIntakePosition()),
                 new ParallelCommandGroup(
-                        PickupCargo(m_drive),
+                        driveToGamePiece(m_drive),
                         new InstantCommand(() -> m_intake.intakeCone())));
     }
 
-    public Command PickupCargo(DriveSubsystem m_drive) {
+    public Command driveToGamePiece(DriveSubsystem m_drive) {
         // Create config for trajectory
         TrajectoryConfig config = new TrajectoryConfig(
                 AutoConstants.kMaxSpeedMetersPerSecond,
