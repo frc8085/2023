@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
@@ -19,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
  */
 public class AutoTurnToDegreeGyro extends PIDCommand {
     private final DriveSubsystem m_drive;
+    private boolean m_relative;
 
     static double kP = 0.01;
     static double kI = 0;
@@ -29,7 +29,7 @@ public class AutoTurnToDegreeGyro extends PIDCommand {
      *
      * @param distance The distance to drive (inches)
      */
-    public AutoTurnToDegreeGyro(double degree, DriveSubsystem drive) {
+    public AutoTurnToDegreeGyro(double degree, DriveSubsystem drive, boolean relative) {
         super(new PIDController(kP, kI, kD),
                 // Close loop on heading
                 drive::getHeading,
@@ -40,6 +40,7 @@ public class AutoTurnToDegreeGyro extends PIDCommand {
 
         // Require the drive
         m_drive = drive;
+        m_relative = relative;
         addRequirements(m_drive);
 
         getController().setTolerance(AutoConstants.kAutoGyroTolerance);
@@ -53,10 +54,14 @@ public class AutoTurnToDegreeGyro extends PIDCommand {
     // Called just before this Command runs the first time
     @Override
     public void initialize() {
-        // Get everything in a safe starting state.
-        m_drive.resetOdometry(new Pose2d());
-        m_drive.zeroHeading();
         super.initialize();
+
+        // Only zero the heading if we are turning relative (e.g., turn 3 degrees from
+        // my current position). Do not zero it if turning absolute (e.g., turn TO 55
+        // degrees)
+        if (m_relative) {
+            m_drive.zeroHeading();
+        }
     }
 
     // Make this return true when this Command no longer needs to run execute()
