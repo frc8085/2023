@@ -20,15 +20,16 @@ public class AutoSidekick extends SequentialCommandGroup {
             Intake m_intake) {
         addCommands(
                 // 1. Score Cone
-                new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
-                // 2. Move to pickup cargo position
-                new AutoSidekickMoveToPickup(m_drive, m_altitude, m_extension),
-                // 3. Intake down and pickup cargo
-                new AutoSidekickPickupCargo(m_drive, m_altitude, m_extension, m_intake),
-                // 4. Intake up and move back to grid
-                new AutoSidekickReturnToScore(m_drive, m_altitude, m_extension, m_intake),
-                // 5. Shoot cube
-                new AutoSidekickSecondScore(m_altitude, m_extension, m_intake));
+                new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake)
+        // 2. Move to pickup cargo position
+        // new AutoSidekickMoveToPickup(m_drive, m_altitude, m_extension),
+        // 3. Intake down and pickup cargo
+        // new AutoSidekickPickupCargo(m_drive, m_altitude, m_extension, m_intake),
+        // 4. Intake up and move back to grid
+        // new AutoSidekickReturnToScore(m_drive, m_altitude, m_extension, m_intake),
+        // 5. Shoot cube
+        // new AutoSidekickSecondScore(m_altitude, m_extension, m_intake)
+        );
 
     }
 
