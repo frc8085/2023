@@ -6,8 +6,6 @@ package frc.robot.commands.Autos.Sidekick;
 
 import java.util.List;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -18,10 +16,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.MoveToTravelAfterIntake;
+import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
@@ -43,59 +39,29 @@ public class AutoSidekickReturnToScore extends SequentialCommandGroup {
 
     public Command returnToScore(DriveSubsystem m_drive) {
         // Create config for trajectory
-        TrajectoryConfig config = new TrajectoryConfig(
-                AutoConstants.kMaxSpeedMetersPerSecond,
-                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-                // Add kinematics to ensure max speed is actually obeyed
-                .setKinematics(DriveConstants.kDriveKinematics);
-
-        // Travel backwards through our trajectory
-        config.setReversed(true);
+        TrajectoryConfig config = AutoTrajectoryCommand.config(true);
 
         // An example trajectory to follow. All units in meters.
         Trajectory returnToScoreOne = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-                // Pass through these two interior waypoints, making an 's' curve path
                 // NOTE: MUST have a waypoint. CANNOT be a straight line.
                 List.of(new Translation2d(.5, 0.01)),
-                // End 3 meters straight ahead of where we started, facing forward
+                // Drive backwards for a meter
                 new Pose2d(1, 0, Rotation2d.fromDegrees(0)),
                 config);
 
         Trajectory returnToScoreTwo = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
+                // Start at the end of first trajectory
                 new Pose2d(1, 0, Rotation2d.fromDegrees(0)),
-                // Pass through these two interior waypoints, making an 's' curve path
                 // NOTE: MUST have a waypoint. CANNOT be a straight line.
                 List.of(new Translation2d(2.5, 0.01)),
-                // End 3 meters straight ahead of where we started, facing forward
+                // End 4 meters straight ahead of where we started, facing forward
                 new Pose2d(4, 0, Rotation2d.fromDegrees(-180)),
                 config);
 
         var concatTraj = returnToScoreOne.concatenate(returnToScoreTwo);
 
-        var thetaController = new ProfiledPIDController(
-                AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-                concatTraj,
-                m_drive::getPose, // Functional interface to feed supplier
-                DriveConstants.kDriveKinematics,
-
-                // Position controllers
-                new PIDController(AutoConstants.kPXController, 0, 0),
-                new PIDController(AutoConstants.kPYController, 0, 0),
-                thetaController,
-                m_drive::setModuleStates,
-                m_drive);
-
-        // Reset odometry to the starting pose of the trajectory.
-        m_drive.resetOdometry(concatTraj.getInitialPose());
-        m_drive.zeroHeading();
-
-        // Run path following command, then stop at the end.
-        return swerveControllerCommand.andThen(() -> m_drive.stop());
+        return AutoTrajectoryCommand.command(m_drive, concatTraj);
     }
 }
