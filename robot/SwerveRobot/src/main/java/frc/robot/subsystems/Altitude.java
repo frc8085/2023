@@ -47,8 +47,8 @@ public class Altitude extends SubsystemBase {
   static double kDRaise = 0.1;
   // static double kIzRaise = 0;
   static double kFFRaise = 0;
-  static double kMaxOutputRaise = .9;
-  static double kMinOutputRaise = -.9;
+  static double kMaxOutputRaise = 1;
+  static double kMinOutputRaise = -1;
 
   // Lower PID coefficients
   static int kLowerPIDSlot = 1;

@@ -37,7 +37,7 @@ public final class Constants {
 
     // Intake Cone Power
     public static final double kIntakeConePower = 1;
-    public static final double kEjectConePower = 0.35;
+    public static final double kEjectConePower = 0.425;
 
     // Intake Cube Power
     public static final double kIntakeCubePower = 0.8;
@@ -135,7 +135,7 @@ public final class Constants {
     // Altitude when delivering high cone that it lowers to after extending fully
     public static double kAltitudeHighDropOffPositionDegrees = 36.8;
     // Altitude at position that it releases the cone
-    public static double kAltitudeMidDropOffPositionDegrees = 38.2;
+    public static double kAltitudeMidDropOffPositionDegrees = 32.0;
     // Altitude at position that it releases the High cone
     public static double kAltitudeHighDropOffFinalPositionDegrees = 41.4;
     // Altitude at position that it releases the Mid cone

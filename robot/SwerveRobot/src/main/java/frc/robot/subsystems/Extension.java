@@ -41,7 +41,7 @@ public class Extension extends SubsystemBase {
   static double kFFExtension = 0;
 
   static double kMaxOutputExtension = 0.85;
-  static double kMinOutputExtension = -0.65;
+  static double kMinOutputExtension = -0.75;
 
   public boolean ExtensionRetractionLimitHit() {
     return isRetractionLimitHit();
