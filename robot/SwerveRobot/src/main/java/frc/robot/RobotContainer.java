@@ -44,9 +44,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -114,6 +116,12 @@ public class RobotContainer {
                 .toggleOnTrue(new RunCommand(
                         () -> m_robotDrive.lock(),
                         m_robotDrive));
+
+        // Cube Low Shot on driver control
+        new JoystickButton(m_driverController, Button.kRightBumper.value)
+                .onTrue(new ParallelDeadlineGroup(
+                        new WaitCommand(.5),
+                        new InstantCommand(m_intake::ejectCone)));
 
         // Zero the heading on Start button press
         new JoystickButton(m_driverController, Button.kStart.value)
