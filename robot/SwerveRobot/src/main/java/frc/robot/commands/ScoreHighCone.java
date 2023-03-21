@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Intake;
+import frc.robot.Constants.AltitudeConstants;
+import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
@@ -32,10 +34,16 @@ public class ScoreHighCone extends SequentialCommandGroup {
                                 new InstantCommand(() -> m_intake.ejectCone()),
                                 new WaitCommand(IntakeConstants.kEjectWaitTime),
                                 new InstantCommand(m_intake::stopIntake)),
-                        new MoveToTravelAfterScoring(m_extension, m_altitude))
+
+                        // TODO: New test to run for Score High Cube
+                        new SequentialCommandGroup(
+                                new RaiseLower(m_altitude, AltitudeConstants.kAltitudeIntakePosition),
+                                new WaitUntilCommand(() -> m_altitude.AltitudeIsInScoringPosition()),
+                                new Extend(m_extension, ExtensionConstants.kExtensionPositionFullyRetracted),
+                                new MoveToTravelAfterScoring(m_extension, m_altitude))
+
+                )
 
         );
-
     }
-
 }
