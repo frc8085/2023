@@ -156,9 +156,6 @@ public class RobotContainer {
         testExtension.onTrue(new InstantCommand(
                 () -> m_extension.keepPositionInches(
                         ExtensionConstants.kExtensionPositionInchesIntakeOut)));
-        testExtension.onTrue(new InstantCommand(
-                () -> m_extension.keepPositionInches(
-                        ExtensionConstants.kExtensionPositionInchesIntakeOut)));
 
         startButton.onTrue(Commands.sequence(
                 new InstantCommand(() -> m_altitude.reset()),
