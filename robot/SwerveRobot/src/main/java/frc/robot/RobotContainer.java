@@ -129,24 +129,25 @@ public class RobotContainer {
 
         // Commands to face the robot in different drections
 
-        final Trigger AutoTurnRight = m_driverController.b();
-        final Trigger AutoTurnUp = m_driverController.y();
-        final Trigger AutoTurnLeft = m_driverController.a();
-        final Trigger AutoTurnDown = m_driverController.x();
+        final Trigger AutoFaceIntakeRight = m_driverController.b();
+        final Trigger AutoFaceIntakeUp = m_driverController.y();
+        final Trigger AutoFaceIntakeLeft = m_driverController.a();
+        final Trigger AutoFaceIntakeDown = m_driverController.x();
 
-        AutoTurnRight.onTrue(new AutoTurnToDegreeGyro(
-                180, m_robotDrive, false));
+        AutoFaceIntakeRight.onTrue(new AutoTurnToDegreeGyro(
+                90, m_robotDrive, false));
 
-        AutoTurnLeft.onTrue(
+        AutoFaceIntakeLeft.onTrue(
                 new AutoTurnToDegreeGyro(
-                        90, m_robotDrive, false));
-        AutoTurnDown.onTrue(
+                        -90, m_robotDrive, false));
+
+        AutoFaceIntakeDown.onTrue(
                 new AutoTurnToDegreeGyro(
                         0, m_robotDrive, false));
 
-        AutoTurnUp.onTrue(
+        AutoFaceIntakeUp.onTrue(
                 new AutoTurnToDegreeGyro(
-                        -90, m_robotDrive, false));
+                        180, m_robotDrive, false));
 
         /** OPERATOR COMMANDS **/
         final Trigger startButton = m_operatorController.start();
