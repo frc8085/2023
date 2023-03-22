@@ -257,6 +257,13 @@ public class Extension extends SubsystemBase {
             - ExtensionConstants.kExtensionPositionTolerance;
   }
 
+  public boolean ExtensionIsInCubeShootPosition() {
+    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionCubeShooter
+        + ExtensionConstants.kExtensionPositionTolerance
+        && m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionCubeShooter
+            - ExtensionConstants.kExtensionPositionTolerance;
+  }
+
   public boolean ExtensionIsInDropOffReturnPosition() {
     return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionHighDropOffReturn
         + ExtensionConstants.kExtensionPositionTolerance;

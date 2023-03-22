@@ -22,6 +22,7 @@ import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
 import frc.robot.commands.AutoTurnToDegreeGyro;
+import frc.robot.commands.DriverShootCube;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.IntakeCargoFromDoubleSubstation;
 import frc.robot.commands.IntakeCargoFromSingleSubstation;
@@ -118,11 +119,11 @@ public class RobotContainer {
 
                 // Cube Low Shot on driver control
                 final Trigger lowCubeEjectButton = m_driverController.povDown();
-                final Trigger lowCubeShootButton = m_driverController.povUp();
+                final Trigger cubeShootButton = m_driverController.povUp();
                 lowCubeEjectButton.onTrue(new InstantCommand(m_intake::stopIntake));
 
-                // TODO: Fix this so it stops actually!
-                lowCubeShootButton.onTrue(new InstantCommand(m_intake::ejectCube).withTimeout(2));
+                cubeShootButton.onTrue(new DriverShootCube(m_altitude, m_extension,
+                                m_intake));
 
                 final Trigger zeroHeadingButton = m_driverController.start();
                 zeroHeadingButton.onTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
