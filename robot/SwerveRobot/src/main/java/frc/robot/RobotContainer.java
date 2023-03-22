@@ -22,8 +22,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
-import frc.robot.commands.FaceIntakeToDirection.Direction;
-import frc.robot.commands.FaceIntakeToDirection;
+import frc.robot.commands.AutoTurnToDegreeGyro;
 import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.IntakeCargoFromDoubleSubstation;
 import frc.robot.commands.IntakeCargoFromSingleSubstation;
@@ -134,17 +133,24 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
     // Commands to face the robot in different drections
-    new JoystickButton(m_driverController, Button.kY.value)
-        .onTrue(FaceIntakeToDirection.command(m_robotDrive, Direction.INTAKE_UP));
-
     new JoystickButton(m_driverController, Button.kB.value)
-        .onTrue(FaceIntakeToDirection.command(m_robotDrive, Direction.INTAKE_RIGHT));
+        .onTrue(
+            new AutoTurnToDegreeGyro(
+                180, m_robotDrive, false));
 
     new JoystickButton(m_driverController, Button.kA.value)
-        .onTrue(FaceIntakeToDirection.command(m_robotDrive, Direction.INTAKE_DOWN));
-
+        .onTrue(
+            new AutoTurnToDegreeGyro(
+                90, m_robotDrive, false));
     new JoystickButton(m_driverController, Button.kX.value)
-        .onTrue(FaceIntakeToDirection.command(m_robotDrive, Direction.INTAKE_LEFT));
+        .onTrue(
+            new AutoTurnToDegreeGyro(
+                0, m_robotDrive, false));
+
+    new JoystickButton(m_driverController, Button.kY.value)
+        .onTrue(
+            new AutoTurnToDegreeGyro(
+                -90, m_robotDrive, false));
 
     /** OPERATOR COMMANDS **/
     final Trigger startButton = m_operatorController.start();

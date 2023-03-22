@@ -103,6 +103,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private void log() {
     SmartDashboard.putNumber("Heading", getHeading());
+    SmartDashboard.putNumber("Absolute", getAbsoluteHeading());
     SmartDashboard.putNumber("X Pose", getPose().getX());
     SmartDashboard.putNumber("Y Pose", getPose().getY());
   }
@@ -317,6 +318,10 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getHeading() {
     return m_gyro.getRotation2d().getDegrees();
+  }
+
+  public double getAbsoluteHeading() {
+    return m_gyro.getAngle();
   }
 
   /**
