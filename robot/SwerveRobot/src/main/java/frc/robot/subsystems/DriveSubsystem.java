@@ -202,11 +202,15 @@ public class DriveSubsystem extends SubsystemBase {
      *                      field.
      * @param rateLimit     Whether to enable rate limiting for smoother control.
      */
+
+    // TODO: confirm that rotation speed is reduced when altitude and extension are
+    // not in travel and that there is no slew then
     public void drive(double speed, double xSpeed, double ySpeed, double rot, boolean fieldRelative,
             boolean rateLimit) {
-        double speedCommanded = isWithinSafeDrivingLimits() ? speed : DriveConstants.kSafeSpeedLimit;
+        double speedCommanded = isWithinSafeDrivingLimits() ? speed : DriveConstants.kSafeSpeedLimit * speed;
         double xSpeedCommanded;
         double ySpeedCommanded;
+        double rotSpeed = isWithinSafeDrivingLimits() ? rot : DriveConstants.kSafeRotLimit * rot;
 
         if (rateLimit) {
             // Convert XY to polar for rate limiting
@@ -253,7 +257,7 @@ public class DriveSubsystem extends SubsystemBase {
         } else {
             xSpeedCommanded = speedCommanded * xSpeed;
             ySpeedCommanded = speedCommanded * ySpeed;
-            m_currentRotation = rot;
+            m_currentRotation = rotSpeed;
         }
 
         // Convert the commanded speeds into the correct units for the drivetrain
