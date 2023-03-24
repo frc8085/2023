@@ -22,11 +22,12 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
+import frc.robot.Constants.TuningModeConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
-    private boolean TUNING_MODE = false;
+    private boolean TUNING_MODE = TuningModeConstants.kDriveTuning;
     private Altitude m_altitude;
     private Extension m_extension;
 
