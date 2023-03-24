@@ -23,12 +23,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2;
 
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
+import frc.robot.Constants.TuningModeConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -47,7 +48,7 @@ public class TeleopDrive extends CommandBase {
     private PIDController m_thetaController;
     private SendableChooser<Double> m_speedChooser;
 
-    private boolean TUNING_MODE = false;
+    private boolean TUNING_MODE = TuningModeConstants.kDriveTuning;
     private Altitude m_altitude;
     private Extension m_extension;
 
@@ -160,7 +161,7 @@ public class TeleopDrive extends CommandBase {
             }
         }
 
-        m_drive.drive(
+        m_drive.testDrive(
                 new Translation2d(xVal, yVal).times(DriveConstants.kMaxSpeedMetersPerSecond),
                 rotationVal * DriveConstants.kMaxAngularSpeed * 0.9,
                 true,

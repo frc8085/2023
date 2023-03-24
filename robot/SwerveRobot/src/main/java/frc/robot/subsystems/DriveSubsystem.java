@@ -364,8 +364,18 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Gyro Stuff
     public double getAngle() {
-        return -getYaw();
+        return -m_gyro.getYaw();
     }
+
+    public Rotation2d getRotation2d() {
+        // Rotation2d and Pigeon are both ccw+
+        return Rotation2d.fromDegrees(m_gyro.getYaw());
+    }
+
+    // public double getRate() {
+    // getRawGyro(_xyz_dps);
+    // return -_xyz_dps[2];
+    // }
 
     /**
      * Returns the heading of the robot.
@@ -373,7 +383,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return the robot's heading in degrees, not wrapped
      */
     public double getHeading() {
-        return m_gyro.getRotation2d().getDegrees();
+        return getRotation2d().getDegrees();
     }
 
     /**
@@ -382,17 +392,17 @@ public class DriveSubsystem extends SubsystemBase {
      * @return the robot's heading in degrees, from -180 to 180
      */
     public double getHeadingWrappedDegrees() {
-        return MathUtil.inputModulus(m_gyro.getRotation2d().getDegrees(), -180, 180);
+        return MathUtil.inputModulus(getRotation2d().getDegrees(), -180, 180);
     }
 
-    /**
-     * Returns the turn rate of the robot.
-     *
-     * @return The turn rate of the robot, in degrees per second
-     */
-    public double getTurnRate() {
-        return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-    }
+    // /**
+    // * Returns the turn rate of the robot.
+    // *
+    // * @return The turn rate of the robot, in degrees per second
+    // */
+    // public double getTurnRate() {
+    // return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    // }
 
     public boolean isWithinSafeDrivingLimits() {
         boolean altitudeInSafeLimit = m_altitude.getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin;
