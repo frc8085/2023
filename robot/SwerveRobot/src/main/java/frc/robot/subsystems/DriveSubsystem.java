@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -15,20 +16,28 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2;
 
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
+import frc.robot.Constants.TuningModeConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
-    private boolean TUNING_MODE = false;
+    private boolean TUNING_MODE = TuningModeConstants.kDriveTuning;
     private Altitude m_altitude;
     private Extension m_extension;
+    public SwerveDriveOdometry m_odometry;
+    public MAXSwerveModule[] m_SwerveMods;
+
+    public Pigeon2 m_gyro;
+    public Field2d m_field;
 
     // Create MAXSwerveModules
     private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -51,9 +60,6 @@ public class DriveSubsystem extends SubsystemBase {
             DriveConstants.kRearRightTurningCanId,
             DriveConstants.kBackRightChassisAngularOffset);
 
-    // The gyro sensor
-    private final WPI_Pigeon2 m_gyro = new WPI_Pigeon2(DriveConstants.kGyroDeviceNumber);
-
     private double[] pitchYawRollVelocities;
 
     // Slew rate filter variables for controlling lateral acceleration
@@ -65,28 +71,35 @@ public class DriveSubsystem extends SubsystemBase {
     private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
-    // Odometry class for tracking robot pose
-    SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
-            DriveConstants.kDriveKinematics,
-            m_gyro.getRotation2d(),
-            new SwerveModulePosition[] {
-                    m_frontLeft.getPosition(),
-                    m_frontRight.getPosition(),
-                    m_rearLeft.getPosition(),
-                    m_rearRight.getPosition()
-            });
-
     /** Creates a new DriveSubsystem. */
     public DriveSubsystem(Altitude Altitude, Extension Extension) {
+        m_gyro = new Pigeon2(DriveConstants.kGyroDeviceNumber, "drive");
+        m_gyro.configFactoryDefault();
+        zeroGyro();
+        m_field = new Field2d();
+
         m_altitude = Altitude;
         m_extension = Extension;
+
+        m_SwerveMods = new MAXSwerveModule[] {
+                m_frontLeft,
+                m_frontRight,
+                m_rearLeft,
+                m_rearRight
+        };
+
+        // Odometry class for tracking robot pose
+        m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getYaw(),
+                new SwerveModulePosition[] { m_frontLeft.getPosition(), m_frontRight.getPosition(),
+                        m_rearLeft.getPosition(), m_rearRight.getPosition() });
+
     }
 
     @Override
     public void periodic() {
         // Update the odometry in the periodic block
         m_odometry.update(
-                m_gyro.getRotation2d(),
+                getYaw(),
                 new SwerveModulePosition[] {
                         m_frontLeft.getPosition(),
                         m_frontRight.getPosition(),
@@ -100,6 +113,39 @@ public class DriveSubsystem extends SubsystemBase {
 
         log();
 
+        m_field.setRobotPose(m_odometry.getPoseMeters());
+
+        SmartDashboard.putData("Field", m_field);
+        if (TUNING_MODE) {
+            SmartDashboard.putNumber("gyro yaw", getYaw().getDegrees());
+
+            // SmartDashboard.putNumber("Front Left Position", m_frontLeft.getPosition());
+            // SmartDashboard.putString("Front Left State", m_frontLeft.getState());
+        }
+    }
+
+    public void testDrive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+        SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                        translation.getX(),
+                        translation.getY(),
+                        rotation,
+                        m_odometry.getPoseMeters().getRotation())
+                        : new ChassisSpeeds(
+                                translation.getX(),
+                                translation.getY(),
+                                rotation));
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates,
+                DriveConstants.kMaxSpeedMetersPerSecond);
+
+        SmartDashboard.putNumber("X Translation", translation.getX());
+        SmartDashboard.putNumber("Y Translation", translation.getY());
+        SmartDashboard.putNumber("Rotation Value", rotation);
+
+    }
+
+    public void stopDrive() {
+        testDrive(new Translation2d(0, 0), 0, false, true);
     }
 
     private void log() {
@@ -117,13 +163,26 @@ public class DriveSubsystem extends SubsystemBase {
         return m_odometry.getPoseMeters();
     }
 
-    /**
-     * Returns the currently-estimated pitch of the robot.
-     *
-     * @return The pitch.
-     */
-    public Rotation2d getPitch() {
-        return Rotation2d.fromDegrees(m_gyro.getPitch());
+    // Returns the currently-estimated pitch of the robot.
+    public double getPitch() {
+        return m_gyro.getPitch();
+    }
+
+    public double getRoll() {
+        return m_gyro.getRoll();
+    }
+
+    public void setYaw(double yaw) {
+        m_gyro.setYaw(yaw);
+    }
+
+    public Rotation2d getYaw() {
+        return (false) ? Rotation2d.fromDegrees(360 - m_gyro.getYaw())
+                : Rotation2d.fromDegrees(m_gyro.getYaw());
+    }
+
+    public void zeroGyro() {
+        m_gyro.setYaw(0);
     }
 
     /**
@@ -134,24 +193,6 @@ public class DriveSubsystem extends SubsystemBase {
     public double getPitchVelocity() {
         // return pitchYawRollVelocities[0];
         return 0;
-    }
-
-    /**
-     * Returns the currently-estimated pitch of the robot.
-     *
-     * @return The rotation.
-     */
-    public Rotation2d getRotation() {
-        return m_gyro.getRotation2d();
-    }
-
-    /**
-     * Returns the currently-estimated roll of the robot.
-     *
-     * @return The roll.
-     */
-    public Rotation2d getRoll() {
-        return Rotation2d.fromDegrees(m_gyro.getRoll());
     }
 
     /**
@@ -171,7 +212,7 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public void resetOdometry(Pose2d pose) {
         m_odometry.resetPosition(
-                m_gyro.getRotation2d(),
+                getYaw(),
                 new SwerveModulePosition[] {
                         m_frontLeft.getPosition(),
                         m_frontRight.getPosition(),
@@ -179,6 +220,12 @@ public class DriveSubsystem extends SubsystemBase {
                         m_rearRight.getPosition()
                 },
                 pose);
+    }
+
+    public void reset() {
+        zeroGyro();
+        Timer.delay(0.04);
+        resetOdometry(new Pose2d(new Translation2d(0.0, 0.0), new Rotation2d(0.0)));
     }
 
     /**
@@ -268,7 +315,7 @@ public class DriveSubsystem extends SubsystemBase {
         var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
                 fieldRelative
                         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                                m_gyro.getRotation2d())
+                                m_odometry.getPoseMeters().getRotation())
                         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         SwerveDriveKinematics.desaturateWheelSpeeds(
                 swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -312,7 +359,12 @@ public class DriveSubsystem extends SubsystemBase {
 
     /** Zeroes the heading of the robot. */
     public void zeroHeading() {
-        m_gyro.reset();
+        m_gyro.setYaw(0);
+    }
+
+    // Gyro Stuff
+    public double getAngle() {
+        return -getYaw();
     }
 
     /**
