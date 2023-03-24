@@ -13,14 +13,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.Constants.AltitudeConstants;
-import frc.robot.Constants.ExtensionConstants;
-import frc.robot.commands.Extend;
-import frc.robot.commands.RaiseLower;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
@@ -33,19 +26,7 @@ public class AutoSidekickMoveToPickup extends SequentialCommandGroup {
                         Altitude m_altitude,
                         Extension m_extension) {
                 addCommands(
-                                // 1. score
-                                new ParallelCommandGroup(
-                                                // TODO: This will spin while we move to intake, is that safe @Lori
-                                                travelBackwardsThenSpin(m_drive),
-                                                new SequentialCommandGroup(
-                                                                new InstantCommand(() -> m_extension
-                                                                                .keepPositionInches(
-                                                                                                ExtensionConstants.kExtensionPositionInchesFullyRetracted)),
-                                                                new WaitUntilCommand(() -> m_extension
-                                                                                .ExtensionIsInDropOffReturnPosition()),
-                                                                new InstantCommand(() -> m_altitude
-                                                                                .keepPositionDegrees(
-                                                                                                AltitudeConstants.kAltitudeTravelPositionDegrees)))));
+                                travelBackwardsThenSpin(m_drive));
 
         }
 
@@ -54,27 +35,15 @@ public class AutoSidekickMoveToPickup extends SequentialCommandGroup {
                 TrajectoryConfig config = AutoTrajectoryCommand.config(true);
 
                 // First trajectory. All units in meters.
-                Trajectory trajectoryOne = TrajectoryGenerator.generateTrajectory(
+                Trajectory moveToPosition = TrajectoryGenerator.generateTrajectory(
                                 // Start at the origin facing the +X direction
                                 new Pose2d(0, 0, Rotation2d.fromDegrees(-180)),
                                 // NOTE: MUST have a waypoint. CANNOT be a straight line.
                                 List.of(new Translation2d(.5, 0.01)),
-                                // Drive backwards and end 1 meters behind where we started
-                                new Pose2d(1, 0, Rotation2d.fromDegrees(-180)),
-                                config);
-
-                // Second trajectory
-                Trajectory trajectoryTwo = TrajectoryGenerator.generateTrajectory(
-                                // Start at the end of the first pose
-                                new Pose2d(1, 0, Rotation2d.fromDegrees(-180)),
-                                // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                                List.of(new Translation2d(2, 0.01)),
-                                // End 3 meters straight ahead of where we started, facing forward
+                                // Drive backwards and end 3 meters behind where we started, facing forward
                                 new Pose2d(3, 0, Rotation2d.fromDegrees(0)),
                                 config);
 
-                var concatTraj = trajectoryOne.concatenate(trajectoryTwo);
-
-                return AutoTrajectoryCommand.command(m_drive, concatTraj);
+                return AutoTrajectoryCommand.command(m_drive, moveToPosition);
         }
 }

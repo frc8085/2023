@@ -14,11 +14,13 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.TuningModeConstants;
+
 import static frc.robot.Constants.ExtensionConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Extension extends SubsystemBase {
-  private boolean TUNING_MODE = false;
+  private boolean TUNING_MODE = TuningModeConstants.kExtensionTuning;
 
   /** Creates a new Extension. */
 

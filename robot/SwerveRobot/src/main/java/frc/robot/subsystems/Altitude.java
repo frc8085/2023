@@ -15,6 +15,7 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ExtensionConstants;
+import frc.robot.Constants.TuningModeConstants;
 
 import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
@@ -22,7 +23,7 @@ import static frc.robot.Constants.SubsystemMotorConstants;
 import java.util.function.BooleanSupplier;
 
 public class Altitude extends SubsystemBase {
-  private boolean TUNING_MODE = false;
+  private boolean TUNING_MODE = TuningModeConstants.kAltitudeTuning;
 
   private Extension m_extension;
   /** Creates a new Altitude. */
