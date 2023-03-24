@@ -25,43 +25,45 @@ import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoSidekickReturnToScore extends SequentialCommandGroup {
-    public AutoSidekickReturnToScore(
-            DriveSubsystem m_drive,
-            Altitude m_altitude,
-            Extension m_extension,
-            Intake m_intake) {
-        addCommands(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> m_intake.holdCargo()),
-                        new MoveToTravelAfterIntake(m_extension, m_altitude)),
-                returnToScore(m_drive));
-    }
+        public AutoSidekickReturnToScore(
+                        DriveSubsystem m_drive,
+                        Altitude m_altitude,
+                        Extension m_extension,
+                        Intake m_intake) {
+                addCommands(
+                                new ParallelCommandGroup(
+                                                new InstantCommand(() -> m_intake.holdCargo()),
+                                                new MoveToTravelAfterIntake(m_extension, m_altitude)),
+                                returnToScore(m_drive));
+        }
 
-    public Command returnToScore(DriveSubsystem m_drive) {
-        // Create config for trajectory
-        TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+        public Command returnToScore(DriveSubsystem m_drive) {
+                // Create config for trajectory
+                TrajectoryConfig config = AutoTrajectoryCommand.config(true);
 
-        // An example trajectory to follow. All units in meters.
-        Trajectory returnToScoreOne = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-                // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                List.of(new Translation2d(.5, 0.01)),
-                // Drive backwards for a meter
-                new Pose2d(1, 0, Rotation2d.fromDegrees(0)),
-                config);
+                // An example trajectory to follow. All units in meters.
+                // Should the points be negative or positive? Does it decide based on the
+                // reversed being true?
+                Trajectory returnToScoreOne = TrajectoryGenerator.generateTrajectory(
+                                // Start at the origin facing the +X direction
+                                new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                                // NOTE: MUST have a waypoint. CANNOT be a straight line.
+                                List.of(new Translation2d(-.5, 0.01)),
+                                // Drive backwards for a meter
+                                new Pose2d(-1, 0, Rotation2d.fromDegrees(0)),
+                                config);
 
-        Trajectory returnToScoreTwo = TrajectoryGenerator.generateTrajectory(
-                // Start at the end of first trajectory
-                new Pose2d(1, 0, Rotation2d.fromDegrees(0)),
-                // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                List.of(new Translation2d(2.5, 0.01)),
-                // End 4 meters straight ahead of where we started, facing forward
-                new Pose2d(4, 0, Rotation2d.fromDegrees(-180)),
-                config);
+                Trajectory returnToScoreTwo = TrajectoryGenerator.generateTrajectory(
+                                // Start at the end of first trajectory
+                                new Pose2d(-1, 0, Rotation2d.fromDegrees(0)),
+                                // NOTE: MUST have a waypoint. CANNOT be a straight line.
+                                List.of(new Translation2d(-2.5, 0.01)),
+                                // End 4 meters straight ahead of where we started, facing forward
+                                new Pose2d(-4, 0, Rotation2d.fromDegrees(-180)),
+                                config);
 
-        var concatTraj = returnToScoreOne.concatenate(returnToScoreTwo);
+                var concatTraj = returnToScoreOne.concatenate(returnToScoreTwo);
 
-        return AutoTrajectoryCommand.command(m_drive, concatTraj);
-    }
+                return AutoTrajectoryCommand.command(m_drive, concatTraj);
+        }
 }

@@ -26,36 +26,35 @@ import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoSidekickPickupCargo extends SequentialCommandGroup {
-    public AutoSidekickPickupCargo(
-            DriveSubsystem m_drive,
-            Altitude m_altitude,
-            Extension m_extension,
-            Intake m_intake) {
-        addCommands(
-                new MoveToIntake(m_extension, m_altitude),
-                new WaitUntilCommand(
-                        () -> m_altitude.AltitudeIsInIntakePosition() &&
-                                m_extension.ExtensionIsInIntakePosition()),
-                new ParallelCommandGroup(
-                        driveToGamePiece(m_drive),
-                        new InstantCommand(() -> m_intake.intakeCone())));
-    }
+        public AutoSidekickPickupCargo(
+                        DriveSubsystem m_drive,
+                        Altitude m_altitude,
+                        Extension m_extension,
+                        Intake m_intake) {
+                addCommands(
+                                new MoveToIntake(m_extension, m_altitude),
+                                new WaitUntilCommand(
+                                                () -> m_altitude.AltitudeIsInIntakePosition() &&
+                                                                m_extension.ExtensionIsInIntakePosition()),
+                                new ParallelCommandGroup(
+                                                driveToGamePiece(m_drive),
+                                                new InstantCommand(() -> m_intake.intakeCone())));
+        }
 
-    public Command driveToGamePiece(DriveSubsystem m_drive) {
-        // Create config for trajectory
-        // TODO: This should probably be false @Lori
-        TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+        public Command driveToGamePiece(DriveSubsystem m_drive) {
+                // Create config for trajectory
+                TrajectoryConfig config = AutoTrajectoryCommand.config(false);
 
-        // An example trajectory to follow. All units in meters.
-        Trajectory pickupCargo = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-                // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                List.of(new Translation2d(1, 0.01)),
-                // End 2 meters straight ahead of where we started, facing forward
-                new Pose2d(2, 0, Rotation2d.fromDegrees(0)),
-                config);
+                // An example trajectory to follow. All units in meters.
+                Trajectory pickupCargo = TrajectoryGenerator.generateTrajectory(
+                                // Start at the origin facing forward
+                                new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                                // NOTE: MUST have a waypoint. CANNOT be a straight line.
+                                List.of(new Translation2d(1, 0.01)),
+                                // End 2 meters straight ahead of where we started still facing forward
+                                new Pose2d(2, 0, Rotation2d.fromDegrees(0)),
+                                config);
 
-        return AutoTrajectoryCommand.command(m_drive, pickupCargo);
-    }
+                return AutoTrajectoryCommand.command(m_drive, pickupCargo);
+        }
 }
