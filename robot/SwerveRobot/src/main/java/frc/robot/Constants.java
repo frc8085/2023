@@ -24,6 +24,14 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+        public static final class TuningModeConstants {
+                public static final boolean kAltitudeTuning = false;
+                public static final boolean kExtensionTuning = false;
+                public static final boolean kIntakeTuning = false;
+                public static final boolean kDriveTuning = true;
+        }
+
         public static final class SubsystemMotorConstants {
                 public static final int kMotorCurrentLimit = 30;
                 public static final int kMotorCurrentLimit550 = 30;

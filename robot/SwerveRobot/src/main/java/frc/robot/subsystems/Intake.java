@@ -14,12 +14,13 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SubsystemMotorConstants;
+import frc.robot.Constants.TuningModeConstants;
 import frc.robot.subsystems.LEDs.GamePiece;
 
 import static frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  private boolean TUNING_MODE = false;
+  private boolean TUNING_MODE = TuningModeConstants.kIntakeTuning;
   private final CANSparkMax m_intakeMotor;
   private RelativeEncoder m_intakeEncoder;
 
