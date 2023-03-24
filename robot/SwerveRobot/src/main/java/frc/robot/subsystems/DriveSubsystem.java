@@ -56,6 +56,10 @@ public class DriveSubsystem extends SubsystemBase {
     private final WPI_Pigeon2 m_gyro = new WPI_Pigeon2(DriveConstants.kGyroDeviceNumber);
 
     private double[] pitchYawRollVelocities;
+    // TODO test something like this instead
+    // float[] XYZ_Dps = new float[3];
+    // m_gyro.GetRawGyro(XYZ_Dps);
+    // float yawRate = XYZ_Dps[2];
 
     // Slew rate filter variables for controlling lateral acceleration
     private double m_currentRotation = 0.0;
