@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class TeleopDrive extends CommandBase {
     private DriveSubsystem m_drive;
+    private double m_speed;
     private DoubleSupplier xSup;
     private DoubleSupplier ySup;
     private DoubleSupplier rotationSup;
@@ -73,11 +74,12 @@ public class TeleopDrive extends CommandBase {
      * @param halfSpeed
      * @param quarterSpeed
      */
-    public TeleopDrive(DriveSubsystem drive, DoubleSupplier xSup, DoubleSupplier ySup,
+    public TeleopDrive(DriveSubsystem drive, double speed, DoubleSupplier xSup, DoubleSupplier ySup,
             DoubleSupplier rotationSup, BooleanSupplier robotCentricSup,
             BooleanSupplier halfSpeed, BooleanSupplier quarterSpeed,
             BooleanSupplier zero, BooleanSupplier ninety, BooleanSupplier oneEighty, BooleanSupplier twoSeventy) {
         m_drive = drive;
+        m_speed = speed;
         this.ySup = ySup;
         this.xSup = xSup;
         this.rotationSup = rotationSup;

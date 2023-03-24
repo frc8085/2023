@@ -39,6 +39,7 @@ import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.TeleopDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -84,21 +85,22 @@ public class RobotContainer {
 
                 // Configure default commands
                 m_robotDrive.setDefaultCommand(
-                                // Right Trigger Controls Speed
-                                // The left stick controls translation of the robot.
-                                // Turning is controlled by the X axis of the right stick.
-                                new RunCommand(
-                                                () -> m_robotDrive.drive(
-                                                                m_driverController.getRightTriggerAxis(),
-                                                                MathUtil.applyDeadband(m_driverController.getLeftY(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                MathUtil.applyDeadband(m_driverController.getLeftX(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                -MathUtil.applyDeadband(m_driverController.getRightX(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                true, m_robotDrive
-                                                                                .isWithinSafeDrivingLimits()),
-                                                m_robotDrive));
+                                // Trying alternate drive.
+                                new TeleopDrive(m_robotDrive,
+                                                m_driverController.getRightTriggerAxis(),
+                                                () -> MathUtil.applyDeadband(m_driverController.getLeftY(),
+                                                                OIConstants.kDriveDeadband),
+                                                () -> MathUtil.applyDeadband(m_driverController.getLeftX(),
+                                                                OIConstants.kDriveDeadband),
+                                                () -> -MathUtil.applyDeadband(m_driverController.getRightX(),
+                                                                OIConstants.kDriveDeadband),
+                                                m_driverController.leftStick(),
+                                                m_driverController.back(),
+                                                m_driverController.rightBumper(),
+                                                m_driverController.y(),
+                                                m_driverController.b(),
+                                                m_driverController.a(),
+                                                m_driverController.x()));
         }
 
         /**
