@@ -285,7 +285,7 @@ public class RobotContainer {
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(1, 0.01)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, -0.1, Rotation2d.fromDegrees(0)),
+        new Pose2d(3, -0.1, Rotation2d.fromDegrees(1)),
         config);
 
     var thetaController = new ProfiledPIDController(

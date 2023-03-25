@@ -45,6 +45,9 @@ public class AutoSidekickMoveToPickup extends SequentialCommandGroup {
         new Pose2d(3, -0.1, Rotation2d.fromDegrees(0)),
         config);
 
+    m_drive.zeroHeading();
+    m_drive.resetOdometry(moveToPosition.getInitialPose());
+
     return AutoTrajectoryCommand.command(m_drive, moveToPosition);
   }
 }

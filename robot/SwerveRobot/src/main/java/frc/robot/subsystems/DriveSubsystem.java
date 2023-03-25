@@ -107,6 +107,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Heading", getHeading());
     SmartDashboard.putNumber("X Pose", getPose().getX());
     SmartDashboard.putNumber("Y Pose", getPose().getY());
+    SmartDashboard.putNumber("Yaw", getYaw());
 
     SmartDashboard.putNumberArray("XYZ_DPS", pitchYawRollVelocitiesDegreesPerSecond);
   }
@@ -118,6 +119,10 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
+  }
+
+  public double getYaw() {
+    return m_gyro.getYaw();
   }
 
   /**

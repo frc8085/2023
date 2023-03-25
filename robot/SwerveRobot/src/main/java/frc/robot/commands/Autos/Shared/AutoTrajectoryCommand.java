@@ -62,8 +62,8 @@ public class AutoTrajectoryCommand extends SequentialCommandGroup {
         m_drive);
 
     // Reset odometry to the starting pose of the trajectory.
-    m_drive.resetOdometry(trajectory.getInitialPose());
-    m_drive.zeroHeading();
+    // m_drive.resetOdometry(trajectory.getInitialPose());
+    // m_drive.zeroHeading();
 
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> m_drive.stop());

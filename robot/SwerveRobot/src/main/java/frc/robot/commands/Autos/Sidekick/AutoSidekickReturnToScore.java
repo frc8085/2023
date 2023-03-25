@@ -50,7 +50,7 @@ public class AutoSidekickReturnToScore extends SequentialCommandGroup {
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(2.5, 0.01)),
         // Drive backwards for a meter
-        new Pose2d(0, -0.1, Rotation2d.fromDegrees(-180)),
+        new Pose2d(0.5, 0.1, Rotation2d.fromDegrees(170)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, returnToScoreOne);
