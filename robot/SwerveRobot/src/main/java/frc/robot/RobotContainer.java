@@ -116,7 +116,7 @@ public class RobotContainer {
         new AutoSuperHero(m_robotDrive, m_altitude, m_extension, m_intake));
 
     // Put the chooser on the dashboard
-    SmartDashboard.putData("Auto Routine", autoSelection);
+    // SmartDashboard.putData("Auto Routine", autoSelection);
   }
 
   /**
@@ -333,7 +333,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     m_robotDrive.zeroHeading();
     m_robotDrive.resetOdometry(new Pose2d());
-    return autoSelection.getSelected();
+    return new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake);
+    // return autoSelection.getSelected();
   }
 
 }
