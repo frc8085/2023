@@ -20,8 +20,8 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 
 /** An example command that uses an example subsystem. */
-public class AutoMainCharacterMoveToChargeStation extends SequentialCommandGroup {
-    public AutoMainCharacterMoveToChargeStation(
+public class UNUSED_AutoMainCharacterMoveToChargeStation extends SequentialCommandGroup {
+    public UNUSED_AutoMainCharacterMoveToChargeStation(
             DriveSubsystem m_drive,
             Altitude m_altitude,
             Extension m_extension) {
