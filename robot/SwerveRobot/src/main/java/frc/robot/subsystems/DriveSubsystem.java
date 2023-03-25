@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.DriveConstants;
@@ -36,7 +36,7 @@ public class DriveSubsystem extends SubsystemBase {
     public SwerveDriveOdometry m_odometry;
     public MAXSwerveModule[] m_SwerveMods;
 
-    public Pigeon2 m_gyro;
+    public WPI_Pigeon2 m_gyro;
     public Field2d m_field;
 
     // Create MAXSwerveModules
@@ -73,7 +73,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     /** Creates a new DriveSubsystem. */
     public DriveSubsystem(Altitude Altitude, Extension Extension) {
-        m_gyro = new Pigeon2(DriveConstants.kGyroDeviceNumber, "drive");
+        m_gyro = new WPI_Pigeon2(DriveConstants.kGyroDeviceNumber, "drive");
         m_gyro.configFactoryDefault();
         zeroGyro();
         m_field = new Field2d();
