@@ -18,24 +18,24 @@ import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoSuperHero extends SequentialCommandGroup {
-    public AutoSuperHero(
-            DriveSubsystem m_drive,
-            Altitude m_altitude,
-            Extension m_extension,
-            Intake m_intake) {
-        addCommands(
-                // 1. Score Cone
-                new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
-                // 2. Move to pickup cargo position
-                new AutoMoveToPickup(m_drive, m_altitude, m_extension),
-                // 3. Intake down and pickup cargo
-                new AutoPickupCargo(m_drive, m_altitude, m_extension, m_intake),
-                // 4. Intake up and move to charge station
-                new AutoMoveToChargeStation(m_drive, m_altitude, m_extension)
-        // 5. Shoot cube
-        // new AutoBalance(m_altitude, m_extension, m_intake)
+  public AutoSuperHero(
+      DriveSubsystem m_drive,
+      Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    addCommands(
+        // 1. Score Cone
+        new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
+        // 2. Move to pickup cargo position
+        new AutoMoveToPickup(m_drive, m_altitude, m_extension),
+        // 3. Intake down and pickup cargo
+        new AutoPickupCargo(m_drive, m_altitude, m_extension, m_intake),
+        // 4. Intake up and move to charge station
+        new AutoMoveToChargeStation(m_drive, m_altitude, m_extension, m_intake)
+    // 5. Shoot cube
+    // new AutoBalance(m_altitude, m_extension, m_intake)
 
-        );
-    }
+    );
+  }
 
 }
