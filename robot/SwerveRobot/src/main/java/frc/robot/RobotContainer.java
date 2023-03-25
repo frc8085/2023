@@ -21,6 +21,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
+import frc.robot.commands.Autos.SuperHero.AutoSuperHero;
 import frc.robot.commands.AutoTurnToDegreeGyro;
 import frc.robot.commands.DriverShootCube;
 import frc.robot.commands.IntakeCargo;
@@ -315,7 +316,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     m_robotDrive.zeroHeading();
     m_robotDrive.resetOdometry(new Pose2d());
-    return new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake);
+    return new AutoSuperHero(m_robotDrive, m_altitude, m_extension, m_intake);
   }
 
 }
