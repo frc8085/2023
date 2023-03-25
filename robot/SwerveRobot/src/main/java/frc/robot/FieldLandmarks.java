@@ -44,6 +44,7 @@ public final class FieldLandmarks {
     // Intake facing grid
     public static final class SegmentEndpoints {
         public static final Pose2d ReachCharingStation = new Pose2d(5.18, 3.12, Rotation2d.fromDegrees(-180));
+        public static final Pose2d MidChargeStation = new Pose2d(3.87, 3.12, Rotation2d.fromDegrees(-180));
     }
 
     // Interior waypoints, no rotation needed
