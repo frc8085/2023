@@ -12,13 +12,13 @@ import frc.robot.subsystems.Extension;
 
 // Move to High Drop Off position
 public class AutoMoveToHighDropOff extends SequentialCommandGroup {
-    public AutoMoveToHighDropOff(
-            Altitude m_altitude,
-            Extension m_extension) {
-        addCommands(
-                new ParallelCommandGroup(
-                        new Extend(m_extension, ExtensionConstants.kExtensionPositionHighDropOff),
-                        new RaiseLower(m_altitude, AltitudeConstants.kAltitudeHighDropOffFinalPosition)));
+  public AutoMoveToHighDropOff(
+      Altitude m_altitude,
+      Extension m_extension) {
+    addCommands(
+        new ParallelCommandGroup(
+            new Extend(m_extension, ExtensionConstants.kExtensionPositionHighDropOff),
+            new RaiseLower(m_altitude, AltitudeConstants.kAltitudeHighDropOffPosition + .1)));
 
-    }
+  }
 }
