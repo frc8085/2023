@@ -57,5 +57,7 @@ public final class FieldLandmarks {
 
         // TODO UPDATE
         public static final Translation2d HaflwayToStation = new Translation2d(5.92, 3.70);
+        public static final Translation2d HalfwayUpStation = new Translation2d(3, MidStationY);
+
     }
 }
