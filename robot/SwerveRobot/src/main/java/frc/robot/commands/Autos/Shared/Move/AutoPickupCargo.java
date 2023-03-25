@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Autos.Sidekick;
+package frc.robot.commands.Autos.Shared.Move;
 
 import java.util.List;
 
@@ -25,8 +25,8 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class AutoSidekickPickupCargo extends SequentialCommandGroup {
-  public AutoSidekickPickupCargo(
+public class AutoPickupCargo extends SequentialCommandGroup {
+  public AutoPickupCargo(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension,
