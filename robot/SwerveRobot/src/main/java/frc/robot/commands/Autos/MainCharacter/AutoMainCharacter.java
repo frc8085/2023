@@ -7,7 +7,7 @@ package frc.robot.commands.Autos.MainCharacter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Autos.Shared.Move.AutoMoveToChargeStation;
+import frc.robot.commands.Autos.Shared.Move.AutoMoveToFrontChargeStation;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickup;
 import frc.robot.commands.Autos.Shared.Move.AutoPickupCargo;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
@@ -29,7 +29,7 @@ public class AutoMainCharacter extends SequentialCommandGroup {
         // 2. Move to leave community
         new AutoMainCharacterLeaveCommunity(m_drive, m_altitude, m_extension),
         // 3. Move to charge station
-        new AutoMoveToChargeStation(m_drive, m_altitude, m_extension, m_intake)
+        new AutoMoveToFrontChargeStation(m_drive, m_altitude, m_extension, m_intake)
     // 5. Shoot cube
     // new AutoBalance(m_altitude, m_extension, m_intake)
 

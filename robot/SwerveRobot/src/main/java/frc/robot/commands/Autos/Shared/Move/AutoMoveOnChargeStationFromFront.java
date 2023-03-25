@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.MoveToTravelAfterIntake;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
@@ -24,34 +25,31 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class AutoMoveToFrontChargeStation extends SequentialCommandGroup {
-  public AutoMoveToFrontChargeStation(
+public class AutoMoveOnChargeStationFromFront extends SequentialCommandGroup {
+  public AutoMoveOnChargeStationFromFront(
       DriveSubsystem m_drive,
       Altitude m_altitude,
-      Extension m_extension,
-      Intake m_intake) {
+      Extension m_extension) {
     addCommands(
-        new ParallelCommandGroup(
-            new InstantCommand(() -> m_intake.holdCargo()),
-            new MoveToTravelAfterIntake(m_extension, m_altitude)),
-        travelToChargeStation(m_drive));
+        moveOnChargeStationFromFront(m_drive),
+        new RunCommand(m_drive::lock));
   }
 
-  public Command travelToChargeStation(DriveSubsystem m_drive) {
+  public Command moveOnChargeStationFromFront(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);
 
     // First trajectory. All units in meters.
-    Trajectory moveToChargeStation = TrajectoryGenerator.generateTrajectory(
+    Trajectory moveOnChargeStation = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(3.25, -0.1, Rotation2d.fromDegrees(-10)),
+        new Pose2d(2.45, -1.5, Rotation2d.fromDegrees(-180)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2.75, -1)),
+        List.of(new Translation2d(1.85, -1.4)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(2.45, -1.5, Rotation2d.fromDegrees(-180)),
+        new Pose2d(0, -1.5, Rotation2d.fromDegrees(-180)),
         config);
 
-    return AutoTrajectoryCommand.command(m_drive, moveToChargeStation);
+    return AutoTrajectoryCommand.command(m_drive, moveOnChargeStation);
   }
 }

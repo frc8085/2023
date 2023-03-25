@@ -7,7 +7,8 @@ package frc.robot.commands.Autos.SuperHero;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Autos.Shared.Move.AutoMoveToChargeStation;
+import frc.robot.commands.Autos.Shared.Move.AutoMoveOnChargeStationFromFront;
+import frc.robot.commands.Autos.Shared.Move.AutoMoveToFrontChargeStation;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickup;
 import frc.robot.commands.Autos.Shared.Move.AutoPickupCargo;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
@@ -31,9 +32,9 @@ public class AutoSuperHero extends SequentialCommandGroup {
         // 3. Intake down and pickup cargo
         new AutoPickupCargo(m_drive, m_altitude, m_extension, m_intake),
         // 4. Intake up and move to charge station
-        new AutoMoveToChargeStation(m_drive, m_altitude, m_extension, m_intake)
-    // 5. Shoot cube
-    // new AutoBalance(m_altitude, m_extension, m_intake)
+        new AutoMoveToFrontChargeStation(m_drive, m_altitude, m_extension, m_intake),
+        // 5. Move on Charge Station
+        new AutoMoveOnChargeStationFromFront(m_drive, m_altitude, m_extension)
 
     );
   }
