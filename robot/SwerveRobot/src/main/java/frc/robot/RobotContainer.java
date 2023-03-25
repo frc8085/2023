@@ -15,6 +15,8 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -63,6 +65,8 @@ import java.util.List;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  protected SendableChooser<Command> autoSelection = new SendableChooser<>();
+
   // The robot's subsystems
   private final Extension m_extension = new Extension();
   private final Altitude m_altitude = new Altitude(m_extension);
@@ -80,6 +84,8 @@ public class RobotContainer {
     // Silence Joystick Warnings
     DriverStation.silenceJoystickConnectionWarning(true);
 
+    // Configure the Auto Selector
+    configureAuto();
     // Configure the button bindings
     configureButtonBindings();
 
@@ -100,6 +106,17 @@ public class RobotContainer {
                 true, m_robotDrive
                     .isWithinSafeDrivingLimits()),
             m_robotDrive));
+  }
+
+  private void configureAuto() {
+
+    autoSelection.setDefaultOption("(15pt) SIDEKICK: Score High, Leave, Pickup Cube, Score High ",
+        new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake));
+    autoSelection.addOption("(19pt) SUPERHERO: Score High, Leave, Pickup Cube, Dock",
+        new AutoSuperHero(m_robotDrive, m_altitude, m_extension, m_intake));
+
+    // Put the chooser on the dashboard
+    SmartDashboard.putData("Auto Routine", autoSelection);
   }
 
   /**
@@ -316,7 +333,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     m_robotDrive.zeroHeading();
     m_robotDrive.resetOdometry(new Pose2d());
-    return new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake);
+    return autoSelection.getSelected();
   }
 
 }
