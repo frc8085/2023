@@ -316,7 +316,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     m_robotDrive.zeroHeading();
     m_robotDrive.resetOdometry(new Pose2d());
-    return new AutoSuperHero(m_robotDrive, m_altitude, m_extension, m_intake);
+    return new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake);
   }
 
 }
