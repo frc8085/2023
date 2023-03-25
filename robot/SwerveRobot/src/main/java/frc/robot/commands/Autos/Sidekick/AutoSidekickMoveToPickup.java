@@ -21,29 +21,30 @@ import frc.robot.subsystems.Extension;
 
 /** An example command that uses an example subsystem. */
 public class AutoSidekickMoveToPickup extends SequentialCommandGroup {
-        public AutoSidekickMoveToPickup(
-                        DriveSubsystem m_drive,
-                        Altitude m_altitude,
-                        Extension m_extension) {
-                addCommands(
-                                travelBackwardsThenSpin(m_drive));
+  public AutoSidekickMoveToPickup(
+      DriveSubsystem m_drive,
+      Altitude m_altitude,
+      Extension m_extension) {
+    addCommands(
+        travelBackwardsThenSpin(m_drive));
 
-        }
+  }
 
-        public Command travelBackwardsThenSpin(DriveSubsystem m_drive) {
-                // Create config for trajectory
-                TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+  public Command travelBackwardsThenSpin(DriveSubsystem m_drive) {
+    // Create config for trajectory
+    TrajectoryConfig config = AutoTrajectoryCommand.config(true);
 
-                // First trajectory. All units in meters.
-                Trajectory moveToPosition = TrajectoryGenerator.generateTrajectory(
-                                // Start at the origin facing the +X direction
-                                new Pose2d(0, 0, Rotation2d.fromDegrees(-180)),
-                                // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                                List.of(new Translation2d(.5, 0.01)),
-                                // Drive backwards and end 3 meters behind where we started, facing forward
-                                new Pose2d(3, 0, Rotation2d.fromDegrees(0)),
-                                config);
+    // First trajectory. All units in meters.
+    Trajectory moveToPosition = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, Rotation2d.fromDegrees(-180)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        // NOTE: MUST have a waypoint. CANNOT be a straight line.
+        List.of(new Translation2d(1, 0.01)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(3, -0.1, Rotation2d.fromDegrees(0)),
+        config);
 
-                return AutoTrajectoryCommand.command(m_drive, moveToPosition);
-        }
+    return AutoTrajectoryCommand.command(m_drive, moveToPosition);
+  }
 }
