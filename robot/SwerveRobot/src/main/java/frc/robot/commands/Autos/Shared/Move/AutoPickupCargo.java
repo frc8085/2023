@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Autos.Shared.Travel;
+package frc.robot.commands.Autos.Shared.Move;
 
 import java.util.List;
 
@@ -16,8 +16,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.FieldLandmarks;
-import frc.robot.commands.MoveToTravelAfterIntake;
+import frc.robot.commands.MoveToIntake;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
@@ -25,30 +26,36 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class AutoTravelToFrontChargeStation extends SequentialCommandGroup {
-  public AutoTravelToFrontChargeStation(
+public class AutoPickupCargo extends SequentialCommandGroup {
+  public AutoPickupCargo(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension,
       Intake m_intake) {
     addCommands(
+        new MoveToIntake(m_extension, m_altitude),
+        new WaitUntilCommand(
+            () -> m_altitude.AltitudeIsInIntakePosition() &&
+                m_extension.ExtensionIsInIntakePosition()),
         new ParallelCommandGroup(
-            new InstantCommand(() -> m_intake.holdCargo()),
-            new MoveToTravelAfterIntake(m_extension, m_altitude)),
-        travelToChargeStation(m_drive));
+            driveToGamePiece(m_drive),
+            new InstantCommand(() -> m_intake.intakeCone())));
   }
 
-  public Command travelToChargeStation(DriveSubsystem m_drive) {
+  public Command driveToGamePiece(DriveSubsystem m_drive) {
     // Create config for trajectory
-    TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+    TrajectoryConfig config = AutoTrajectoryCommand.config(false);
 
-    Trajectory moveToChargeStation = TrajectoryGenerator.generateTrajectory(
-        FieldLandmarks.PickupPosition.Blue1,
+    // An example trajectory to follow. All units in meters.
+    Trajectory pickupCargo = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing forward
+        FieldLandmarks.SegmentEndpoints.ApproachBlue1,
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(FieldLandmarks.InteriorWaypoint.HaflwayToStation),
-        FieldLandmarks.SegmentEndpoints.ReachCharingStation,
+        List.of(FieldLandmarks.InteriorWaypoint.HaflwayToBlue1),
+        // End 2 meters straight ahead of where we started still facing forward
+        FieldLandmarks.PickupPosition.Blue1,
         config);
 
-    return AutoTrajectoryCommand.command(m_drive, moveToChargeStation);
+    return AutoTrajectoryCommand.command(m_drive, pickupCargo);
   }
 }

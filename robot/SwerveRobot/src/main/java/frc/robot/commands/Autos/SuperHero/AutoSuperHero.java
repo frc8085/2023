@@ -7,11 +7,11 @@ package frc.robot.commands.Autos.SuperHero;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.Autos.Shared.Move.AutoMoveOnChargeStationFromFront;
+import frc.robot.commands.Autos.Shared.Move.AutoMoveToFrontChargeStation;
+import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickup;
+import frc.robot.commands.Autos.Shared.Move.AutoPickupCargo;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
-import frc.robot.commands.Autos.Shared.Travel.AutoTravelOnChargeStationFromFront;
-import frc.robot.commands.Autos.Shared.Travel.AutoTravelToFrontChargeStation;
-import frc.robot.commands.Autos.Shared.Travel.AutoTravelToPickup;
-import frc.robot.commands.Autos.Shared.Travel.AutoPickupCargo;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
@@ -28,13 +28,13 @@ public class AutoSuperHero extends SequentialCommandGroup {
         // 1. Score Cone
         new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
         // 2. Move to pickup cargo position
-        new AutoTravelToPickup(m_drive, m_altitude, m_extension),
+        new AutoMoveToPickup(m_drive, m_altitude, m_extension),
         // 3. Intake down and pickup cargo
         new AutoPickupCargo(m_drive, m_altitude, m_extension, m_intake),
         // 4. Intake up and move to charge station
-        new AutoTravelToFrontChargeStation(m_drive, m_altitude, m_extension, m_intake),
+        new AutoMoveToFrontChargeStation(m_drive, m_altitude, m_extension, m_intake),
         // 5. Move on Charge Station
-        new AutoTravelOnChargeStationFromFront(m_drive, m_altitude, m_extension)
+        new AutoMoveOnChargeStationFromFront(m_drive, m_altitude, m_extension)
 
     );
   }

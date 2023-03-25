@@ -14,7 +14,6 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.FieldLandmarks;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
@@ -37,9 +36,12 @@ public class AutoMainCharacterLeaveCommunity extends SequentialCommandGroup {
 
         // First trajectory. All units in meters.
         Trajectory leaveCommunity = TrajectoryGenerator.generateTrajectory(
-                FieldLandmarks.GridPosition.BlueALeft,
+                // Start at the origin facing the +X direction
+                new Pose2d(0, 0, Rotation2d.fromDegrees(-180)),
+                // Pass through these two interior waypoints, making an 's' curve path
                 // NOTE: MUST have a waypoint. CANNOT be a straight line.
                 List.of(new Translation2d(2, -0.01)),
+                // End 3 meters straight ahead of where we started, facing forward
                 new Pose2d(4, -0.1, Rotation2d.fromDegrees(0)),
                 config);
 

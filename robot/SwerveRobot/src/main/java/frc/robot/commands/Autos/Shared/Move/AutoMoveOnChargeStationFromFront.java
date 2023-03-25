@@ -2,9 +2,8 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Autos.Shared.Travel;
+package frc.robot.commands.Autos.Shared.Move;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,40 +13,43 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.FieldLandmarks;
+import frc.robot.commands.MoveToTravelAfterIntake;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
+import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class AutoTravelToPickup extends SequentialCommandGroup {
-  public AutoTravelToPickup(
+public class AutoMoveOnChargeStationFromFront extends SequentialCommandGroup {
+  public AutoMoveOnChargeStationFromFront(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension) {
     addCommands(
-        travelBackwardsThenSpin(m_drive));
-
+        moveOnChargeStationFromFront(m_drive),
+        new RunCommand(m_drive::lock));
   }
 
-  public Command travelBackwardsThenSpin(DriveSubsystem m_drive) {
+  public Command moveOnChargeStationFromFront(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);
 
-    Trajectory moveToPosition = TrajectoryGenerator.generateTrajectory(
-        FieldLandmarks.GridPosition.BlueALeft,
+    // First trajectory. All units in meters.
+    Trajectory moveOnChargeStation = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(2.45, -1.5, Rotation2d.fromDegrees(-180)),
+        // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(FieldLandmarks.InteriorWaypoint.HaflwayToPickup),
-        FieldLandmarks.SegmentEndpoints.ApproachBlue1,
+        List.of(new Translation2d(1.85, -1.4)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(0, -1.5, Rotation2d.fromDegrees(-180)),
         config);
 
-    // Because this is the first point, make sure we reset odometry to start at
-    // initial pose
-    m_drive.zeroHeading();
-    m_drive.resetOdometry(moveToPosition.getInitialPose());
-
-    return AutoTrajectoryCommand.command(m_drive, moveToPosition);
+    return AutoTrajectoryCommand.command(m_drive, moveOnChargeStation);
   }
 }
