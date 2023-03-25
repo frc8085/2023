@@ -52,7 +52,7 @@ public final class Constants {
     public static final double kEjectCubePower = .8;
     public static final double kIntakeHoldCubePower = 0.15;
 
-    public static final double kEjectWaitTime = 2;
+    public static final double kEjectWaitTime = 0.5;
     public static final double kAutoEjectWaitTime = .5;
 
     // Intake Button Wait Time

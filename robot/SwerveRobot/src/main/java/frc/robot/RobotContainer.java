@@ -21,6 +21,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
+import frc.robot.commands.Autos.SuperHero.AutoSuperHero;
 import frc.robot.commands.AutoTurnToDegreeGyro;
 import frc.robot.commands.DriverShootCube;
 import frc.robot.commands.IntakeCargo;

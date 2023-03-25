@@ -20,8 +20,8 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 
 /** An example command that uses an example subsystem. */
-public class AutoSidekickMoveToPickup extends SequentialCommandGroup {
-  public AutoSidekickMoveToPickup(
+public class AutoMoveToPickup extends SequentialCommandGroup {
+  public AutoMoveToPickup(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension) {
@@ -40,9 +40,9 @@ public class AutoSidekickMoveToPickup extends SequentialCommandGroup {
         new Pose2d(0, 0, Rotation2d.fromDegrees(-180)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(1.5, -0.1)),
+        List.of(new Translation2d(1.5, -0.4)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, -0.1, Rotation2d.fromDegrees(-10)),
+        new Pose2d(3, -0.2, Rotation2d.fromDegrees(-10)),
         config);
 
     m_drive.zeroHeading();
