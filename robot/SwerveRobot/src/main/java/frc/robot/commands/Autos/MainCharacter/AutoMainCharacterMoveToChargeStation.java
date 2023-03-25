@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Autos.Shared.Move;
+package frc.robot.commands.Autos.MainCharacter;
 
 import java.util.List;
 
@@ -20,31 +20,31 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 
 /** An example command that uses an example subsystem. */
-public class AutoMoveToChargeStation extends SequentialCommandGroup {
-    public AutoMoveToChargeStation(
+public class AutoMainCharacterMoveToChargeStation extends SequentialCommandGroup {
+    public AutoMainCharacterMoveToChargeStation(
             DriveSubsystem m_drive,
             Altitude m_altitude,
             Extension m_extension) {
         addCommands(
-                travelToChargeStation(m_drive));
+                returnToChargeStation(m_drive));
 
     }
 
-    public Command travelToChargeStation(DriveSubsystem m_drive) {
+    public Command returnToChargeStation(DriveSubsystem m_drive) {
         // Create config for trajectory
         TrajectoryConfig config = AutoTrajectoryCommand.config(true);
 
         // First trajectory. All units in meters.
-        Trajectory moveToChargeStation = TrajectoryGenerator.generateTrajectory(
+        Trajectory returnToChargeStation = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(3.25, -0.1, Rotation2d.fromDegrees(-10)),
+                new Pose2d(4, -0.1, Rotation2d.fromDegrees(0)),
                 // Pass through these two interior waypoints, making an 's' curve path
                 // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                List.of(new Translation2d(2.75, -0.5)),
+                List.of(new Translation2d(3, -0.01)),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(2.25, -1, Rotation2d.fromDegrees(-10)),
+                new Pose2d(2, -0.1, Rotation2d.fromDegrees(15)),
                 config);
 
-        return AutoTrajectoryCommand.command(m_drive, moveToChargeStation);
+        return AutoTrajectoryCommand.command(m_drive, returnToChargeStation);
     }
 }

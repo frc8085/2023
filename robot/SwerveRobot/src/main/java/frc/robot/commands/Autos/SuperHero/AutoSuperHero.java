@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Autos.MainCharacter;
+package frc.robot.commands.Autos.SuperHero;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -17,8 +17,8 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class AutoMainCharacter extends SequentialCommandGroup {
-    public AutoMainCharacter(
+public class AutoSuperHero extends SequentialCommandGroup {
+    public AutoSuperHero(
             DriveSubsystem m_drive,
             Altitude m_altitude,
             Extension m_extension,
@@ -26,9 +26,11 @@ public class AutoMainCharacter extends SequentialCommandGroup {
         addCommands(
                 // 1. Score Cone
                 new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
-                // 2. Move to leave community
-                new AutoMainCharacterLeaveCommunity(m_drive, m_altitude, m_extension),
-                // 3. Move to charge station
+                // 2. Move to pickup cargo position
+                new AutoMoveToPickup(m_drive, m_altitude, m_extension),
+                // 3. Intake down and pickup cargo
+                new AutoPickupCargo(m_drive, m_altitude, m_extension, m_intake),
+                // 4. Intake up and move to charge station
                 new AutoMoveToChargeStation(m_drive, m_altitude, m_extension)
         // 5. Shoot cube
         // new AutoBalance(m_altitude, m_extension, m_intake)
