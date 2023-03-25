@@ -40,9 +40,9 @@ public class AutoSidekickMoveToPickup extends SequentialCommandGroup {
         new Pose2d(0, 0, Rotation2d.fromDegrees(-180)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(1, 0.01)),
+        List.of(new Translation2d(1.5, -0.1)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, -0.1, Rotation2d.fromDegrees(0)),
+        new Pose2d(3, -0.1, Rotation2d.fromDegrees(-10)),
         config);
 
     m_drive.zeroHeading();

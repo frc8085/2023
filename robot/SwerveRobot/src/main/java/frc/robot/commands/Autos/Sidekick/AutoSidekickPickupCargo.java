@@ -48,11 +48,11 @@ public class AutoSidekickPickupCargo extends SequentialCommandGroup {
     // An example trajectory to follow. All units in meters.
     Trajectory pickupCargo = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing forward
-        new Pose2d(3, -0.1, Rotation2d.fromDegrees(0)),
+        new Pose2d(3, -0.1, Rotation2d.fromDegrees(-10)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(3.5, 0.01)),
+        List.of(new Translation2d(3.2, -0.15)),
         // End 2 meters straight ahead of where we started still facing forward
-        new Pose2d(4, -0.1, Rotation2d.fromDegrees(0)),
+        new Pose2d(3.45, -0.25, Rotation2d.fromDegrees(-10)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, pickupCargo);

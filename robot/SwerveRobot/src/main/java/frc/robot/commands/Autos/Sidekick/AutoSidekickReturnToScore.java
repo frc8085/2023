@@ -46,11 +46,11 @@ public class AutoSidekickReturnToScore extends SequentialCommandGroup {
     // reversed being true?
     Trajectory returnToScoreOne = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(4.0, -0.1, Rotation2d.fromDegrees(0)),
+        new Pose2d(4.0, -0.1, Rotation2d.fromDegrees(-10)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2.5, 0.01)),
+        List.of(new Translation2d(2.5, -0.2)),
         // Drive backwards for a meter
-        new Pose2d(0.5, 0.1, Rotation2d.fromDegrees(170)),
+        new Pose2d(0.25, -0.3, Rotation2d.fromDegrees(-180)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, returnToScoreOne);
