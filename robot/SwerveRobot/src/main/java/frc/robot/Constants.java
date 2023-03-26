@@ -206,7 +206,7 @@ public final class Constants {
     public static double kAltitudeError = 0.05;
 
     // Range for safe Travel altitude > -0.7
-    public static double kAltitudeSafeMin = -0.7;
+    public static double kAltitudeSafeMin = -0.9;
 
     public static double kAltitudeSafeExtensionMin = kAltitudeDropOffPosition - kAltitudePositionTolerance;
 

@@ -132,7 +132,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /** Drive Lock **/
-    final Trigger lockWheels = m_driverController.leftBumper();
+    final Trigger lockWheels = m_driverController.povDown();
 
     lockWheels.toggleOnTrue(new RunCommand(
         () -> m_robotDrive.lock(),
@@ -148,7 +148,7 @@ public class RobotContainer {
 
     cubeMidShotButton.onTrue(new ScoreCube(m_altitude, m_extension, m_intake));
 
-    cubeShootButton.onTrue(new DriverShootCube(m_altitude, m_extension,
+    cubeShootButton.onTrue(new ScoreHighCube(m_altitude, m_extension,
         m_intake));
 
     final Trigger zeroHeadingButton = m_driverController.start();
