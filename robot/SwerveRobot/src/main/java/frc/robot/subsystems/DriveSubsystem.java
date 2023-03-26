@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,24 +14,20 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
-
-// import edu.wpi.first.wpilibj.ADIS16448_IMU;
-// import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
-
-import frc.robot.Constants.ExtensionConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.AltitudeConstants;
-import frc.robot.Constants.OIConstants;
-import frc.robot.utilities.SwerveUtils;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
+
+import frc.robot.Constants.AltitudeConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ExtensionConstants;
+import frc.robot.Constants.TuningModeConstants;
+import frc.utils.SwerveUtils;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 public class DriveSubsystem extends SubsystemBase {
-  private boolean TUNING_MODE = true;
+  private boolean TUNING_MODE = TuningModeConstants.kDriveTuning;
   private Altitude m_altitude;
   private Extension m_extension;
 
@@ -56,59 +53,29 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  // private final ADIS16448_IMU m_gyro = new ADIS16448_IMU();
-  // private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
   private final WPI_Pigeon2 m_gyro = new WPI_Pigeon2(DriveConstants.kGyroDeviceNumber);
+
+  private double[] pitchYawRollVelocitiesDegreesPerSecond = new double[3];
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
   private double m_currentTranslationDir = 0.0;
   private double m_currentTranslationMag = 0.0;
 
-  private SlewRateLimiter m_magLimiter = new SlewRateLimiter(OIConstants.kMagnitudeSlewRate);
-  private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(OIConstants.kRotationalSlewRate);
+  private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
+  private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
-      Rotation2d.fromDegrees(m_gyro.getAngle()),
+      m_gyro.getRotation2d(),
       new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
       });
-
-  public double getPitch() {
-    return m_gyro.getPitch();
-  }
-
-  public void logSwerveStates() {
-    // System.out.println("Position FrontLeft: " + m_frontLeft.getPosition());
-    // System.out.println("Position FrontRight: " + m_frontRight.getPosition());
-    // System.out.println("Position RearLeft: " + m_rearLeft.getPosition());
-    // System.out.println("Position RearRight: " + m_rearRight.getPosition());
-  }
-
-  /** The log method puts interesting information to the SmartDashboard. */
-  public void log() {
-    SmartDashboard.putNumber("Match time remaining", getMatchTimeRemaining());
-    SmartDashboard.putBoolean("Under 60s", getMatchTimeRemaining() > 60);
-    SmartDashboard.putBoolean("Under 30s ", getMatchTimeRemaining() > 30);
-
-    // Things to show only in tuning mode
-    if (TUNING_MODE) {
-      SmartDashboard.putNumber("POSE X Meters", m_odometry.getPoseMeters().getX());
-      SmartDashboard.putNumber("POSE Y Meters", m_odometry.getPoseMeters().getY());
-
-      SmartDashboard.putNumber("Angle", m_gyro.getAngle());
-      // SmartDashboard.putNumber("Yaw", m_gyro.getYaw());
-      SmartDashboard.putNumber("Pitch", m_gyro.getPitch());
-      // SmartDashboard.putNumber("Roll", m_gyro.getRoll());
-
-    }
-  }
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(Altitude Altitude, Extension Extension) {
@@ -118,19 +85,31 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /** Call log method every loop. */
-    log();
-
     // Update the odometry in the periodic block
-    //
     m_odometry.update(
-        Rotation2d.fromDegrees(m_gyro.getAngle()),
+        m_gyro.getRotation2d(),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
+
+    // calculate velocities for pitch, yaw, roll from the gyro
+    // Returned in degrees per second
+    m_gyro.getRawGyro(pitchYawRollVelocitiesDegreesPerSecond);
+
+    log();
+
+  }
+
+  private void log() {
+    SmartDashboard.putNumber("Heading", getHeading());
+    SmartDashboard.putNumber("X Pose", getPose().getX());
+    SmartDashboard.putNumber("Y Pose", getPose().getY());
+    SmartDashboard.putNumber("Yaw", getYaw());
+
+    SmartDashboard.putNumberArray("XYZ_DPS", pitchYawRollVelocitiesDegreesPerSecond);
   }
 
   /**
@@ -142,6 +121,57 @@ public class DriveSubsystem extends SubsystemBase {
     return m_odometry.getPoseMeters();
   }
 
+  public double getYaw() {
+    return m_gyro.getYaw();
+  }
+
+  /**
+   * Returns the currently-estimated pitch of the robot.
+   *
+   * @return The pitch.
+   */
+  public Rotation2d getPitch() {
+    return Rotation2d.fromDegrees(m_gyro.getPitch());
+  }
+
+  /**
+   * Returns the currently-estimated pitch velocity of the robot.
+   *
+   * @return The pitch velocity (degrees per second)
+   */
+  public double getPitchVelocity() {
+    return pitchYawRollVelocitiesDegreesPerSecond[0];
+    // return 0;
+  }
+
+  /**
+   * Returns the currently-estimated pitch of the robot.
+   *
+   * @return The rotation.
+   */
+  public Rotation2d getRotation() {
+    return m_gyro.getRotation2d();
+  }
+
+  /**
+   * Returns the currently-estimated roll of the robot.
+   *
+   * @return The roll.
+   */
+  public Rotation2d getRoll() {
+    return Rotation2d.fromDegrees(m_gyro.getRoll());
+  }
+
+  /**
+   * Returns the currently-estimated roll velocity of the robot.
+   *
+   * @return The roll velocity (degrees per second)
+   */
+  public double getRollVelocity() {
+    return pitchYawRollVelocitiesDegreesPerSecond[2];
+    // return 0;
+  }
+
   /**
    * Resets the odometry to the specified pose.
    *
@@ -149,7 +179,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(m_gyro.getAngle()),
+        m_gyro.getRotation2d(),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -159,65 +189,48 @@ public class DriveSubsystem extends SubsystemBase {
         pose);
   }
 
-  public boolean isWithinSafeDrivingLimits() {
-    boolean altitudeInSafeLimit = m_altitude.getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin;
-    boolean extenstionInSafeLimit = m_extension.getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
-
-    // If in Auto, it is safe to drive faster
-    // But if in Teleop, consider us within safe driving limits only if the altitude
-    // and extension are within safe limits
-    return RobotState.isAutonomous() || (altitudeInSafeLimit && extenstionInSafeLimit);
+  /**
+   * Method to stop the robot
+   */
+  public void stop() {
+    drive(0, 0, 0, 0, false, false);
   }
 
-  public void stop() {
-    drive(false, 0, 0, 0, 0, true, false);
+  public void turn(double speed) {
+    drive(0, 0, 0, speed, true, false);
   }
 
   /**
    * Method to drive the robot using joystick info.
    *
-   * @param speedLimit        Whether to fix the speed to a set value
-   * @param inputSpeed        Speed of the robot in the x direction (forward).
-   * @param forwardDirection
-   * @param sidewaysDirection
-   * @param rotDirection      Angular rate of the robot.
-   * @param fieldRelative     Whether to move relative to the field
-   * @param rateLimit         Whether to use rate limiting
+   * @param xSpeed        Speed of the robot in the x direction (forward).
+   * @param ySpeed        Speed of the robot in the y direction (sideways).
+   * @param rot           Angular rate of the robot.
+   * @param fieldRelative Whether the provided x and y speeds are relative to the
+   *                      field.
+   * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
-  public void drive(
-      boolean speedLimit,
-      double inputSpeed,
-      double forwardDirection,
-      double sidewaysDirection,
-      double rotDirection,
-      boolean fieldRelative,
+
+  // TODO: confirm that rotation speed is reduced when altitude and extension are
+  // not in travel and that there is no slew then
+  public void drive(double speed, double xSpeed, double ySpeed, double rot, boolean fieldRelative,
       boolean rateLimit) {
-
-    // Adjust input based on max speed
-
-    // If we set the speed limit use a lower max speed
-    // otherwise the speed value with some max
-    double speed = speedLimit || !isWithinSafeDrivingLimits()
-        ? inputSpeed * DriveConstants.kMaxLimitedSpeedMetersPerSecond
-        : inputSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
-
-    rotDirection = speedLimit || !isWithinSafeDrivingLimits()
-        ? rotDirection * DriveConstants.kMaxLimitedAngularSpeed
-        : rotDirection * DriveConstants.kMaxAngularSpeed;
-
-    double forwardDirectionCommanded;
-    double sidewaysDirectionCommanded;
+    double speedCommanded = isWithinSafeDrivingLimits() ? speed : DriveConstants.kSafeSpeedLimit * speed;
+    double xSpeedCommanded;
+    double ySpeedCommanded;
+    double rotSpeed = isWithinSafeDrivingLimits() ? rot : DriveConstants.kSafeRotLimit * rot;
 
     if (rateLimit) {
       // Convert XY to polar for rate limiting
-      double inputTranslationDir = Math.atan2(sidewaysDirection, forwardDirection);
-      double inputTranslationMag = Math.sqrt(Math.pow(forwardDirection, 2) + Math.pow(sidewaysDirection, 2));
+      double inputTranslationDir = Math.atan2(speedCommanded * ySpeed, speedCommanded * xSpeed);
+      double inputTranslationMag = Math
+          .sqrt(Math.pow(speedCommanded * xSpeed, 2) + Math.pow(speedCommanded * ySpeed, 2));
 
       // Calculate the direction slew rate based on an estimate of the lateral
       // acceleration
       double directionSlewRate;
       if (m_currentTranslationMag != 0.0) {
-        directionSlewRate = Math.abs(OIConstants.kDirectionSlewRate / m_currentTranslationMag);
+        directionSlewRate = Math.abs(DriveConstants.kDirectionSlewRate / m_currentTranslationMag);
       } else {
         directionSlewRate = 500.0; // some high number that means the slew rate is effectively instantaneous
       }
@@ -245,41 +258,32 @@ public class DriveSubsystem extends SubsystemBase {
       }
       m_prevTime = currentTime;
 
-      forwardDirectionCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
-      sidewaysDirectionCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
-      m_currentRotation = m_rotLimiter.calculate(rotDirection);
+      xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
+      ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
+      m_currentRotation = m_rotLimiter.calculate(rot);
 
     } else {
-      forwardDirectionCommanded = forwardDirection;
-      sidewaysDirectionCommanded = sidewaysDirection;
-      m_currentRotation = rotDirection;
+      xSpeedCommanded = speedCommanded * xSpeed;
+      ySpeedCommanded = speedCommanded * ySpeed;
+      m_currentRotation = rotSpeed;
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    double forwardDirectionDelivered = forwardDirectionCommanded * speed;
-    double sidewaysDirectionDelivered = sidewaysDirectionCommanded * speed;
+    double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
+    double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotDelivered = m_currentRotation * DriveConstants.kMaxAngularSpeed;
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                forwardDirectionDelivered,
-                sidewaysDirectionDelivered,
-                rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle()))
-            : new ChassisSpeeds(
-                forwardDirectionDelivered,
-                sidewaysDirectionDelivered,
-                rotDelivered));
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
+                m_gyro.getRotation2d())
+            : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
-  }
-
-  public void turn(double speed) {
-    drive(false, 0, 0, 0, speed, true, false);
   }
 
   /**
@@ -319,14 +323,13 @@ public class DriveSubsystem extends SubsystemBase {
     m_gyro.reset();
   }
 
-  /** Resets the odometry of the robot. */
-  public void resetPose() {
-    m_gyro.reset();
-  }
-
-  /** Calibrates the gyro */
-  public void calibrate() {
-    m_gyro.calibrate();
+  /**
+   * Returns the heading of the robot.
+   *
+   * @return the robot's heading in degrees, not wrapped
+   */
+  public double getHeading() {
+    return m_gyro.getRotation2d().getDegrees();
   }
 
   /**
@@ -334,8 +337,8 @@ public class DriveSubsystem extends SubsystemBase {
    *
    * @return the robot's heading in degrees, from -180 to 180
    */
-  public double getHeading() {
-    return Rotation2d.fromDegrees(m_gyro.getAngle()).getDegrees();
+  public double getHeadingWrappedDegrees() {
+    return MathUtil.inputModulus(m_gyro.getRotation2d().getDegrees(), -180, 180);
   }
 
   /**
@@ -347,8 +350,14 @@ public class DriveSubsystem extends SubsystemBase {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
-  public double getMatchTimeRemaining() {
-    return Timer.getMatchTime();
-  }
+  public boolean isWithinSafeDrivingLimits() {
+    boolean altitudeInSafeLimit = m_altitude.getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin;
+    boolean extenstionInSafeLimit = m_extension
+        .getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
 
+    // If in Auto, it is safe to drive faster
+    // But if in Teleop, consider us within safe driving limits only if the altitude
+    // and extension are within safe limits
+    return RobotState.isAutonomous() || (altitudeInSafeLimit && extenstionInSafeLimit);
+  }
 }

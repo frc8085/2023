@@ -14,11 +14,13 @@ import com.revrobotics.SparkMaxPIDController;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.TuningModeConstants;
+
 import static frc.robot.Constants.ExtensionConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
 public class Extension extends SubsystemBase {
-  private boolean TUNING_MODE = false;
+  private boolean TUNING_MODE = TuningModeConstants.kExtensionTuning;
 
   /** Creates a new Extension. */
 
@@ -41,7 +43,7 @@ public class Extension extends SubsystemBase {
   static double kFFExtension = 0;
 
   static double kMaxOutputExtension = 0.85;
-  static double kMinOutputExtension = -0.85;
+  static double kMinOutputExtension = -0.75;
 
   public boolean ExtensionRetractionLimitHit() {
     return isRetractionLimitHit();
@@ -80,6 +82,9 @@ public class Extension extends SubsystemBase {
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
+
+    SmartDashboard.putNumber("Extension Current position", getCurrentExtensionPosition());
+
     if (TUNING_MODE) {
       // SmartDashboard.putBoolean("Fully Extended", m_extensionLimit.isPressed());
       // SmartDashboard.putBoolean("Fully Retracted", m_retractionLimit.isPressed());
@@ -87,7 +92,6 @@ public class Extension extends SubsystemBase {
       // ExtensionIsInTravelPosition());
       // SmartDashboard.putBoolean("Extension Intake Position",
       // ExtensionIsInIntakePosition());
-      SmartDashboard.putNumber("Extension Current position", getCurrentExtensionPosition());
       addPIDToDashboard();
       readExtensionPIDTuningFromDashboard();
 
@@ -181,6 +185,10 @@ public class Extension extends SubsystemBase {
   }
 
   /** ELEVATOR Extension **/
+  public void moveExtension(double speed) {
+    m_extensionMotor.set(speed);
+  }
+
   // Run the elevator Extension motor forward
   public void extendExtension() {
     m_extensionMotor.set(ExtensionConstants.kExtensionExtendSpeed);
@@ -248,6 +256,13 @@ public class Extension extends SubsystemBase {
     return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionHighCubeShooter
         + ExtensionConstants.kExtensionPositionTolerance
         && m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionHighCubeShooter
+            - ExtensionConstants.kExtensionPositionTolerance;
+  }
+
+  public boolean ExtensionIsInCubeShootPosition() {
+    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionCubeShooter
+        + ExtensionConstants.kExtensionPositionTolerance
+        && m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionCubeShooter
             - ExtensionConstants.kExtensionPositionTolerance;
   }
 

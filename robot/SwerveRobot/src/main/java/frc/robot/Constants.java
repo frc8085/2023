@@ -6,7 +6,10 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -25,8 +28,12 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
 
-  public static final class IntakeCoverConstants {
-    public static final int[] kIntakeCoverSolenoidPorts = new int[] { 6, 7 };
+  public static final class TuningModeConstants {
+    public static final boolean kAltitudeTuning = false;
+    public static final boolean kExtensionTuning = false;
+    public static final boolean kIntakeTuning = false;
+    public static final boolean kDriveTuning = true;
+    public static final boolean kLimelightTuning = true;
   }
 
   public static final class SubsystemMotorConstants {
@@ -42,14 +49,17 @@ public final class Constants {
 
     // Intake Cone Power
     public static final double kIntakeConePower = 1;
-    public static final double kEjectConePower = 0.35;
+    public static final double kEjectConePower = 0.425;
 
     // Intake Cube Power
     public static final double kIntakeCubePower = 0.8;
     public static final double kEjectCubePower = .8;
+    public static final double kShootCubePower = 1;
     public static final double kIntakeHoldCubePower = 0.15;
+    public static final double kDropCubePower = 0.15;
 
-    public static final double kEjectWaitTime = 2;
+    public static final double kEjectWaitTime = 0.5;
+    public static final double kAutoEjectWaitTime = .5;
 
     // Intake Button Wait Time
     public static final double kIntakeSafetyPressWaitTime = 2;
@@ -62,42 +72,58 @@ public final class Constants {
     public static double kExtensionRetractSpeed = 0.25;
     public static double kExtensionRampRate = 0;
     public static double kExtensionPositionTolerance = 1;
+    public static double kAutoExtensionPositionTolerance = 5;
 
     public static final double kMaxExtensionSpeedMetersPerSecond = 0.25;
 
     // Estimates, fix this once we get exact measurements
-    public static final double kExtensionLengthInches = 48;
-    public static final double kExtensionLengthRevolutions = 141;
+    public static final double kExtensionLengthInches = 50;
+    public static final double kExtensionLengthRevolutions = 82;
 
-    // Convert length of travel to encoder rotations, where encoder reading of 1 is
-    // 0 inches and reading of 140 is 48 inches
-    public static final double kExtensionRevolutionsPerInch = (kExtensionLengthRevolutions - 1)
+    // Convert length of travel to encoder rotations, where encoder reading of 0 is
+    // 0 inches and reading of 82 is 48 inches
+    public static final double kExtensionRevolutionsPerInch = (kExtensionLengthRevolutions)
         / kExtensionLengthInches;
 
     // Range for safe Travel Extension <20
     public static double kExtensionSafeMax = 10;
 
-    // encoder readings of Extension position as of 2.14.2023
-    public static double kExtensionPositionFullyRetracted = 1;
-    public static double kExtensionPositionIntakeOut = 39;
-    public static double kExtensionPositionMidDropOff = 86;
-    public static double kExtensionPositionHighDropOff = 135;
-    public static double kExtensionPositionHighDropOffReturn = 100;
-    public static double kExtensionPositionSingleSubstation = 41;
-    public static double kExtensionPositionMidCubeShooter = 60;
-    public static double kExtensionPositionHighCubeShooter = 70;
-
     // Converted 2.14.23 Encoder readings into inches
-    public static double kExtensionPositionInchesFullyRetracted = 1 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesIntakeOut = 38 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesMidDropOff = 85 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesHighDropOff = 134 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesHighDropOffReturn = 99 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesSingleSubstation = 40 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesMidCubeShooter = 59 / kExtensionRevolutionsPerInch;
-    public static double kExtensionPositionInchesHighCubeShooter = 69 / kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionInchesFullyRetracted = 0;
+    public static double kExtensionPositionInchesIntakeOut = 13.1;
+    public static double kExtensionPositionInchesMidDropOff = 29.3;
+    public static double kExtensionPositionInchesHighDropOff = 44.2;
+    public static double kExtensionPositionInchesAutoHighDropOff = 46.2;
+    public static double kExtensionPositionInchesHighDropOffReturn = 34.1;
+    // public static double kExtensionPositionInchesSingleSubstation = 6;
+    public static double kExtensionPositionInchesSingleSubstation = 4;
+    public static double kExtensionPositionInchesMidCubeShooter = 20.3;
+    public static double kExtensionPositionInchesHighCubeShooter = 23.8;
+    public static double kExtensionPositionInchesCubeShooter = 14;
 
-    public static double kExtensionSafeExtensionMax = kExtensionPositionIntakeOut + kExtensionPositionTolerance;
+    // encoder readings of Extension position as of 3.18.2023
+    public static double kExtensionPositionFullyRetracted = 0;
+    public static double kExtensionPositionIntakeOut = kExtensionPositionInchesIntakeOut
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionMidDropOff = kExtensionPositionInchesMidDropOff
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionHighDropOff = kExtensionPositionInchesHighDropOff
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionAutoHighDropOff = kExtensionPositionInchesAutoHighDropOff
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionHighDropOffReturn = kExtensionPositionInchesHighDropOffReturn
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionSingleSubstation = kExtensionPositionInchesSingleSubstation
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionMidCubeShooter = kExtensionPositionInchesMidCubeShooter
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionHighCubeShooter = kExtensionPositionInchesHighCubeShooter
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionCubeShooter = kExtensionPositionInchesCubeShooter
+        * kExtensionRevolutionsPerInch;
+
+    public static double kExtensionSafeExtensionMax = kExtensionPositionIntakeOut
+        + kExtensionPositionTolerance;
 
     public static double kExtensionConeRetractDistance = 5;
 
@@ -110,6 +136,7 @@ public final class Constants {
     public static double kAltitudeLowerSpeed = 0.2;
     public static double kAltitudeRampRate = 1;
     public static double kAltitudePositionTolerance = 1;
+    public static double kAutoAltitudePositionTolerance = .1;
 
     public static final double kMaxAltitudeSpeedMetersPerSecond = .05;
     public static final double kMaxLimitedAltitudeSpeedMetersPerSecond = .01;
@@ -123,70 +150,118 @@ public final class Constants {
     public static final double kAltitudeRevolutionsPerDegree = -(kAltitudeTotalRevolutions)
         / kAltitudeTotalDegrees;
 
-    // encoder readings of altitude as of 2.14.2023
-    // Altitude at Top Position
-    public static double kAltitudeTravelPosition = -0.05;
-    // Altitude at DropOff Position
-    public static double kAltitudeDropOffPosition = -2.15;
-    // Altitude when delivering high cone that it lowers to after extending fully
-    public static double kAltitudeHighDropOffPosition = -2.9;
-    // Altitude at position that it releases the cone
-    public static double kAltitudeMidDropOffPosition = -3.0;
-    // Altitude at position that it releases the High cone
-    public static double kAltitudeHighDropOffFinalPosition = -3.25;
-    // Altitude at position that it releases the Mid cone
-    public static double kAltitudeMidDropOffFinalPosition = -3.35;
-    // Altitude at high cube shoot Altitude
-    public static double kAltitudeHighCubeShootPosition = -1;
-    // Altitude at Bottom Position
-    public static double kAltitudeIntakePosition = -5.5;
-    // Altitude at Shelf Position
-    public static double kAltitudeDoubleSubstationPosition = -2.85;
-    public static double kAltitudeSingleSubstationPosition = -1.55;
-
     // angle conversions for 2.14.2023 altitude readings
     // Altitude at Top Position
-    public static double kAltitudeTravelPositionDegrees = -.1 / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeTravelPositionDegrees = 1;
     // Altitude at DropOff Position
-    public static double kAltitudeDropOffPositionDegrees = (-2.15 + .1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeDropOffPositionDegrees = 27;
     // Altitude when delivering high cone that it lowers to after extending fully
-    public static double kAltitudeHighDropOffPositionDegrees = (-2.9 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeHighDropOffPositionDegrees = 36.8;
     // Altitude at position that it releases the cone
-    public static double kAltitudeMidDropOffPositionDegrees = (-3.0 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeMidDropOffPositionDegrees = 32.0;
     // Altitude at position that it releases the High cone
-    public static double kAltitudeHighDropOffFinalPositionDegrees = (-3.25 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeHighDropOffFinalPositionDegrees = 41.4;
     // Altitude at position that it releases the Mid cone
-    public static double kAltitudeMidDropOffFinalPositionDegrees = (-3.35 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeMidDropOffFinalPositionDegrees = 42.8;
     // Altitude at high cube shoot Altitude
-    public static double kAltitudeHighCubeShootPositionDegrees = (-1 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeHighCubeShootPositionDegrees = 11.8;
     // Altitude at Bottom Position
-    public static double kAltitudeIntakePositionDegrees = (-5.5 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeIntakePositionDegrees = 71.1;
     // Altitude at Shelf Position
-    public static double kAltitudeDoubleSubstationPositionDegrees = (-2.85 + 0.1) / kAltitudeRevolutionsPerDegree;
-    public static double kAltitudeSingleSubstationPositionDegrees = (-1.55 + 0.1) / kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeDoubleSubstationPositionDegrees = 36.2;
+    public static double kAltitudeSingleSubstationPositionDegrees = 9.;
+
+    // encoder readings of altitude as of 2.14.2023
+    // Altitude at Top Position
+    public static double kAltitudeTravelPosition = kAltitudeTravelPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at DropOff Position
+    public static double kAltitudeDropOffPosition = kAltitudeDropOffPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude when delivering high cone that it lowers to after extending fully
+    public static double kAltitudeHighDropOffPosition = kAltitudeHighDropOffPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at position that it releases the cone
+    public static double kAltitudeMidDropOffPosition = kAltitudeMidDropOffPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at position that it releases the High cone
+    public static double kAltitudeHighDropOffFinalPosition = kAltitudeHighDropOffFinalPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at position that it releases the Mid cone
+    public static double kAltitudeMidDropOffFinalPosition = kAltitudeMidDropOffFinalPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at high cube shoot Altitude
+    public static double kAltitudeHighCubeShootPosition = kAltitudeHighCubeShootPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at Bottom Position
+    public static double kAltitudeIntakePosition = kAltitudeIntakePositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at Shelf Position
+    public static double kAltitudeDoubleSubstationPosition = kAltitudeDoubleSubstationPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    public static double kAltitudeSingleSubstationPosition = kAltitudeSingleSubstationPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
 
     // Altitude Error Tolerance
     public static double kAltitudeError = 0.05;
 
-    // Range for safe Travel altitude > -0.5
-    public static double kAltitudeSafeMin = -0.5;
+    // Range for safe Travel altitude > -0.7
+    public static double kAltitudeSafeMin = -0.9;
 
     public static double kAltitudeSafeExtensionMin = kAltitudeDropOffPosition - kAltitudePositionTolerance;
 
   }
 
+  public static final class LimelightConstants {
+    public static final int APRILTAG_PIPELINE = 0;
+
+    public static final double VISION_POS_TOLLERANCE = 0.5;
+
+    public static final double ALIGNED_GRID_APRIL_X = -12.0;
+    public static final double ALIGNED_GRID_APRIL_Y = -3.0;
+    public static final double ALIGNED_GRID_APRIL_AREA = 3.7;
+
+    public static final double ALIGNED_SUBSTATION_APRIL_X = -18.3;
+    public static final double ALIGNED_SUBSTATION_APRIL_Y = -16.3;
+    public static final double ALIGNED_SUBSTATION_APRIL_AREA = 6.0;
+
+    public static final double ALIGNED_LEFT_CONE_X = -18.3;
+    public static final double ALIGNED_LEFT_CONE_Y = -16.3;
+    public static final double ALIGNED_LEFT_CONE_AREA = 6.0;
+
+    public static final double ALIGNED_RIGHT_CONE_X = -18.3;
+    public static final double ALIGNED_RIGHT_CONE_Y = -16.3;
+    public static final double ALIGNED_RIGHT_CONE_AREA = 6.0;
+
+    public static final double SETPOINT_DIS_FROM_MID_CONE = 24;
+    public static final double SETPOINT_DIS_FROM_TOP_CONE = 40;
+
+    public static final double SETPOINT_DIS_FROM_GRID_APRIL = 14.062222;
+    public static final double SETPOINT_DIS_FROM_SUBSTATION_APRIL = 5;
+    // height of vision tape center in inches
+    public static final double HEIGHT_CONE_NODE_TAP = 24.125;
+    public static final double HEIGHT_GRID_APRIL = 18.25;
+    public static final double HEIGHT_SUBSTATION_APRIL = 27.375;
+
+    public static final Transform3d CAMERA_TO_ROBOT = new Transform3d(new Translation3d(0.0, 0.0, 0.0),
+        new Rotation3d(0.0, 0.0, 0.0));
+  }
+
   public static final class DriveConstants {
+    public static final double kSafeSpeedLimit = 0.40; // % of max speed
+    public static final double kSafeRotLimit = .1;
+
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kFixedMidSpeedLimit = 0.50;
-    // maxSpeedMetersPerSecond default = 4.8
     public static final double kMaxSpeedMetersPerSecond = 4.8;
-    // Cap the max speed if it's not safe to go fast
-    public static final double kMaxLimitedSpeedMetersPerSecond = 2;
-    // reduced this from 2 * Math.PI to slow down rotation
-    public static final double kMaxAngularSpeed = .5 * Math.PI; // radians per second
-    // even more reduced angular speed when needed
-    public static final double kMaxLimitedAngularSpeed = .2 * Math.PI;
+    // Note - we had changed this to .5 * Pi to slow down rotation
+    public static final double kMaxAngularSpeed = 1.5 * Math.PI; // radians per second
+
+    // Note - we had changed this to 2.4 direction, 3.6 magnitude, and 4.0
+    // rotational
+    public static final double kDirectionSlewRate = 2.4; // radians per second
+    public static final double kMagnitudeSlewRate = 2.6; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(24);
@@ -216,7 +291,7 @@ public final class Constants {
     public static final int kFrontRightTurningCanId = 10;
     public static final int kRearRightTurningCanId = 11;
 
-    // GYRO CONSTANTS
+    // Gyro Constants
     public static final int kGyroDeviceNumber = 15;
     public static final boolean kGyroReversed = false;
   }
@@ -241,7 +316,8 @@ public final class Constants {
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
     // teeth on the bevel pinion
     public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
-    public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
+    public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps
+        * kWheelCircumferenceMeters)
         / kDrivingMotorReduction;
 
     public static final double kDrivingEncoderPositionFactor = (kWheelDiameterMeters * Math.PI)
@@ -278,38 +354,31 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
-    public static int kOperatorControllerPort = 1;
+    public static final int kOperatorControllerPort = 1;
     public static final double kDriveDeadband = 0.05;
-    public static final double kMagnitudeDeadband = 0.05;
-    public static final double kDirectionSlewRate = 2.4; // radians per second
-    public static final double kMagnitudeSlewRate = 3.6; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 4.0; // percent per second (1 = 100%)
   }
 
   public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = .4;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 0.5;
-    public static final double kMaxAngularSpeedRadiansPerSecond = 0.25 * Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = 0.25 * Math.PI;
+    // 4.5 / 4
+    public static final double kMaxSpeedMetersPerSecond = 4.5;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxAngularSpeedRadiansPerSecond = 4 * Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = 4 * Math.PI;
 
     public static final double kPXController = 1;
     public static final double kPYController = 1;
-    public static final double kPThetaController = 1;
+    public static final double kPThetaController = 4;
 
     // Constraint for the motion profiled robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+    public static final double kTurnToleranceDeg = 2;
+    public static final double kTurnRateToleranceDegPerS = 8;
+    public static final double kAutoGyroTolerance = 2;
 
-    // Constants for us in Auto commands
-    public static final double kTravelForwards = 1;
-    public static final double kTravelBackwards = -1;
-
-    public static final double kDriveToStationSpeed = 0.4;
     public static final double kDriveOnStationMaxSpeed = 0.15;
     public static final double kDriveToBalanceFactor = 0.7;
     public static final double kFinalBalanceSpeed = kDriveOnStationMaxSpeed * (kDriveToBalanceFactor / 2);
-    public static final double kAutoGyroTolerance = 2;
-
   }
 
   public static final class NeoMotorConstants {

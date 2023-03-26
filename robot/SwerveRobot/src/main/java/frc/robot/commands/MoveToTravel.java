@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
@@ -16,19 +17,15 @@ import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 
 public class MoveToTravel extends SequentialCommandGroup {
-    public MoveToTravel(
-            Extension m_extension,
-            Altitude m_altitude) {
-        addCommands(
-                new ConditionalCommand(
-                        new InstantCommand(),
-                        new SequentialCommandGroup(
-                                new InstantCommand(
-                                        () -> m_extension.keepPositionInches(
-                                                ExtensionConstants.kExtensionPositionInchesFullyRetracted)),
-                                new WaitUntilCommand(() -> m_extension.ExtensionIsInIntakePosition())),
-                        () -> m_extension.ExtensionIsInIntakePosition()),
-                new InstantCommand(() -> m_altitude
-                        .keepPositionDegrees(AltitudeConstants.kAltitudeTravelPositionDegrees)));
-    }
+        public MoveToTravel(
+                        Extension m_extension,
+                        Altitude m_altitude) {
+                addCommands(
+                                new ParallelCommandGroup(
+                                                new InstantCommand(() -> m_extension.keepPositionInches(
+                                                                ExtensionConstants.kExtensionPositionInchesFullyRetracted)),
+                                                new InstantCommand(() -> m_altitude
+                                                                .keepPositionDegrees(
+                                                                                AltitudeConstants.kAltitudeTravelPositionDegrees))));
+        }
 }

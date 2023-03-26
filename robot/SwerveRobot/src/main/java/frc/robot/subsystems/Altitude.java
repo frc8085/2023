@@ -15,12 +15,15 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ExtensionConstants;
+import frc.robot.Constants.TuningModeConstants;
 
 import static frc.robot.Constants.AltitudeConstants;
 import static frc.robot.Constants.SubsystemMotorConstants;
 
+import java.util.function.BooleanSupplier;
+
 public class Altitude extends SubsystemBase {
-  private boolean TUNING_MODE = false;
+  private boolean TUNING_MODE = TuningModeConstants.kAltitudeTuning;
 
   private Extension m_extension;
   /** Creates a new Altitude. */
@@ -45,12 +48,12 @@ public class Altitude extends SubsystemBase {
   static double kDRaise = 0.1;
   // static double kIzRaise = 0;
   static double kFFRaise = 0;
-  static double kMaxOutputRaise = .9;
-  static double kMinOutputRaise = -.9;
+  static double kMaxOutputRaise = 1;
+  static double kMinOutputRaise = -1;
 
   // Lower PID coefficients
   static int kLowerPIDSlot = 1;
-  static double kPLower = 1;
+  static double kPLower = .5;
   static double kILower = 0.0001;
   static double kDLower = 0.1;
   static double kFFLower = 0;
@@ -127,6 +130,7 @@ public class Altitude extends SubsystemBase {
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
+    SmartDashboard.putNumber("Altitude: Current reading", getCurrentAltitude());
 
     if (TUNING_MODE) {
       // SmartDashboard.putBoolean("Altitude at Top Position",
@@ -135,7 +139,6 @@ public class Altitude extends SubsystemBase {
       // m_altitudeBottomLimit.isPressed());
       // SmartDashboard.putBoolean("Altitude is in Travel Position",
       // AltitudeIsInTravelPosition());
-      SmartDashboard.putNumber("Altitude: Current reading", getCurrentAltitude());
 
       readRaisePIDTuningFromDashboard();
       readLowerPIDTuningFromDashboard();
@@ -355,6 +358,11 @@ public class Altitude extends SubsystemBase {
     m_altitudeMotor.set(0);
   }
 
+  // Manually move altitude
+  public void moveAltitude(double speed) {
+    m_altitudeMotor.set(speed);
+  }
+
   // Returns the current altitude
   public double getCurrentAltitude() {
     return m_altitudeEncoder.getPosition();
@@ -409,6 +417,13 @@ public class Altitude extends SubsystemBase {
     return m_altitudeEncoder
         .getPosition() > (AltitudeConstants.kAltitudeTravelPosition
             - AltitudeConstants.kAltitudePositionTolerance);
+  }
+
+  public boolean AltitudeIsInSingleSubstationPosition() {
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeSingleSubstationPosition
+        + AltitudeConstants.kAltitudePositionTolerance &&
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeSingleSubstationPosition
+            - AltitudeConstants.kAltitudePositionTolerance;
   }
 
   public boolean AltitudeIsInIntakePosition() {
