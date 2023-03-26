@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.FieldLandmarks;
 import frc.robot.commands.MoveToIntake;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
@@ -48,11 +49,11 @@ public class AutoPickupCargo extends SequentialCommandGroup {
     // An example trajectory to follow. All units in meters.
     Trajectory pickupCargo = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing forward
-        new Pose2d(3, -0.1, Rotation2d.fromDegrees(-10)),
+        FieldLandmarks.SegmentEndpoints.ApproachBlue1,
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(3.2, -0.15)),
+        List.of(FieldLandmarks.InteriorWaypoint.HaflwayToBlue1),
         // End 2 meters straight ahead of where we started still facing forward
-        new Pose2d(3.45, -0.25, Rotation2d.fromDegrees(-10)),
+        FieldLandmarks.PickupPosition.Blue1,
         config);
 
     return AutoTrajectoryCommand.command(m_drive, pickupCargo);

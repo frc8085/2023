@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.FieldLandmarks;
 import frc.robot.commands.MoveToTravelAfterIntake;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
@@ -46,11 +47,11 @@ public class AutoSidekickReturnToScore extends SequentialCommandGroup {
     // reversed being true?
     Trajectory returnToScoreOne = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(4.0, -0.1, Rotation2d.fromDegrees(-10)),
+        FieldLandmarks.PickupPosition.Blue1,
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2.5, -0.2)),
+        List.of(FieldLandmarks.InteriorWaypoint.HaflwayToPickup),
         // Drive backwards for a meter
-        new Pose2d(0.1, -0.45, Rotation2d.fromDegrees(-180)),
+        FieldLandmarks.GridPosition.BlueACenter,
         config);
 
     return AutoTrajectoryCommand.command(m_drive, returnToScoreOne);
