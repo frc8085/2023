@@ -25,11 +25,11 @@ public class AutoSidekick extends SequentialCommandGroup {
       Extension m_extension,
       Intake m_intake) {
     addCommands(
-        new ParallelCommandGroup(
-            // Reset Heading & Odometry
-            new AutoResetOdometry(m_drive),
-            // 1. Score Cone
-            new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake)),
+        // new ParallelCommandGroup(
+        // Reset Heading & Odometry
+        new AutoResetOdometry(m_drive),
+        // 1. Score Cone
+        new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
         // 2. Move to pickup cargo position
         new AutoMoveToPickup(m_drive, m_altitude, m_extension),
         // 3. Intake down and pickup cargo
