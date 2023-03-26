@@ -11,17 +11,17 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 public class DriverShootCube extends SequentialCommandGroup {
-    public DriverShootCube(
-            Altitude m_altitude,
-            Extension m_extension,
-            Intake m_intake) {
-        addCommands(
-                // Prepare Cube SHoot (move extension to proper position)
-                new MoveToCubeShoot(m_extension),
-                new WaitUntilCommand(() -> m_extension.ExtensionIsInCubeShootPosition()),
-                // Run Eject Cube
-                new ScoreCube(m_altitude, m_extension, m_intake),
-                // Return to Travel Position
-                new MoveToTravelAfterScoring(m_extension, m_altitude));
-    }
+  public DriverShootCube(
+      Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    addCommands(
+        // Prepare Cube SHoot (move extension to proper position)
+        new MoveToCubeShoot(m_extension),
+        new WaitUntilCommand(() -> m_extension.ExtensionIsInCubeShootPosition()),
+        // Run Eject Cube
+        new ShootCube(m_altitude, m_extension, m_intake),
+        // Return to Travel Position
+        new MoveToTravelAfterScoring(m_extension, m_altitude));
+  }
 }
