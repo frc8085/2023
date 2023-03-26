@@ -12,13 +12,13 @@ import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoSidekickSecondScore extends SequentialCommandGroup {
-    public AutoSidekickSecondScore(
-            Altitude m_altitude,
-            Extension m_extension,
-            Intake m_intake) {
-        addCommands(
-                new ScoreHighCube(m_altitude, m_extension, m_intake));
+  public AutoSidekickSecondScore(
+      Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    addCommands(
+        new ScoreHighCube(m_altitude, m_extension, m_intake));
 
-    }
+  }
 
 }
