@@ -92,9 +92,11 @@ public final class Constants {
     public static double kExtensionPositionInchesFullyRetracted = 0;
     public static double kExtensionPositionInchesIntakeOut = 13.1;
     public static double kExtensionPositionInchesMidDropOff = 29.3;
-    public static double kExtensionPositionInchesHighDropOff = 46.2;
+    public static double kExtensionPositionInchesHighDropOff = 44.2;
+    public static double kExtensionPositionInchesAutoHighDropOff = 46.2;
     public static double kExtensionPositionInchesHighDropOffReturn = 34.1;
-    public static double kExtensionPositionInchesSingleSubstation = 6;
+    // public static double kExtensionPositionInchesSingleSubstation = 6;
+    public static double kExtensionPositionInchesSingleSubstation = 4;
     public static double kExtensionPositionInchesMidCubeShooter = 20.3;
     public static double kExtensionPositionInchesHighCubeShooter = 23.8;
     public static double kExtensionPositionInchesCubeShooter = 14;
@@ -106,6 +108,8 @@ public final class Constants {
     public static double kExtensionPositionMidDropOff = kExtensionPositionInchesMidDropOff
         * kExtensionRevolutionsPerInch;
     public static double kExtensionPositionHighDropOff = kExtensionPositionInchesHighDropOff
+        * kExtensionRevolutionsPerInch;
+    public static double kExtensionPositionAutoHighDropOff = kExtensionPositionInchesAutoHighDropOff
         * kExtensionRevolutionsPerInch;
     public static double kExtensionPositionHighDropOffReturn = kExtensionPositionInchesHighDropOffReturn
         * kExtensionRevolutionsPerInch;
@@ -201,8 +205,8 @@ public final class Constants {
     // Altitude Error Tolerance
     public static double kAltitudeError = 0.05;
 
-    // Range for safe Travel altitude > -0.5
-    public static double kAltitudeSafeMin = -0.5;
+    // Range for safe Travel altitude > -0.7
+    public static double kAltitudeSafeMin = -0.7;
 
     public static double kAltitudeSafeExtensionMin = kAltitudeDropOffPosition - kAltitudePositionTolerance;
 
@@ -251,12 +255,12 @@ public final class Constants {
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.8;
     // Note - we had changed this to .5 * Pi to slow down rotation
-    public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+    public static final double kMaxAngularSpeed = 1.5 * Math.PI; // radians per second
 
     // Note - we had changed this to 2.4 direction, 3.6 magnitude, and 4.0
     // rotational
     public static final double kDirectionSlewRate = 2.4; // radians per second
-    public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
+    public static final double kMagnitudeSlewRate = 2.6; // percent per second (1 = 100%)
     public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
 
     // Chassis configuration

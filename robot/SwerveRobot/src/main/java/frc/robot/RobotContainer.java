@@ -37,6 +37,7 @@ import frc.robot.commands.MoveToTravelAfterIntake;
 import frc.robot.commands.MoveToTravelAfterScoring;
 import frc.robot.commands.PrepareIntake;
 import frc.robot.commands.ScoreBasedOnPosition;
+import frc.robot.commands.ScoreCube;
 import frc.robot.commands.ScoreHighCube;
 import frc.robot.commands.ScoreMidCube;
 import frc.robot.subsystems.Altitude;
@@ -140,8 +141,12 @@ public class RobotContainer {
     // Cube Low Shot on driver control
     final Trigger lowCubeEjectButton = m_driverController.leftTrigger();
     final Trigger cubeShootButton = m_driverController.rightBumper();
+    final Trigger cubeMidShotButton = m_driverController.leftBumper();
+
     // lowCubeEjectButton.onTrue(new InstantCommand(m_intake::stopIntake));
     lowCubeEjectButton.onTrue(new DropCube(m_altitude, m_extension, m_intake));
+
+    cubeMidShotButton.onTrue(new ScoreCube(m_altitude, m_extension, m_intake));
 
     cubeShootButton.onTrue(new DriverShootCube(m_altitude, m_extension,
         m_intake));
