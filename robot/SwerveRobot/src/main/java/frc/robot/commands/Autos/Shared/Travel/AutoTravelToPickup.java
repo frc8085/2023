@@ -2,8 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Autos.MainCharacter;
+package frc.robot.commands.Autos.Shared.Travel;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -21,28 +22,32 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 
 /** An example command that uses an example subsystem. */
-public class AutoMainCharacterLeaveCommunity extends SequentialCommandGroup {
-    public AutoMainCharacterLeaveCommunity(
+public class AutoTravelToPickup extends SequentialCommandGroup {
+    public AutoTravelToPickup(
             DriveSubsystem m_drive,
             Altitude m_altitude,
             Extension m_extension) {
         addCommands(
-                travelToLeaveCommunity(m_drive));
+                travelBackwardsThenSpin(m_drive));
 
     }
 
-    public Command travelToLeaveCommunity(DriveSubsystem m_drive) {
+    public Command travelBackwardsThenSpin(DriveSubsystem m_drive) {
         // Create config for trajectory
         TrajectoryConfig config = AutoTrajectoryCommand.config(true);
 
-        // First trajectory. All units in meters.
-        Trajectory leaveCommunity = TrajectoryGenerator.generateTrajectory(
+        Trajectory moveToPosition = TrajectoryGenerator.generateTrajectory(
                 FieldLandmarks.GridPosition.BlueALeft,
                 // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                List.of(new Translation2d(2, -0.01)),
-                new Pose2d(4, -0.1, Rotation2d.fromDegrees(0)),
+                List.of(FieldLandmarks.InteriorWaypoint.HaflwayToPickup),
+                FieldLandmarks.SegmentEndpoints.ApproachBlue1,
                 config);
 
-        return AutoTrajectoryCommand.command(m_drive, leaveCommunity);
+        // Because this is the first point, make sure we reset odometry to start at
+        // initial pose
+        m_drive.zeroHeading();
+        m_drive.resetOdometry(moveToPosition.getInitialPose());
+
+        return AutoTrajectoryCommand.command(m_drive, moveToPosition);
     }
 }
