@@ -175,6 +175,11 @@ public class Intake extends SubsystemBase {
     m_intakeMotor.set(-IntakeConstants.kEjectCubePower);
   }
 
+  // Run the intake reverse to eject CUBE
+  public void shootCube() {
+    m_intakeMotor.set(-IntakeConstants.kShootCubePower);
+  }
+
   // Stop the intake
   public void stopIntake() {
     m_intakeMotor.set(0);

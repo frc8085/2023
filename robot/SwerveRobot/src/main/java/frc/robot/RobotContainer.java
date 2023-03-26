@@ -137,8 +137,8 @@ public class RobotContainer {
         m_robotDrive));
 
     // Cube Low Shot on driver control
-    final Trigger lowCubeEjectButton = m_driverController.povDown();
-    final Trigger cubeShootButton = m_driverController.povUp();
+    final Trigger lowCubeEjectButton = m_driverController.leftTrigger();
+    final Trigger cubeShootButton = m_driverController.rightBumper();
     lowCubeEjectButton.onTrue(new InstantCommand(m_intake::stopIntake));
 
     cubeShootButton.onTrue(new DriverShootCube(m_altitude, m_extension,
