@@ -22,6 +22,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.Autos.Autos;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
 import frc.robot.commands.Autos.SuperHero.AutoSuperHero;
 import frc.robot.commands.AutoTurnToDegreeGyro;
@@ -112,10 +113,11 @@ public class RobotContainer {
 
   private void configureAuto() {
 
-    autoSelection.setDefaultOption("(15pt) SIDEKICK: Score High, Leave, Pickup Cube, Score High ",
-        new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake));
-    autoSelection.addOption("(19pt) SUPERHERO: Score High, Leave, Pickup Cube, Dock",
-        new AutoSuperHero(m_robotDrive, m_altitude, m_extension, m_intake));
+    autoSelection.setDefaultOption("(15pt) SIDEKICK: 2x Score High, Leave",
+        Autos.AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake));
+
+    autoSelection.addOption("(23pt) DYNAMIC DUO: 2x Score High, Leave, Dock",
+        Autos.AutoDynamicDuo(m_robotDrive, m_altitude, m_extension, m_intake));
 
     // Put the chooser on the dashboard
     SmartDashboard.putData("Auto Routine", autoSelection);
@@ -340,8 +342,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     m_robotDrive.zeroHeading();
     m_robotDrive.resetOdometry(new Pose2d());
-    return new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake);
-    // return autoSelection.getSelected();
+    // return new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake);
+    return autoSelection.getSelected();
   }
 
 }
