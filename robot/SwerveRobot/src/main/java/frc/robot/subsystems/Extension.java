@@ -35,6 +35,23 @@ public class Extension extends SubsystemBase {
   private SparkMaxLimitSwitch m_extensionLimit;
   private SparkMaxLimitSwitch m_retractionLimit;
 
+  // Extension Limit Switches are on by default is locked by default
+  private boolean extensionLimitSwitchIsDisabled = false;
+
+  /* Ignore Limit Switch */
+  public void disableExtensionLimitSwitch() {
+    extensionLimitSwitchIsDisabled = true;
+  }
+
+  /* Enable Limit Switch */
+  public void activateExtensionLimitSwitch() {
+    extensionLimitSwitchIsDisabled = false;
+  }
+
+  public boolean extensionLimitSwitchIsDisabled() {
+    return extensionLimitSwitchIsDisabled();
+  }
+
   // PID
   private SparkMaxPIDController m_extensionPIDController = m_extensionMotor.getPIDController();
   static double kPExtension = .05;
@@ -49,7 +66,17 @@ public class Extension extends SubsystemBase {
     return isRetractionLimitHit();
   }
 
+  public void disableExtensionLimitSwitches() {
+    if (extensionLimitSwitchIsDisabled) {
+      m_extensionLimit.enableLimitSwitch(false);
+      m_retractionLimit.enableLimitSwitch(false);
+    }
+    ;
+  }
+
   public Extension() {
+
+    m_extensionMotor.restoreFactoryDefaults();
 
     m_extensionMotor.setIdleMode(IdleMode.kBrake);
     m_extensionMotor.setSmartCurrentLimit((SubsystemMotorConstants.kMotorCurrentLimit));
@@ -71,6 +98,7 @@ public class Extension extends SubsystemBase {
      * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyOpen
      * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyClosed
      */
+
     m_extensionLimit = m_extensionMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     m_retractionLimit = m_extensionMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
 
@@ -84,6 +112,7 @@ public class Extension extends SubsystemBase {
   public void log() {
 
     SmartDashboard.putNumber("Extension Current position", getCurrentExtensionPosition());
+    SmartDashboard.putBoolean("Extension Limit Switch Disabled", extensionLimitSwitchIsDisabled());
 
     if (TUNING_MODE) {
       // SmartDashboard.putBoolean("Fully Extended", m_extensionLimit.isPressed());

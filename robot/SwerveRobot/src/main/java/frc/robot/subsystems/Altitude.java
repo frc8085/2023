@@ -39,6 +39,31 @@ public class Altitude extends SubsystemBase {
   private SparkMaxLimitSwitch m_altitudeTopLimit;
   private SparkMaxLimitSwitch m_altitudeBottomLimit;
 
+  // Altitude Limit Switches are on by default is locked by default
+  private boolean altitudeLimitSwitchIsDisabled = false;
+
+  /* Ignore Limit Switch */
+  public void disableAltitudeLimitSwitch() {
+    altitudeLimitSwitchIsDisabled = true;
+  }
+
+  /* Enable Limit Switch */
+  public void activateAltitudeLimitSwitch() {
+    altitudeLimitSwitchIsDisabled = false;
+  }
+
+  public boolean altitudeLimitSwitchIsDisabled() {
+    return altitudeLimitSwitchIsDisabled();
+  }
+
+  public void disableAltitudeLimitSwitches() {
+    if (altitudeLimitSwitchIsDisabled) {
+      m_altitudeTopLimit.enableLimitSwitch(false);
+      m_altitudeBottomLimit.enableLimitSwitch(false);
+    }
+    ;
+  }
+
   private SparkMaxPIDController m_altitudePIDController = m_altitudeMotor.getPIDController();
 
   // Raise PID coefficients
@@ -74,6 +99,9 @@ public class Altitude extends SubsystemBase {
   }
 
   public Altitude(Extension Extension) {
+
+    m_altitudeMotor.restoreFactoryDefaults();
+
     m_extension = Extension;
     m_altitudeMotor.setIdleMode(IdleMode.kBrake);
     m_altitudeMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
@@ -131,6 +159,7 @@ public class Altitude extends SubsystemBase {
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
     SmartDashboard.putNumber("Altitude: Current reading", getCurrentAltitude());
+    SmartDashboard.putBoolean("Altitude Limit Switch Disabled", altitudeLimitSwitchIsDisabled());
 
     if (TUNING_MODE) {
       // SmartDashboard.putBoolean("Altitude at Top Position",
