@@ -50,7 +50,7 @@ public class AutoDynamicDuoReturnToScore extends SequentialCommandGroup {
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(2.5, 0.3)),
         // Drive backwards for a meter
-        new Pose2d(0.1, 0.3, Rotation2d.fromDegrees(-180)),
+        new Pose2d(0.3, 0.3, Rotation2d.fromDegrees(-180)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, returnToScoreOne);

@@ -24,29 +24,29 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class AutoDynamicDuoMoveToChargeStation extends SequentialCommandGroup {
-    public AutoDynamicDuoMoveToChargeStation(
+public class AutoDynamicDuoMoveOnChargeStation extends SequentialCommandGroup {
+    public AutoDynamicDuoMoveOnChargeStation(
             DriveSubsystem m_drive) {
         addCommands(
-                moveToChargeStation(m_drive));
+                moveOnChargeStation(m_drive));
     }
 
-    public Command moveToChargeStation(DriveSubsystem m_drive) {
+    public Command moveOnChargeStation(DriveSubsystem m_drive) {
         // Create config for trajectory
         TrajectoryConfig config = AutoTrajectoryCommand.config(true);
 
         // An example trajectory to follow. All units in meters.
         // Should the points be negative or positive? Does it decide based on the
         // reversed being true?
-        Trajectory goToChargeStation = TrajectoryGenerator.generateTrajectory(
+        Trajectory goOnChargeStation = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(0.3, .3, Rotation2d.fromDegrees(-180)),
-                // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                List.of(new Translation2d(0.4, 1.2)),
-                // Drive backwards for a meter
                 new Pose2d(0.5, 1.8, Rotation2d.fromDegrees(45)),
+                // NOTE: MUST have a waypoint. CANNOT be a straight line.
+                List.of(new Translation2d(2, 1.9)),
+                // Drive backwards for a meter
+                new Pose2d(3, 2, Rotation2d.fromDegrees(45)),
                 config);
 
-        return AutoTrajectoryCommand.command(m_drive, goToChargeStation);
+        return AutoTrajectoryCommand.command(m_drive, goOnChargeStation);
     }
 }
