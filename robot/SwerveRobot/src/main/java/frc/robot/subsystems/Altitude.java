@@ -159,7 +159,8 @@ public class Altitude extends SubsystemBase {
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
     SmartDashboard.putNumber("Altitude: Current reading", getCurrentAltitude());
-    SmartDashboard.putBoolean("Altitude Limit Switch Disabled", altitudeLimitSwitchIsDisabled());
+
+    displayDisableAltitudeLimitSwitch();
 
     if (TUNING_MODE) {
       // SmartDashboard.putBoolean("Altitude at Top Position",
@@ -174,6 +175,13 @@ public class Altitude extends SubsystemBase {
       // readTuningFromDashboard();
 
     }
+
+  }
+
+  public void displayDisableAltitudeLimitSwitch() {
+    // enable/disable limit switches based on value read from SmartDashboard
+    m_altitudeTopLimit.enableLimitSwitch(SmartDashboard.getBoolean("Altitude Top Limit Switch Enabled", true));
+    m_altitudeBottomLimit.enableLimitSwitch(SmartDashboard.getBoolean("Altitude Bottom Limit Switch Enabled", true));
 
   }
 

@@ -112,7 +112,7 @@ public class Extension extends SubsystemBase {
   public void log() {
 
     SmartDashboard.putNumber("Extension Current position", getCurrentExtensionPosition());
-    SmartDashboard.putBoolean("Extension Limit Switch Disabled", extensionLimitSwitchIsDisabled());
+    SmartDashboard.putBoolean("Extension Limit Enabled", m_extensionLimit.isLimitSwitchEnabled());
 
     if (TUNING_MODE) {
       // SmartDashboard.putBoolean("Fully Extended", m_extensionLimit.isPressed());
@@ -128,6 +128,13 @@ public class Extension extends SubsystemBase {
         System.out.println("Extension in HIGH SCORING position");
       }
     }
+  }
+
+  public void displayDisableExtensionLimitSwitch() {
+    // enable/disable limit switches based on value read from SmartDashboard
+    m_extensionLimit.enableLimitSwitch(SmartDashboard.getBoolean("Extension Limit Switch Enabled", true));
+    m_retractionLimit.enableLimitSwitch(SmartDashboard.getBoolean("Retraction Limit Switch Enabled", true));
+
   }
 
   private void addPIDToDashboard() {

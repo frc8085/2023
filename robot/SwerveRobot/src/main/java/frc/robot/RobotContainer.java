@@ -197,14 +197,18 @@ public class RobotContainer {
 
         final Trigger testAuto = m_operatorController.povLeft();
 
-        final Trigger disableExtensionLimitSwitch = m_operatorController.rightStick();
-        final Trigger disableAltitudeLimitSwitch = m_operatorController.leftStick();
+        // final Trigger disableExtensionLimitSwitch =
+        // m_operatorController.rightStick();
+        // final Trigger disableAltitudeLimitSwitch = m_operatorController.leftStick();
 
-        disableExtensionLimitSwitch
-                .toggleOnTrue(new InstantCommand(m_extension::disableExtensionLimitSwitch, m_extension));
-        disableAltitudeLimitSwitch.toggleOnTrue(new InstantCommand(m_altitude::disableAltitudeLimitSwitch, m_altitude));
+        // disableExtensionLimitSwitch
+        // .toggleOnTrue(new InstantCommand(m_extension::disableExtensionLimitSwitch,
+        // m_extension));
+        // disableAltitudeLimitSwitch.toggleOnTrue(new
+        // InstantCommand(m_altitude::disableAltitudeLimitSwitch, m_altitude));
 
-        testAuto.onTrue(new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake));
+        // testAuto.onTrue(new AutoSidekick(m_robotDrive, m_altitude, m_extension,
+        // m_intake));
 
         testExtension.onTrue(new InstantCommand(
                 () -> m_extension.keepPositionInches(
