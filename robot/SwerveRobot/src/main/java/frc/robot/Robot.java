@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -22,6 +26,12 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  Thread m_visionThread;
+  UsbCamera camera1;
+  UsbCamera camera2;
+
+  private final Timer m_timer = new Timer();
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -33,6 +43,21 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    m_robotContainer.turnOffLimelightLED();
+
+    if (Robot.isReal()) {
+      camera1 = CameraServer.startAutomaticCapture(0);
+      camera2 = CameraServer.startAutomaticCapture(1);
+    }
+
+    // Setup Port Forwarding to enable Limelight communication
+    // while tethered to our robot over USB
+    PortForwarder.add(5800, "limelight.local", 5800);
+    PortForwarder.add(5801, "limelight.local", 5801);
+    PortForwarder.add(5802, "limelight.local", 5802);
+    PortForwarder.add(5803, "limelight.local", 5803);
+    PortForwarder.add(5804, "limelight.local", 5804);
+    PortForwarder.add(5805, "limelight.local", 5805);
   }
 
   /**
@@ -60,6 +85,10 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+
+    // Turn off the limelight LED when disabled
+    m_robotContainer.turnOffLimelightLED();
+
   }
 
   @Override
@@ -72,7 +101,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    m_timer.reset();
+    m_timer.start();
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+
+    // Turn on the limelight LED
+    m_robotContainer.turnOnLimelightLED();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -90,6 +125,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    if (m_timer.get() > 14.9 && m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+    }
   }
 
   @Override
@@ -98,6 +136,10 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+
+    // Turn on the limelight LED
+    m_robotContainer.turnOnLimelightLED();
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

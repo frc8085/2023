@@ -23,6 +23,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Autos.Shared.AutoPositionWithLimelight;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
 import frc.robot.commands.Autos.SuperHero.AutoSuperHero;
 import frc.robot.commands.AutoTurnToDegreeGyro;
@@ -45,6 +46,8 @@ import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
+import frc.utils.LimelightConfiguration.LedMode;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -75,6 +78,7 @@ public class RobotContainer {
   private final Altitude m_altitude = new Altitude(m_extension);
   private final Intake m_intake = new Intake();
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_altitude, m_extension);
+  private final Limelight limelight = new Limelight();
 
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -86,6 +90,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Silence Joystick Warnings
     DriverStation.silenceJoystickConnectionWarning(true);
+
+    // Make sure the limelight's LED is off when we turn on
+    turnOffLimelightLED();
 
     // Configure the Auto Selector
     configureAuto();
@@ -155,6 +162,10 @@ public class RobotContainer {
 
     final Trigger zeroHeadingButton = m_driverController.start();
     zeroHeadingButton.onTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+
+    final Trigger autoCenter = m_driverController.povUp();
+
+    autoCenter.onTrue(new AutoPositionWithLimelight(m_robotDrive, limelight));
 
     // Commands to face the robot in different drections
 
@@ -350,11 +361,19 @@ public class RobotContainer {
     return swerveControllerCommand.andThen(() -> m_robotDrive.stop());
   }
 
+  public void turnOffLimelightLED() {
+    limelight.setLEDMode(LedMode.kforceOff);
+  }
+
+  public void turnOnLimelightLED() {
+    limelight.setLEDMode(LedMode.kforceOn);
+  }
+
   public Command getAutonomousCommand() {
     m_robotDrive.zeroHeading();
     m_robotDrive.resetOdometry(new Pose2d());
-    return new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake);
-    // return autoSelection.getSelected();
+    // return new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake);
+    return autoSelection.getSelected();
   }
 
 }
