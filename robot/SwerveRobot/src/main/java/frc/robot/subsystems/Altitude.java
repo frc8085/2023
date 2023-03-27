@@ -39,6 +39,31 @@ public class Altitude extends SubsystemBase {
   private SparkMaxLimitSwitch m_altitudeTopLimit;
   private SparkMaxLimitSwitch m_altitudeBottomLimit;
 
+  // Altitude Limit Switches are on by default is locked by default
+  private boolean altitudeLimitSwitchIsDisabled = false;
+
+  /* Ignore Limit Switch */
+  public void disableAltitudeLimitSwitch() {
+    altitudeLimitSwitchIsDisabled = true;
+  }
+
+  /* Enable Limit Switch */
+  public void activateAltitudeLimitSwitch() {
+    altitudeLimitSwitchIsDisabled = false;
+  }
+
+  public boolean altitudeLimitSwitchIsDisabled() {
+    return altitudeLimitSwitchIsDisabled();
+  }
+
+  public void disableAltitudeLimitSwitches() {
+    if (altitudeLimitSwitchIsDisabled) {
+      m_altitudeTopLimit.enableLimitSwitch(false);
+      m_altitudeBottomLimit.enableLimitSwitch(false);
+    }
+    ;
+  }
+
   private SparkMaxPIDController m_altitudePIDController = m_altitudeMotor.getPIDController();
 
   // Raise PID coefficients
@@ -74,6 +99,9 @@ public class Altitude extends SubsystemBase {
   }
 
   public Altitude(Extension Extension) {
+
+    m_altitudeMotor.restoreFactoryDefaults();
+
     m_extension = Extension;
     m_altitudeMotor.setIdleMode(IdleMode.kBrake);
     m_altitudeMotor.setSmartCurrentLimit(SubsystemMotorConstants.kMotorCurrentLimit);
@@ -145,6 +173,13 @@ public class Altitude extends SubsystemBase {
       // readTuningFromDashboard();
 
     }
+
+  }
+
+  public void displayDisableAltitudeLimitSwitch() {
+    // enable/disable limit switches based on value read from SmartDashboard
+    m_altitudeTopLimit.enableLimitSwitch(SmartDashboard.getBoolean("Altitude Top Limit Switch Enabled", true));
+    m_altitudeBottomLimit.enableLimitSwitch(SmartDashboard.getBoolean("Altitude Bottom Limit Switch Enabled", true));
 
   }
 
@@ -322,6 +357,7 @@ public class Altitude extends SubsystemBase {
     log();
 
     enforceSafeExtensions();
+    displayDisableAltitudeLimitSwitch();
 
     // resetAltitudeEncoderAtTopLimit();
     AltitudeIsInTravelPosition();

@@ -35,6 +35,23 @@ public class Extension extends SubsystemBase {
   private SparkMaxLimitSwitch m_extensionLimit;
   private SparkMaxLimitSwitch m_retractionLimit;
 
+  // Extension Limit Switches are on by default is locked by default
+  private boolean extensionLimitSwitchIsDisabled = false;
+
+  /* Ignore Limit Switch */
+  public void disableExtensionLimitSwitch() {
+    extensionLimitSwitchIsDisabled = true;
+  }
+
+  /* Enable Limit Switch */
+  public void activateExtensionLimitSwitch() {
+    extensionLimitSwitchIsDisabled = false;
+  }
+
+  public boolean extensionLimitSwitchIsDisabled() {
+    return extensionLimitSwitchIsDisabled();
+  }
+
   // PID
   private SparkMaxPIDController m_extensionPIDController = m_extensionMotor.getPIDController();
   static double kPExtension = .05;
@@ -49,7 +66,17 @@ public class Extension extends SubsystemBase {
     return isRetractionLimitHit();
   }
 
+  public void disableExtensionLimitSwitches() {
+    if (extensionLimitSwitchIsDisabled) {
+      m_extensionLimit.enableLimitSwitch(false);
+      m_retractionLimit.enableLimitSwitch(false);
+    }
+    ;
+  }
+
   public Extension() {
+
+    m_extensionMotor.restoreFactoryDefaults();
 
     m_extensionMotor.setIdleMode(IdleMode.kBrake);
     m_extensionMotor.setSmartCurrentLimit((SubsystemMotorConstants.kMotorCurrentLimit));
@@ -71,6 +98,7 @@ public class Extension extends SubsystemBase {
      * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyOpen
      * com.revrobotics.SparkMaxLimitSwitch.SparkMaxLimitSwitch.Type.kNormallyClosed
      */
+
     m_extensionLimit = m_extensionMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     m_retractionLimit = m_extensionMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
 
@@ -99,6 +127,13 @@ public class Extension extends SubsystemBase {
         System.out.println("Extension in HIGH SCORING position");
       }
     }
+  }
+
+  public void displayDisableExtensionLimitSwitch() {
+    // enable/disable limit switches based on value read from SmartDashboard
+    m_extensionLimit.enableLimitSwitch(SmartDashboard.getBoolean("Extension Limit Switch Enabled", true));
+    m_retractionLimit.enableLimitSwitch(SmartDashboard.getBoolean("Retraction Limit Switch Enabled", true));
+
   }
 
   private void addPIDToDashboard() {
@@ -168,6 +203,7 @@ public class Extension extends SubsystemBase {
   public void periodic() {
     log();
     ExtensionRetractionLimitHit();
+    displayDisableExtensionLimitSwitch();
   }
 
   /** Resets the Extension encoder to currently read a position of 0. */
