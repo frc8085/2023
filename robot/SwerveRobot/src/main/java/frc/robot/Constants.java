@@ -294,6 +294,10 @@ public final class Constants {
     // Gyro Constants
     public static final int kGyroDeviceNumber = 15;
     public static final boolean kGyroReversed = false;
+
+    // Turn factor constants
+    public static final double kTrackWidthInches = 20.5; // Known
+    public static final double kTurnFactor = kTrackWidthInches * Math.PI / 360; // Known
   }
 
   public static final class ModuleConstants {

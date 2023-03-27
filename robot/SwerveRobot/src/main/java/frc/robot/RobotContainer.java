@@ -23,6 +23,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Autos.Shared.AutoPositionWithLimelight;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
 import frc.robot.commands.Autos.SuperHero.AutoSuperHero;
 import frc.robot.commands.AutoTurnToDegreeGyro;
@@ -45,6 +46,8 @@ import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
+import frc.utils.LimelightConfiguration.LedMode;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -68,293 +71,309 @@ import java.util.List;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    protected SendableChooser<Command> autoSelection = new SendableChooser<>();
+  protected SendableChooser<Command> autoSelection = new SendableChooser<>();
 
-    // The robot's subsystems
-    private final Extension m_extension = new Extension();
-    private final Altitude m_altitude = new Altitude(m_extension);
-    private final Intake m_intake = new Intake();
-    private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_altitude, m_extension);
+  // The robot's subsystems
+  private final Extension m_extension = new Extension();
+  private final Altitude m_altitude = new Altitude(m_extension);
+  private final Intake m_intake = new Intake();
+  private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_altitude, m_extension);
+  private final Limelight limelight = new Limelight();
 
-    // The driver's controller
-    CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
-    CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
+  // The driver's controller
+  CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+  CommandXboxController m_operatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
 
-    /**
-     * The container for the robot. Contains subsystems, OI devices, and commands.
-     */
-    public RobotContainer() {
-        // Silence Joystick Warnings
-        DriverStation.silenceJoystickConnectionWarning(true);
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
+  public RobotContainer() {
+    // Silence Joystick Warnings
+    DriverStation.silenceJoystickConnectionWarning(true);
 
-        // Configure the Auto Selector
-        configureAuto();
-        // Configure the button bindings
-        configureButtonBindings();
+    // Make sure the limelight's LED is off when we turn on
+    turnOffLimelightLED();
 
-        // Configure default commands
-        m_robotDrive.setDefaultCommand(
-                // Right Trigger Controls Speed
-                // The left stick controls translation of the robot.
-                // Turning is controlled by the X axis of the right stick.
-                new RunCommand(
-                        () -> m_robotDrive.drive(
-                                m_driverController.getRightTriggerAxis(),
-                                MathUtil.applyDeadband(m_driverController.getLeftY(),
-                                        OIConstants.kDriveDeadband),
-                                MathUtil.applyDeadband(m_driverController.getLeftX(),
-                                        OIConstants.kDriveDeadband),
-                                -MathUtil.applyDeadband(m_driverController.getRightX(),
-                                        OIConstants.kDriveDeadband),
-                                true, m_robotDrive
-                                        .isWithinSafeDrivingLimits()),
-                        m_robotDrive));
-    }
+    // Configure the Auto Selector
+    configureAuto();
+    // Configure the button bindings
+    configureButtonBindings();
 
-    private void configureAuto() {
+    // Configure default commands
+    m_robotDrive.setDefaultCommand(
+        // Right Trigger Controls Speed
+        // The left stick controls translation of the robot.
+        // Turning is controlled by the X axis of the right stick.
+        new RunCommand(
+            () -> m_robotDrive.drive(
+                m_driverController.getRightTriggerAxis(),
+                MathUtil.applyDeadband(m_driverController.getLeftY(),
+                    OIConstants.kDriveDeadband),
+                MathUtil.applyDeadband(m_driverController.getLeftX(),
+                    OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getRightX(),
+                    OIConstants.kDriveDeadband),
+                true, m_robotDrive
+                    .isWithinSafeDrivingLimits()),
+            m_robotDrive));
+  }
 
-        autoSelection.setDefaultOption("(15pt) SIDEKICK: 2x Score High, Leave",
-                Autos.AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake));
+  private void configureAuto() {
 
-        autoSelection.addOption("(23pt) DYNAMIC DUO: 2x Score High, Leave, Dock",
-                Autos.AutoDynamicDuo(m_robotDrive, m_altitude, m_extension, m_intake));
+    autoSelection.setDefaultOption("(15pt) SIDEKICK: 2x Score High, Leave",
+        Autos.AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake));
 
-        // Put the chooser on the dashboard
-        SmartDashboard.putData("Auto Routine", autoSelection);
-    }
+    autoSelection.addOption("(23pt) DYNAMIC DUO: 2x Score High, Leave, Dock",
+        Autos.AutoDynamicDuo(m_robotDrive, m_altitude, m_extension, m_intake));
 
-    /**
-     * Use this method to define your button->command mappings. Buttons can be
-     * created by
-     * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-     * subclasses ({@link
-     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-     * passing it to a
-     * {@link JoystickButton}.
-     */
-    private void configureButtonBindings() {
-        /** Drive Lock **/
-        final Trigger lockWheels = m_driverController.povDown();
+    // Put the chooser on the dashboard
+    SmartDashboard.putData("Auto Routine", autoSelection);
+  }
 
-        lockWheels.toggleOnTrue(new RunCommand(
-                () -> m_robotDrive.lock(),
-                m_robotDrive));
+  /**
+   * Use this method to define your button->command mappings. Buttons can be
+   * created by
+   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
+   * subclasses ({@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
+   * passing it to a
+   * {@link JoystickButton}.
+   */
+  private void configureButtonBindings() {
+    /** Drive Lock **/
+    final Trigger lockWheels = m_driverController.povDown();
 
-        // Cube Low Shot on driver control
-        final Trigger lowCubeEjectButton = m_driverController.leftTrigger();
-        final Trigger cubeShootButton = m_driverController.rightBumper();
-        final Trigger cubeMidShotButton = m_driverController.leftBumper();
+    lockWheels.toggleOnTrue(new RunCommand(
+        () -> m_robotDrive.lock(),
+        m_robotDrive));
 
-        // lowCubeEjectButton.onTrue(new InstantCommand(m_intake::stopIntake));
-        lowCubeEjectButton.onTrue(new DropCube(m_altitude, m_extension, m_intake));
+    // Cube Low Shot on driver control
+    final Trigger lowCubeEjectButton = m_driverController.leftTrigger();
+    final Trigger cubeShootButton = m_driverController.rightBumper();
+    final Trigger cubeMidShotButton = m_driverController.leftBumper();
 
-        cubeMidShotButton.onTrue(new ScoreCube(m_altitude, m_extension, m_intake));
+    // lowCubeEjectButton.onTrue(new InstantCommand(m_intake::stopIntake));
+    lowCubeEjectButton.onTrue(new DropCube(m_altitude, m_extension, m_intake));
 
-        cubeShootButton.onTrue(new ScoreHighCube(m_altitude, m_extension,
-                m_intake));
+    cubeMidShotButton.onTrue(new ScoreCube(m_altitude, m_extension, m_intake));
 
-        final Trigger zeroHeadingButton = m_driverController.start();
-        zeroHeadingButton.onTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
+    cubeShootButton.onTrue(new ScoreHighCube(m_altitude, m_extension,
+        m_intake));
 
-        // Commands to face the robot in different drections
+    final Trigger zeroHeadingButton = m_driverController.start();
+    zeroHeadingButton.onTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
-        final Trigger AutoFaceIntakeRight = m_driverController.b();
-        final Trigger AutoFaceIntakeUp = m_driverController.y();
-        final Trigger AutoFaceIntakeLeft = m_driverController.x();
-        final Trigger AutoFaceIntakeDown = m_driverController.a();
+    final Trigger autoCenter = m_driverController.povUp();
 
-        AutoFaceIntakeRight.onTrue(new AutoTurnToDegreeGyro(
-                90, m_robotDrive, false));
+    autoCenter.onTrue(new AutoPositionWithLimelight(m_robotDrive, limelight));
 
-        AutoFaceIntakeLeft.onTrue(
-                new AutoTurnToDegreeGyro(
-                        -90, m_robotDrive, false));
+    // Commands to face the robot in different drections
 
-        AutoFaceIntakeDown.onTrue(
-                new AutoTurnToDegreeGyro(
-                        0, m_robotDrive, false));
+    final Trigger AutoFaceIntakeRight = m_driverController.b();
+    final Trigger AutoFaceIntakeUp = m_driverController.y();
+    final Trigger AutoFaceIntakeLeft = m_driverController.x();
+    final Trigger AutoFaceIntakeDown = m_driverController.a();
 
-        AutoFaceIntakeUp.onTrue(
-                new AutoTurnToDegreeGyro(
-                        180, m_robotDrive, false));
+    AutoFaceIntakeRight.onTrue(new AutoTurnToDegreeGyro(
+        90, m_robotDrive, false));
 
-        /** OPERATOR COMMANDS **/
-        final Trigger startButton = m_operatorController.start();
-        final Trigger intakeButton = m_operatorController.rightTrigger();
-        final Trigger manualIntakeButton = m_operatorController.rightBumper();
-        final Trigger ejectButton = m_operatorController.leftTrigger();
-        final Trigger highCubeEjectButton = m_operatorController.leftBumper();
-        // final Trigger midCubeEjectButton = m_operatorController.;
-        final Trigger setDoubleSubstationButton = m_operatorController.povUp();
-        final Trigger setSingleSubstationButton = m_operatorController.povDown();
+    AutoFaceIntakeLeft.onTrue(
+        new AutoTurnToDegreeGyro(
+            -90, m_robotDrive, false));
 
-        final Trigger testExtension = m_operatorController.povRight();
+    AutoFaceIntakeDown.onTrue(
+        new AutoTurnToDegreeGyro(
+            0, m_robotDrive, false));
 
-        final Trigger ExtendButton = m_operatorController.axisLessThan(5, -.25);
-        final Trigger RetractButton = m_operatorController.axisGreaterThan(5, .25);
-        final Trigger RaiseButton = m_operatorController.axisLessThan(1, -.25);
-        final Trigger LowerButton = m_operatorController.axisGreaterThan(1, .25);
+    AutoFaceIntakeUp.onTrue(
+        new AutoTurnToDegreeGyro(
+            180, m_robotDrive, false));
 
-        final Trigger testAuto = m_operatorController.povLeft();
+    /** OPERATOR COMMANDS **/
+    final Trigger startButton = m_operatorController.start();
+    final Trigger intakeButton = m_operatorController.rightTrigger();
+    final Trigger manualIntakeButton = m_operatorController.rightBumper();
+    final Trigger ejectButton = m_operatorController.leftTrigger();
+    final Trigger highCubeEjectButton = m_operatorController.leftBumper();
+    // final Trigger midCubeEjectButton = m_operatorController.;
+    final Trigger setDoubleSubstationButton = m_operatorController.povUp();
+    final Trigger setSingleSubstationButton = m_operatorController.povDown();
 
-        // final Trigger disableExtensionLimitSwitch =
-        // m_operatorController.rightStick();
-        // final Trigger disableAltitudeLimitSwitch = m_operatorController.leftStick();
+    final Trigger testExtension = m_operatorController.povRight();
 
-        // disableExtensionLimitSwitch
-        // .toggleOnTrue(new InstantCommand(m_extension::disableExtensionLimitSwitch,
-        // m_extension));
-        // disableAltitudeLimitSwitch.toggleOnTrue(new
-        // InstantCommand(m_altitude::disableAltitudeLimitSwitch, m_altitude));
+    final Trigger ExtendButton = m_operatorController.axisLessThan(5, -.25);
+    final Trigger RetractButton = m_operatorController.axisGreaterThan(5, .25);
+    final Trigger RaiseButton = m_operatorController.axisLessThan(1, -.25);
+    final Trigger LowerButton = m_operatorController.axisGreaterThan(1, .25);
 
-        // testAuto.onTrue(new AutoSidekick(m_robotDrive, m_altitude, m_extension,
-        // m_intake));
+    final Trigger testAuto = m_operatorController.povLeft();
 
-        testExtension.onTrue(new InstantCommand(
-                () -> m_extension.keepPositionInches(
-                        ExtensionConstants.kExtensionPositionInchesIntakeOut)));
+    // final Trigger disableExtensionLimitSwitch =
+    // m_operatorController.rightStick();
+    // final Trigger disableAltitudeLimitSwitch = m_operatorController.leftStick();
 
-        startButton.onTrue(Commands.sequence(
-                new InstantCommand(() -> m_altitude.reset()),
-                new InstantCommand(() -> m_extension.reset())));
+    // disableExtensionLimitSwitch
+    // .toggleOnTrue(new InstantCommand(m_extension::disableExtensionLimitSwitch,
+    // m_extension));
+    // disableAltitudeLimitSwitch.toggleOnTrue(new
+    // InstantCommand(m_altitude::disableAltitudeLimitSwitch, m_altitude));
 
-        // Intake button will run the intake then hold game piece when released
-        intakeButton.whileTrue(new IntakeCargo(m_altitude, m_extension, m_intake))
-                .onFalse(new ParallelCommandGroup(
-                        new InstantCommand(() -> m_intake.holdCargo()),
-                        new MoveToTravelAfterIntake(m_extension, m_altitude)));
+    // testAuto.onTrue(new AutoSidekick(m_robotDrive, m_altitude, m_extension,
+    // m_intake));
 
-        manualIntakeButton.whileTrue(
-                new InstantCommand(() -> m_intake.intakeCube()))
-                .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
+    testExtension.onTrue(new InstantCommand(
+        () -> m_extension.keepPositionInches(
+            ExtensionConstants.kExtensionPositionInchesIntakeOut)));
 
-        setDoubleSubstationButton
-                .whileTrue(new IntakeCargoFromDoubleSubstation(m_altitude, m_extension,
-                        m_intake))
-                .onFalse(new ParallelCommandGroup(
-                        new InstantCommand(() -> m_intake.holdCargo()),
-                        new MoveToTravelAfterScoring(m_extension, m_altitude)));
+    startButton.onTrue(Commands.sequence(
+        new InstantCommand(() -> m_altitude.reset()),
+        new InstantCommand(() -> m_extension.reset())));
 
-        setSingleSubstationButton
-                .whileTrue(new IntakeCargoFromSingleSubstation(m_altitude, m_extension,
-                        m_intake))
-                .onFalse(new ParallelCommandGroup(
-                        new InstantCommand(() -> m_intake.holdCargo()),
-                        new MoveToTravelAfterScoring(m_extension, m_altitude)));
+    // Intake button will run the intake then hold game piece when released
+    intakeButton.whileTrue(new IntakeCargo(m_altitude, m_extension, m_intake))
+        .onFalse(new ParallelCommandGroup(
+            new InstantCommand(() -> m_intake.holdCargo()),
+            new MoveToTravelAfterIntake(m_extension, m_altitude)));
 
-        ejectButton.onTrue(new ScoreBasedOnPosition(m_altitude, m_extension,
-                m_intake));
+    manualIntakeButton.whileTrue(
+        new InstantCommand(() -> m_intake.intakeCube()))
+        .onFalse(new InstantCommand(() -> m_intake.holdCargo()));
 
-        highCubeEjectButton.onTrue(new ScoreHighCube(m_altitude, m_extension,
-                m_intake));
+    setDoubleSubstationButton
+        .whileTrue(new IntakeCargoFromDoubleSubstation(m_altitude, m_extension,
+            m_intake))
+        .onFalse(new ParallelCommandGroup(
+            new InstantCommand(() -> m_intake.holdCargo()),
+            new MoveToTravelAfterScoring(m_extension, m_altitude)));
 
-        // midCubeEjectButton.onTrue(new ScoreMidCube(m_altitude, m_extension,
-        // m_intake));
+    setSingleSubstationButton
+        .whileTrue(new IntakeCargoFromSingleSubstation(m_altitude, m_extension,
+            m_intake))
+        .onFalse(new ParallelCommandGroup(
+            new InstantCommand(() -> m_intake.holdCargo()),
+            new MoveToTravelAfterScoring(m_extension, m_altitude)));
 
-        ExtendButton.whileTrue(new InstantCommand(m_extension::extendExtension, m_extension))
-                .onFalse(new InstantCommand(
-                        () -> m_extension.keepPosition(
-                                m_extension.getCurrentExtensionPosition())));
+    ejectButton.onTrue(new ScoreBasedOnPosition(m_altitude, m_extension,
+        m_intake));
 
-        RetractButton.whileTrue(new InstantCommand(m_extension::retractExtension, m_extension))
-                .onFalse(new InstantCommand(
-                        () -> m_extension.keepPosition(
-                                m_extension.getCurrentExtensionPosition())));
+    highCubeEjectButton.onTrue(new ScoreHighCube(m_altitude, m_extension,
+        m_intake));
 
-        RaiseButton
-                .whileTrue(new InstantCommand(m_altitude::raiseAltitude, m_altitude))
-                .onFalse(new InstantCommand(
-                        () -> m_altitude.keepPosition(m_altitude.getCurrentAltitude())));
+    // midCubeEjectButton.onTrue(new ScoreMidCube(m_altitude, m_extension,
+    // m_intake));
 
-        LowerButton
-                .whileTrue(new InstantCommand(m_altitude::lowerAltitude, m_altitude))
-                .onFalse(new InstantCommand(
-                        () -> m_altitude.keepPosition(m_altitude.getCurrentAltitude())));
+    ExtendButton.whileTrue(new InstantCommand(m_extension::extendExtension, m_extension))
+        .onFalse(new InstantCommand(
+            () -> m_extension.keepPosition(
+                m_extension.getCurrentExtensionPosition())));
 
-        /** PRESET POSITIONS **/
-        final Trigger prepareHighDropOffButton = m_operatorController.b();
-        final Trigger prepareMidDropOffButton = m_operatorController.x();
-        final Trigger prepareTravelButton = m_operatorController.y();
-        final Trigger prepareHoldCargo = m_operatorController.a();
+    RetractButton.whileTrue(new InstantCommand(m_extension::retractExtension, m_extension))
+        .onFalse(new InstantCommand(
+            () -> m_extension.keepPosition(
+                m_extension.getCurrentExtensionPosition())));
 
-        prepareMidDropOffButton.onTrue(new MoveToMidConeDropOff(m_extension,
-                m_altitude))
-                .onFalse(new SequentialCommandGroup(
-                        new WaitUntilCommand(
-                                () -> m_extension.ExtensionIsInMidScoringPosition()),
-                        new InstantCommand(
-                                () -> m_altitude.keepPosition(
-                                        AltitudeConstants.kAltitudeMidDropOffPosition))));
+    RaiseButton
+        .whileTrue(new InstantCommand(m_altitude::raiseAltitude, m_altitude))
+        .onFalse(new InstantCommand(
+            () -> m_altitude.keepPosition(m_altitude.getCurrentAltitude())));
 
-        prepareHighDropOffButton.onTrue(new MoveToHighConeDropOff(m_extension,
-                m_altitude))
-                .onFalse(new SequentialCommandGroup(
-                        new WaitUntilCommand(
-                                () -> m_extension.ExtensionIsInHighScoringPosition()),
-                        new InstantCommand(
-                                () -> m_altitude.keepPosition(
-                                        AltitudeConstants.kAltitudeHighDropOffPosition))));
-        prepareTravelButton.onTrue(new MoveToTravel(m_extension, m_altitude));
+    LowerButton
+        .whileTrue(new InstantCommand(m_altitude::lowerAltitude, m_altitude))
+        .onFalse(new InstantCommand(
+            () -> m_altitude.keepPosition(m_altitude.getCurrentAltitude())));
 
-    }
+    /** PRESET POSITIONS **/
+    final Trigger prepareHighDropOffButton = m_operatorController.b();
+    final Trigger prepareMidDropOffButton = m_operatorController.x();
+    final Trigger prepareTravelButton = m_operatorController.y();
+    final Trigger prepareHoldCargo = m_operatorController.a();
 
-    // TODO: Make sure robot follows the path properly
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    public Command getAutonomousCommandOriginal() {
-        // Create config for trajectory
-        TrajectoryConfig config = new TrajectoryConfig(
-                AutoConstants.kMaxSpeedMetersPerSecond,
-                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-                // Add kinematics to ensure max speed is actually obeyed
-                .setKinematics(DriveConstants.kDriveKinematics);
+    prepareMidDropOffButton.onTrue(new MoveToMidConeDropOff(m_extension,
+        m_altitude))
+        .onFalse(new SequentialCommandGroup(
+            new WaitUntilCommand(
+                () -> m_extension.ExtensionIsInMidScoringPosition()),
+            new InstantCommand(
+                () -> m_altitude.keepPosition(
+                    AltitudeConstants.kAltitudeMidDropOffPosition))));
 
-        // Travel backwards through our trajectory
-        config.setReversed(true);
+    prepareHighDropOffButton.onTrue(new MoveToHighConeDropOff(m_extension,
+        m_altitude))
+        .onFalse(new SequentialCommandGroup(
+            new WaitUntilCommand(
+                () -> m_extension.ExtensionIsInHighScoringPosition()),
+            new InstantCommand(
+                () -> m_altitude.keepPosition(
+                    AltitudeConstants.kAltitudeHighDropOffPosition))));
+    prepareTravelButton.onTrue(new MoveToTravel(m_extension, m_altitude));
 
-        // An example trajectory to follow. All units in meters.
-        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(0, 0, Rotation2d.fromDegrees(-180)),
-                // Pass through these two interior waypoints, making an 's' curve path
-                // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                List.of(new Translation2d(1, 0.01)),
-                // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(3, -0.1, Rotation2d.fromDegrees(1)),
-                config);
+  }
 
-        var thetaController = new ProfiledPIDController(
-                AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+  // TODO: Make sure robot follows the path properly
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommandOriginal() {
+    // Create config for trajectory
+    TrajectoryConfig config = new TrajectoryConfig(
+        AutoConstants.kMaxSpeedMetersPerSecond,
+        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+        // Add kinematics to ensure max speed is actually obeyed
+        .setKinematics(DriveConstants.kDriveKinematics);
 
-        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-                exampleTrajectory,
-                m_robotDrive::getPose, // Functional interface to feed supplier
-                DriveConstants.kDriveKinematics,
+    // Travel backwards through our trajectory
+    config.setReversed(true);
 
-                // Position controllers
-                new PIDController(AutoConstants.kPXController, 0, 0),
-                new PIDController(AutoConstants.kPYController, 0, 0),
-                thetaController,
-                m_robotDrive::setModuleStates,
-                m_robotDrive);
+    // An example trajectory to follow. All units in meters.
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, Rotation2d.fromDegrees(-180)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        // NOTE: MUST have a waypoint. CANNOT be a straight line.
+        List.of(new Translation2d(1, 0.01)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(3, -0.1, Rotation2d.fromDegrees(1)),
+        config);
 
-        // Reset odometry to the starting pose of the trajectory.
-        m_robotDrive.zeroHeading();
-        m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+    var thetaController = new ProfiledPIDController(
+        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-        // Run path following command, then stop at the end.
-        return swerveControllerCommand.andThen(() -> m_robotDrive.stop());
-    }
+    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+        exampleTrajectory,
+        m_robotDrive::getPose, // Functional interface to feed supplier
+        DriveConstants.kDriveKinematics,
 
-    public Command getAutonomousCommand() {
-        m_robotDrive.zeroHeading();
-        m_robotDrive.resetOdometry(new Pose2d());
-        // return new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake);
-        return autoSelection.getSelected();
-    }
+        // Position controllers
+        new PIDController(AutoConstants.kPXController, 0, 0),
+        new PIDController(AutoConstants.kPYController, 0, 0),
+        thetaController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);
+
+    // Reset odometry to the starting pose of the trajectory.
+    m_robotDrive.zeroHeading();
+    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+
+    // Run path following command, then stop at the end.
+    return swerveControllerCommand.andThen(() -> m_robotDrive.stop());
+  }
+
+  public void turnOffLimelightLED() {
+    limelight.setLEDMode(LedMode.kforceOff);
+  }
+
+  public void turnOnLimelightLED() {
+    limelight.setLEDMode(LedMode.kforceOn);
+  }
+
+  public Command getAutonomousCommand() {
+    m_robotDrive.zeroHeading();
+    m_robotDrive.resetOdometry(new Pose2d());
+    // return new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake);
+    return autoSelection.getSelected();
+  }
 
 }
