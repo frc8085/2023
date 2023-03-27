@@ -112,7 +112,6 @@ public class Extension extends SubsystemBase {
   public void log() {
 
     SmartDashboard.putNumber("Extension Current position", getCurrentExtensionPosition());
-    SmartDashboard.putBoolean("Extension Limit Enabled", m_extensionLimit.isLimitSwitchEnabled());
 
     if (TUNING_MODE) {
       // SmartDashboard.putBoolean("Fully Extended", m_extensionLimit.isPressed());
@@ -204,6 +203,7 @@ public class Extension extends SubsystemBase {
   public void periodic() {
     log();
     ExtensionRetractionLimitHit();
+    displayDisableExtensionLimitSwitch();
   }
 
   /** Resets the Extension encoder to currently read a position of 0. */

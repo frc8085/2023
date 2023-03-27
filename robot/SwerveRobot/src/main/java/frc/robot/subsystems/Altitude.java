@@ -160,8 +160,6 @@ public class Altitude extends SubsystemBase {
   public void log() {
     SmartDashboard.putNumber("Altitude: Current reading", getCurrentAltitude());
 
-    displayDisableAltitudeLimitSwitch();
-
     if (TUNING_MODE) {
       // SmartDashboard.putBoolean("Altitude at Top Position",
       // m_altitudeTopLimit.isPressed());
@@ -359,6 +357,7 @@ public class Altitude extends SubsystemBase {
     log();
 
     enforceSafeExtensions();
+    displayDisableAltitudeLimitSwitch();
 
     // resetAltitudeEncoderAtTopLimit();
     AltitudeIsInTravelPosition();
