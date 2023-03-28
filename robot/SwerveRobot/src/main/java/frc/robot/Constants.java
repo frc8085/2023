@@ -297,7 +297,7 @@ public final class Constants {
 
     // Turn factor constants
     public static final double kTrackWidthInches = 20.5; // Known
-    public static final double kTurnFactor = kTrackWidthInches * 4 * Math.PI / 360; // Known
+    public static final double kTurnFactor = kTrackWidthInches * Math.PI / 360; // Known
   }
 
   public static final class ModuleConstants {
