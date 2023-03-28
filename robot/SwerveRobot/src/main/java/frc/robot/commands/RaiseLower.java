@@ -19,9 +19,9 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 public class RaiseLower extends PIDCommand {
   private final Altitude m_altitude;
 
-  static double kP = .75;
-  static double kI = .0001;
-  static double kD = .1;
+  static double kP = .0375;
+  static double kI = .000005;
+  static double kD = .005;
 
   /**
    * Create a new TurnToDegreeGyro command.

@@ -135,15 +135,15 @@ public final class Constants {
     public static double kAltitudeRaiseSpeed = 0.2;
     public static double kAltitudeLowerSpeed = 0.2;
     public static double kAltitudeRampRate = 1;
-    public static double kAltitudePositionTolerance = 1;
-    public static double kAutoAltitudePositionTolerance = .1;
+    public static double kAltitudePositionTolerance = 20;
+    public static double kAutoAltitudePositionTolerance = 2;
 
     public static final double kMaxAltitudeSpeedMetersPerSecond = .05;
     public static final double kMaxLimitedAltitudeSpeedMetersPerSecond = .01;
 
     // Estimates, fix this once we get exact measurements
     public static final double kAltitudeTotalDegrees = 72.4;
-    public static final double kAltitudeTotalRevolutions = 5.488;
+    public static final double kAltitudeTotalRevolutions = 117.9;
 
     // Convert angle of travel to encoder rotations, where encoder reading of .1 is
     // 0 degrees and reading of 5.5 is 90 degrees
@@ -203,10 +203,10 @@ public final class Constants {
         * kAltitudeRevolutionsPerDegree;
 
     // Altitude Error Tolerance
-    public static double kAltitudeError = 0.05;
+    public static double kAltitudeError = 1;
 
     // Range for safe Travel altitude > -0.7
-    public static double kAltitudeSafeMin = -0.9;
+    public static double kAltitudeSafeMin = -18;
 
     public static double kAltitudeSafeExtensionMin = kAltitudeDropOffPosition - kAltitudePositionTolerance;
 
