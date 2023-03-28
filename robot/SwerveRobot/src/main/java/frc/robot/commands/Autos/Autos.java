@@ -16,6 +16,28 @@ public final class Autos {
     SIDEKICK, SUPERHERO, MAIN_CHARACTER, DYNAMIC_DUO
   }
 
+  public static String GetAutoName(Auto selected) {
+    String name;
+
+    switch (selected) {
+      case SIDEKICK:
+        name = "(15pt) SIDEKICK: 2x Score High, Leave";
+        break;
+      case SUPERHERO:
+        name = "(21pt) SUPERHERO: 1x Score, Pickup, Balance";
+        break;
+      case MAIN_CHARACTER:
+        name = "(21pt) MAIN CHARACTER: 1x Score, Leave, Balance";
+        break;
+      case DYNAMIC_DUO:
+        name = "(23pt) DYNAMIC DUO: 2x Score High, Leave, Dock";
+        break;
+      default:
+        throw new AssertionError("Illegal value" + selected);
+    }
+    return name;
+  }
+
   public static Command SelectAuto(Auto selected, DriveSubsystem m_drive, Altitude m_altitude,
       Extension m_extension, Intake m_intake) {
     Command autoCommand;

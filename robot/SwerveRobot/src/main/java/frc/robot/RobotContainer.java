@@ -120,12 +120,15 @@ public class RobotContainer {
   }
 
   private void configureAuto() {
+    for (Auto auto : Auto.values()) {
+      autoSelection.addOption(
+          Autos.GetAutoName(auto),
+          auto);
+    }
 
-    autoSelection.setDefaultOption("(15pt) SIDEKICK: 2x Score High, Leave",
+    autoSelection.setDefaultOption(
+        Autos.GetAutoName(Auto.SIDEKICK),
         Auto.SIDEKICK);
-
-    autoSelection.addOption("(23pt) DYNAMIC DUO: 2x Score High, Leave, Dock",
-        Auto.DYNAMIC_DUO);
 
     // Put the chooser on the dashboard
     SmartDashboard.putData("Auto Routine", autoSelection);
