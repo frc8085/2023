@@ -154,6 +154,7 @@ public class Altitude extends SubsystemBase {
       addTuningtoDashboard();
     }
 
+    addAltitudeLimitSwitchDisableToDashboard();
   }
 
   /** The log method puts interesting information to the SmartDashboard. */
@@ -177,6 +178,7 @@ public class Altitude extends SubsystemBase {
   }
 
   public void displayDisableAltitudeLimitSwitch() {
+
     // enable/disable limit switches based on value read from SmartDashboard
     m_altitudeTopLimit.enableLimitSwitch(SmartDashboard.getBoolean("Altitude Top Limit Switch Enabled", true));
     m_altitudeBottomLimit.enableLimitSwitch(SmartDashboard.getBoolean("Altitude Bottom Limit Switch Enabled", true));
@@ -202,6 +204,11 @@ public class Altitude extends SubsystemBase {
     if (AltitudeIsInTravelPosition()) {
       System.out.println("Altitude in TRAVEL position");
     }
+  }
+
+  private void addAltitudeLimitSwitchDisableToDashboard() {
+    SmartDashboard.putBoolean("Altitude Top Limit Switch Enabled", m_altitudeTopLimit.isLimitSwitchEnabled());
+    SmartDashboard.putBoolean("Altitude Bottom Limit Switch Enabled", m_altitudeBottomLimit.isLimitSwitchEnabled());
   }
 
   private void addPIDToDashboard() {

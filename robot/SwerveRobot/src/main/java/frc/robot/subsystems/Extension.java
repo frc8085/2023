@@ -106,6 +106,9 @@ public class Extension extends SubsystemBase {
     // operation, it will maintain the above configurations.
 
     m_extensionMotor.burnFlash();
+
+    addExtensionLimitSwitchDisableToDashboard();
+
   }
 
   /** The log method puts interesting information to the SmartDashboard. */
@@ -134,6 +137,11 @@ public class Extension extends SubsystemBase {
     m_extensionLimit.enableLimitSwitch(SmartDashboard.getBoolean("Extension Limit Switch Enabled", true));
     m_retractionLimit.enableLimitSwitch(SmartDashboard.getBoolean("Retraction Limit Switch Enabled", true));
 
+  }
+
+  public void addExtensionLimitSwitchDisableToDashboard() {
+    SmartDashboard.getBoolean("Extension Limit Switch Enabled", m_extensionLimit.isLimitSwitchEnabled());
+    SmartDashboard.getBoolean("Retraction Limit Switch Enabled", m_retractionLimit.isLimitSwitchEnabled());
   }
 
   private void addPIDToDashboard() {
