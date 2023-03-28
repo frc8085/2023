@@ -7,7 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Constants.TuningModeConstants;
 import frc.utils.LimelightConfiguration.Advanced_Crosshair;
 import frc.utils.LimelightConfiguration.Advanced_Target;
 import frc.utils.LimelightConfiguration.CamMode;
@@ -21,7 +21,7 @@ import frc.utils.LimelightConfiguration.StreamType;
  * Camera.
  */
 public class Limelight extends SubsystemBase {
-  private boolean TUNING_MODE = false;
+  private boolean TUNING_MODE = TuningModeConstants.kLimelightTuning;
   private NetworkTable m_table;
   private String m_tableName;
   private Boolean isConnected = false;
