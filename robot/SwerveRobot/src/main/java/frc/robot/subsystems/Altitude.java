@@ -39,31 +39,6 @@ public class Altitude extends SubsystemBase {
   private SparkMaxLimitSwitch m_altitudeTopLimit;
   private SparkMaxLimitSwitch m_altitudeBottomLimit;
 
-  // Altitude Limit Switches are on by default is locked by default
-  private boolean altitudeLimitSwitchIsDisabled = false;
-
-  /* Ignore Limit Switch */
-  public void disableAltitudeLimitSwitch() {
-    altitudeLimitSwitchIsDisabled = true;
-  }
-
-  /* Enable Limit Switch */
-  public void activateAltitudeLimitSwitch() {
-    altitudeLimitSwitchIsDisabled = false;
-  }
-
-  public boolean altitudeLimitSwitchIsDisabled() {
-    return altitudeLimitSwitchIsDisabled();
-  }
-
-  public void disableAltitudeLimitSwitches() {
-    if (altitudeLimitSwitchIsDisabled) {
-      m_altitudeTopLimit.enableLimitSwitch(false);
-      m_altitudeBottomLimit.enableLimitSwitch(false);
-    }
-    ;
-  }
-
   private SparkMaxPIDController m_altitudePIDController = m_altitudeMotor.getPIDController();
 
   // Raise PID coefficients
@@ -144,10 +119,6 @@ public class Altitude extends SubsystemBase {
     m_altitudeTopLimit = m_altitudeMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     m_altitudeBottomLimit = m_altitudeMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
 
-    // Save the SPARK MAX configurations. If a SPARK MAX browns out during
-    // operation, it will maintain the above configurations.
-    m_altitudeMotor.burnFlash();
-
     // If we're fine-tuning PID Constants, the display them on the dashboard
     if (TUNING_MODE) {
       addPIDToDashboard();
@@ -155,6 +126,11 @@ public class Altitude extends SubsystemBase {
     }
 
     addAltitudeLimitSwitchDisableToDashboard();
+
+    // Save the SPARK MAX configurations. If a SPARK MAX browns out during
+    // operation, it will maintain the above configurations.
+    m_altitudeMotor.burnFlash();
+
   }
 
   /** The log method puts interesting information to the SmartDashboard. */
@@ -207,6 +183,8 @@ public class Altitude extends SubsystemBase {
   }
 
   private void addAltitudeLimitSwitchDisableToDashboard() {
+    m_altitudeTopLimit.enableLimitSwitch(true);
+    m_altitudeBottomLimit.enableLimitSwitch(true);
     SmartDashboard.putBoolean("Altitude Top Limit Switch Enabled", m_altitudeTopLimit.isLimitSwitchEnabled());
     SmartDashboard.putBoolean("Altitude Bottom Limit Switch Enabled", m_altitudeBottomLimit.isLimitSwitchEnabled());
   }
@@ -382,7 +360,7 @@ public class Altitude extends SubsystemBase {
   }
 
   public void resetAltitudeEncoderAtTopLimit() {
-    m_altitudeEncoder.setPosition(-0.1);
+    m_altitudeEncoder.setPosition(0);
   };
 
   /** ALTITUDE **/

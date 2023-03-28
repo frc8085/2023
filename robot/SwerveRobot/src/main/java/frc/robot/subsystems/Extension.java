@@ -35,23 +35,6 @@ public class Extension extends SubsystemBase {
   private SparkMaxLimitSwitch m_extensionLimit;
   private SparkMaxLimitSwitch m_retractionLimit;
 
-  // Extension Limit Switches are on by default is locked by default
-  private boolean extensionLimitSwitchIsDisabled = false;
-
-  /* Ignore Limit Switch */
-  public void disableExtensionLimitSwitch() {
-    extensionLimitSwitchIsDisabled = true;
-  }
-
-  /* Enable Limit Switch */
-  public void activateExtensionLimitSwitch() {
-    extensionLimitSwitchIsDisabled = false;
-  }
-
-  public boolean extensionLimitSwitchIsDisabled() {
-    return extensionLimitSwitchIsDisabled();
-  }
-
   // PID
   private SparkMaxPIDController m_extensionPIDController = m_extensionMotor.getPIDController();
   static double kPExtension = .05;
@@ -64,14 +47,6 @@ public class Extension extends SubsystemBase {
 
   public boolean ExtensionRetractionLimitHit() {
     return isRetractionLimitHit();
-  }
-
-  public void disableExtensionLimitSwitches() {
-    if (extensionLimitSwitchIsDisabled) {
-      m_extensionLimit.enableLimitSwitch(false);
-      m_retractionLimit.enableLimitSwitch(false);
-    }
-    ;
   }
 
   public Extension() {
@@ -105,9 +80,9 @@ public class Extension extends SubsystemBase {
     // Save the SPARK MAX configurations. If a SPARK MAX browns out during
     // operation, it will maintain the above configurations.
 
-    m_extensionMotor.burnFlash();
-
     addExtensionLimitSwitchDisableToDashboard();
+
+    m_extensionMotor.burnFlash();
 
   }
 
@@ -139,11 +114,6 @@ public class Extension extends SubsystemBase {
 
   }
 
-  public void addExtensionLimitSwitchDisableToDashboard() {
-    SmartDashboard.getBoolean("Extension Limit Switch Enabled", m_extensionLimit.isLimitSwitchEnabled());
-    SmartDashboard.getBoolean("Retraction Limit Switch Enabled", m_retractionLimit.isLimitSwitchEnabled());
-  }
-
   private void addPIDToDashboard() {
     // Display PID Extension coefficients on SmartDashboard
     SmartDashboard.putNumber("Extension P Gain", kPExtension);
@@ -152,6 +122,13 @@ public class Extension extends SubsystemBase {
     SmartDashboard.putNumber("Extension Max Output", kMaxOutputExtension);
     SmartDashboard.putNumber("Extension Min Output", kMinOutputExtension);
 
+  }
+
+  public void addExtensionLimitSwitchDisableToDashboard() {
+    m_extensionLimit.enableLimitSwitch(true);
+    m_retractionLimit.enableLimitSwitch(true);
+    SmartDashboard.putBoolean("Extension Limit Switch Enabled", m_extensionLimit.isLimitSwitchEnabled());
+    SmartDashboard.putBoolean("Retraction Limit Switch Enabled", m_retractionLimit.isLimitSwitchEnabled());
   }
 
   private void readExtensionPIDTuningFromDashboard() {
