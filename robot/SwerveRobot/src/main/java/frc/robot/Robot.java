@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.hal.DriverStationJNI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -105,6 +106,7 @@ public class Robot extends TimedRobot {
     m_timer.start();
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    DriverStationJNI.getAllianceStation();
 
     // Turn on the limelight LED
     m_robotContainer.turnOnLimelightLED();
