@@ -23,6 +23,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Autos.Autos.Auto;
 import frc.robot.commands.Autos.Shared.AutoPositionWithLimelight;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
 import frc.robot.commands.Autos.SuperHero.AutoSuperHero;
@@ -71,7 +72,7 @@ import java.util.List;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  protected SendableChooser<Command> autoSelection = new SendableChooser<>();
+  protected SendableChooser<Auto> autoSelection = new SendableChooser<>();
 
   // The robot's subsystems
   private final Extension m_extension = new Extension();
@@ -121,10 +122,10 @@ public class RobotContainer {
   private void configureAuto() {
 
     autoSelection.setDefaultOption("(15pt) SIDEKICK: 2x Score High, Leave",
-        Autos.AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake));
+        Auto.SIDEKICK);
 
     autoSelection.addOption("(23pt) DYNAMIC DUO: 2x Score High, Leave, Dock",
-        Autos.AutoDynamicDuo(m_robotDrive, m_altitude, m_extension, m_intake));
+        Auto.DYNAMIC_DUO);
 
     // Put the chooser on the dashboard
     SmartDashboard.putData("Auto Routine", autoSelection);
@@ -373,7 +374,7 @@ public class RobotContainer {
     m_robotDrive.zeroHeading();
     m_robotDrive.resetOdometry(new Pose2d());
     // return new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake);
-    return autoSelection.getSelected();
+    return Autos.SelectAuto(autoSelection.getSelected(), m_robotDrive, m_altitude, m_extension, m_intake);
   }
 
 }
