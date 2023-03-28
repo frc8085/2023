@@ -25,7 +25,7 @@ public class Limelight extends SubsystemBase {
   private NetworkTable m_table;
   private String m_tableName;
   private Boolean isConnected = false;
-  private double _hearBeatPeriod = 0.1;
+  private double _heartBeatPeriod = 0.1;
   private NetworkTableEntry targetVisible;
   private NetworkTableEntry distanceToTarget;
   private NetworkTableEntry rotationToTarget;
@@ -37,7 +37,7 @@ public class Limelight extends SubsystemBase {
 
   class PeriodicRunnable implements java.lang.Runnable {
     public void run() {
-      resetPilelineLatency();
+      resetPipelineLatency();
       setpointTarget = getSetpointToTarget();
       log();
 
@@ -55,7 +55,7 @@ public class Limelight extends SubsystemBase {
     }
   }
 
-  Notifier _hearBeat = new Notifier(new PeriodicRunnable());
+  Notifier _heartBeat = new Notifier(new PeriodicRunnable());
 
   /** The log method puts interesting information to the SmartDashboard. */
   public void log() {
@@ -74,7 +74,7 @@ public class Limelight extends SubsystemBase {
   public Limelight() {
     m_tableName = "limelight";
     m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
-    _hearBeat.startPeriodic(_hearBeatPeriod);
+    _heartBeat.startPeriodic(_heartBeatPeriod);
 
   }
 
@@ -84,7 +84,7 @@ public class Limelight extends SubsystemBase {
   public Limelight(String tableName) {
     m_tableName = tableName;
     m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
-    _hearBeat.startPeriodic(_hearBeatPeriod);
+    _heartBeat.startPeriodic(_heartBeatPeriod);
   }
 
   /**
@@ -92,7 +92,7 @@ public class Limelight extends SubsystemBase {
    */
   public Limelight(NetworkTable table) {
     m_table = table;
-    _hearBeat.startPeriodic(_hearBeatPeriod);
+    _heartBeat.startPeriodic(_heartBeatPeriod);
   }
 
   // This is a test
@@ -213,7 +213,7 @@ public class Limelight extends SubsystemBase {
     return l;
   }
 
-  private void resetPilelineLatency() {
+  private void resetPipelineLatency() {
     m_table.getEntry("tl").setValue(0.0);
   }
   // Setters
