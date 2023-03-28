@@ -175,20 +175,21 @@ public class RobotContainer {
     final Trigger AutoFaceIntakeLeft = m_driverController.x();
     final Trigger AutoFaceIntakeDown = m_driverController.a();
 
-    AutoFaceIntakeRight.onTrue(new AutoTurnToDegreeGyro(
-        90, m_robotDrive, false));
+    AutoFaceIntakeRight.whileTrue(new AutoTurnToDegreeGyro(
+        90, m_robotDrive, false))
+        .onFalse(new InstantCommand(m_robotDrive::stop));
 
-    AutoFaceIntakeLeft.onTrue(
-        new AutoTurnToDegreeGyro(
-            -90, m_robotDrive, false));
+    AutoFaceIntakeLeft.whileTrue(
+        new AutoTurnToDegreeGyro(-90, m_robotDrive, false))
+        .onFalse(new InstantCommand(m_robotDrive::stop));
 
-    AutoFaceIntakeDown.onTrue(
-        new AutoTurnToDegreeGyro(
-            0, m_robotDrive, false));
+    AutoFaceIntakeDown.whileTrue(
+        new AutoTurnToDegreeGyro(0, m_robotDrive, false))
+        .onFalse(new InstantCommand(m_robotDrive::stop));
 
-    AutoFaceIntakeUp.onTrue(
-        new AutoTurnToDegreeGyro(
-            180, m_robotDrive, false));
+    AutoFaceIntakeUp.whileTrue(
+        new AutoTurnToDegreeGyro(180, m_robotDrive, false))
+        .onFalse(new InstantCommand(m_robotDrive::stop));
 
     /** OPERATOR COMMANDS **/
     final Trigger startButton = m_operatorController.start();
