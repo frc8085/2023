@@ -449,8 +449,17 @@ public class Altitude extends SubsystemBase {
 
   public boolean AltitudeIsInIntakePosition() {
     return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeIntakePosition
-        + AltitudeConstants.kAltitudePositionTolerance;
+        + AltitudeConstants.kAltitudePositionTolerance &&
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeIntakePosition
+            - AltitudeConstants.kAltitudePositionTolerance;
 
+  }
+
+  public boolean AltitudeIsInAutoIntakePosition() {
+    return m_altitudeEncoder.getPosition() < AltitudeConstants.kAltitudeAutoIntakePosition
+        + AltitudeConstants.kAltitudePositionTolerance &&
+        m_altitudeEncoder.getPosition() > AltitudeConstants.kAltitudeAutoIntakePosition
+            - AltitudeConstants.kAltitudePositionTolerance;
   }
 
   public boolean AltitudeIsInScoringPosition() {

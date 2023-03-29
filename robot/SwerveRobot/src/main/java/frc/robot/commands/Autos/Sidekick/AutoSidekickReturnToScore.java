@@ -37,6 +37,7 @@ public class AutoSidekickReturnToScore extends SequentialCommandGroup {
         returnToScore(m_drive));
   }
 
+  // This has been tuned for red. For Blue, y values and turns should be negated.
   public Command returnToScore(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);

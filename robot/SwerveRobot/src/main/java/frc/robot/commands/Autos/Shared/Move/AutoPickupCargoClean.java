@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.commands.MoveToIntake;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
@@ -25,16 +24,16 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class AutoPickupCargo extends SequentialCommandGroup {
-  public AutoPickupCargo(
+public class AutoPickupCargoClean extends SequentialCommandGroup {
+  public AutoPickupCargoClean(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension,
       Intake m_intake) {
     addCommands(
-        new MoveToIntake(m_extension, m_altitude),
+        new AutoMoveToIntake(m_extension, m_altitude),
         new WaitUntilCommand(
-            () -> m_altitude.AltitudeIsInIntakePosition() &&
+            () -> m_altitude.AltitudeIsInAutoIntakePosition() &&
                 m_extension.ExtensionIsInIntakePosition()),
         new ParallelCommandGroup(
             driveToGamePiece(m_drive),
