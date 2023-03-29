@@ -14,6 +14,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
@@ -23,36 +24,34 @@ import frc.robot.subsystems.Extension;
 
 /** An example command that uses an example subsystem. */
 public class AutoMoveToPickupAndStartLoweringIntake extends SequentialCommandGroup {
-    public AutoMoveToPickupAndStartLoweringIntake(
-            DriveSubsystem m_drive,
-            Altitude m_altitude,
-            Extension m_extension) {
-        addCommands(
-                // start lowering altitude while it's moving to the pickup spot.
-                new ParallelRaceGroup(
-                        new InstantCommand(m_altitude::lowerAltitude, m_altitude),
-                        travelBackwardsThenSpin(m_drive)));
+  public AutoMoveToPickupAndStartLoweringIntake(
+      DriveSubsystem m_drive,
+      Altitude m_altitude,
+      Extension m_extension) {
+    addCommands(
+        // start lowering altitude while it's moving to the pickup spot.
+        new InstantCommand(m_altitude::lowerAltitude, m_altitude).raceWith(travelBackwardsThenSpin(m_drive)));
 
-    }
+  }
 
-    public Command travelBackwardsThenSpin(DriveSubsystem m_drive) {
-        // Create config for trajectory
-        TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+  public Command travelBackwardsThenSpin(DriveSubsystem m_drive) {
+    // Create config for trajectory
+    TrajectoryConfig config = AutoTrajectoryCommand.config(true);
 
-        // First trajectory. All units in meters.
-        Trajectory moveToPosition = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(0, 0, Rotation2d.fromDegrees(-180)),
-                // Pass through these two interior waypoints, making an 's' curve path
-                // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                List.of(new Translation2d(2.5, 0.7)),
-                // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(4, 0.35, Rotation2d.fromDegrees(5)),
-                config);
+    // First trajectory. All units in meters.
+    Trajectory moveToPosition = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, Rotation2d.fromDegrees(-180)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        // NOTE: MUST have a waypoint. CANNOT be a straight line.
+        List.of(new Translation2d(2.5, 0.7)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(4, 0.35, Rotation2d.fromDegrees(5)),
+        config);
 
-        m_drive.zeroHeading();
-        m_drive.resetOdometry(moveToPosition.getInitialPose());
+    m_drive.zeroHeading();
+    m_drive.resetOdometry(moveToPosition.getInitialPose());
 
-        return AutoTrajectoryCommand.command(m_drive, moveToPosition);
-    }
+    return AutoTrajectoryCommand.command(m_drive, moveToPosition);
+  }
 }
