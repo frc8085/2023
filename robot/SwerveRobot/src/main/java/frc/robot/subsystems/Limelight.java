@@ -162,6 +162,17 @@ public class Limelight extends SubsystemBase {
    * 
    * @return
    */
+  public double getXDistanceFromTarget() {
+    NetworkTableEntry tx = m_table.getEntry("tx");
+    double x = tx.getDouble(0.0);
+    return x;
+  }
+
+  /**
+   * tx Horizontal Offset From Crosshair To Target (-27 degrees to 27 degrees)
+   * 
+   * @return
+   */
   public double getdegRotationToTarget() {
     NetworkTableEntry tx = m_table.getEntry("tx");
     double x = tx.getDouble(0.0);

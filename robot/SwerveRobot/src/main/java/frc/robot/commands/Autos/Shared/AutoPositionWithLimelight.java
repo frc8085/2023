@@ -6,7 +6,6 @@ package frc.robot.commands.Autos.Shared;
 
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Limelight;
 
@@ -21,6 +20,8 @@ public class AutoPositionWithLimelight extends CommandBase {
   MedianFilter filter = new MedianFilter(5);
   MedianFilter setpointFilter = new MedianFilter(5);
 
+  double medianReading;
+
   public AutoPositionWithLimelight(DriveSubsystem drive, Limelight limelight) {
     // Require the drive and limelight
     m_drive = drive;
@@ -31,14 +32,22 @@ public class AutoPositionWithLimelight extends CommandBase {
   @Override
   public void execute() {
     super.execute();
-    double turnSetpoint = m_limelight.getdegRotationToTarget();
-    System.out.println("Degrees from target" + turnSetpoint);
+    double driveSetpoint = m_limelight.getXDistanceFromTarget();
+
+    System.out.println("X from target" + driveSetpoint);
     // Use the median from the last 5 readings
     // We do this because the input can be erratic
     // Median is more robust than average
-    double medianDegree = filter.calculate(turnSetpoint);
-    double turnSpeed = medianDegree * DriveConstants.kTurnFactor;
-    m_drive.turn(turnSpeed);
+    medianReading = filter.calculate(driveSetpoint);
+    double direction = Math.signum(medianReading);
+    m_drive.drive(
+        0.1,
+        0,
+        direction,
+        0,
+        true,
+        false);
+    ;
   }
 
   // Called just before this Command runs the first time
@@ -52,8 +61,7 @@ public class AutoPositionWithLimelight extends CommandBase {
   @Override
   public boolean isFinished() {
     boolean targetVisible = m_limelight.getIsTargetFound();
-    double medianRotation = setpointFilter.calculate(m_limelight.getdegRotationToTarget());
-    boolean withinTolerance = Math.abs(medianRotation) <= 2.5;
+    boolean withinTolerance = Math.abs(medianReading) <= 2.5;
     // End this Command if we reached our setpoint OR we don't have a target visible
     return !targetVisible || withinTolerance;
   }
