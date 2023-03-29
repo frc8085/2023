@@ -5,6 +5,7 @@
 package frc.robot.commands.Autos.Shared;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveSubsystem;
@@ -14,7 +15,7 @@ public class AutoResetOdometry extends SequentialCommandGroup {
     public AutoResetOdometry(
             DriveSubsystem m_drive) {
         addCommands(
-                new RunCommand(() -> m_drive.zeroHeading()).withTimeout(0.5),
-                new RunCommand(() -> m_drive.resetOdometry(new Pose2d())).withTimeout((0.5)));
+                new InstantCommand(() -> m_drive.zeroHeading()),
+                new InstantCommand(() -> m_drive.resetOdometry(new Pose2d()))));
     }
 }

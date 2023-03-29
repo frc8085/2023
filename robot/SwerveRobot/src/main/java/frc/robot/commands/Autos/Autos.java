@@ -1,8 +1,10 @@
 package frc.robot.commands.Autos;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.Autos.DynamicDuo.AutoDynamicDuo;
 import frc.robot.commands.Autos.MainCharacter.AutoMainCharacter;
+import frc.robot.commands.Autos.Shared.AutoResetOdometry;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
 import frc.robot.commands.Autos.SuperHero.AutoSuperHero;
 import frc.robot.subsystems.Altitude;
@@ -41,6 +43,7 @@ public final class Autos {
   public static Command SelectAuto(Auto selected, DriveSubsystem m_drive, Altitude m_altitude,
       Extension m_extension, Intake m_intake) {
     Command autoCommand;
+    Command reset = new AutoResetOdometry(m_drive);
 
     switch (selected) {
       case SIDEKICK:
@@ -59,7 +62,7 @@ public final class Autos {
         throw new AssertionError("Illegal value" + selected);
     }
 
-    return autoCommand;
+    return reset.andThen(autoCommand);
 
   }
 
