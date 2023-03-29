@@ -48,7 +48,7 @@ public class AutoSidekickReturnToScore extends SequentialCommandGroup {
         // Start at the origin facing the +X direction
         new Pose2d(5.0, .35, Rotation2d.fromDegrees(0)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2.5, 0.3)),
+        List.of(new Translation2d(2.5, 0.7)),
         // Drive backwards for a meter
         new Pose2d(0.1, 0.3, Rotation2d.fromDegrees(-180)),
         config);

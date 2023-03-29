@@ -42,7 +42,7 @@ public class AutoMoveToPickup extends SequentialCommandGroup {
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(2.5, 0.7)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(4, 0.35, Rotation2d.fromDegrees(0)),
+        new Pose2d(4, 0.35, Rotation2d.fromDegrees(2)),
         config);
 
     m_drive.zeroHeading();
