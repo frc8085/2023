@@ -43,7 +43,7 @@ public class AutoTestPickupCargoSlowerIntakeWheels extends SequentialCommandGrou
 
   public Command driveToGamePiece(DriveSubsystem m_drive) {
     // Create config for trajectory
-    TrajectoryConfig config = AutoTrajectoryVariableSpeedCommand.config(false);
+    TrajectoryConfig config = AutoTrajectoryVariableSpeedCommand.config(false, 1);
 
     // An example trajectory to follow. All units in meters.
     Trajectory pickupCargo = TrajectoryGenerator.generateTrajectory(

@@ -24,10 +24,10 @@ public class AutoTrajectoryVariableSpeedCommand extends SequentialCommandGroup {
    * @param reversed Are we driving backward along the trajectory
    */
 
-  public static TrajectoryConfig config(boolean reversed) {
+  public static TrajectoryConfig config(boolean reversed, double speed) {
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
-        1,
+        speed,
         AutoConstants.kMaxAccelerationMetersPerSecondSquared)
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(DriveConstants.kDriveKinematics);
