@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Autos.Shared.AutoResetOdometry;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickup;
-import frc.robot.commands.Autos.Shared.Move.AutoPickupCargo;
+import frc.robot.commands.Autos.Shared.Move.AutoPickupCargoClean;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
@@ -33,7 +33,7 @@ public class AutoSidekick extends SequentialCommandGroup {
         // 2. Move to pickup cargo position
         new AutoMoveToPickup(m_drive, m_altitude, m_extension),
         // 3. Intake down and pickup cargo
-        new AutoPickupCargo(m_drive, m_altitude, m_extension, m_intake),
+        new AutoPickupCargoClean(m_drive, m_altitude, m_extension, m_intake),
         // 4. Intake up and move back to grid
         new AutoSidekickReturnToScore(m_drive, m_altitude, m_extension, m_intake),
         // 5. Shoot cube

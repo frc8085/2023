@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveToFrontChargeStation;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickup;
-import frc.robot.commands.Autos.Shared.Move.AutoPickupCargo;
+import frc.robot.commands.Autos.Shared.Move.AutoPickupCargoClean;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
