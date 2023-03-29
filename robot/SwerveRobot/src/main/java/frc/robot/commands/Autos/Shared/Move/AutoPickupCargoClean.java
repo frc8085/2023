@@ -23,7 +23,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
-/** An example command that uses an example subsystem. */
+// Used for picking up cargo from the "clean" side of the field
 public class AutoPickupCargoClean extends SequentialCommandGroup {
   public AutoPickupCargoClean(
       DriveSubsystem m_drive,
@@ -37,7 +37,7 @@ public class AutoPickupCargoClean extends SequentialCommandGroup {
                 m_extension.ExtensionIsInIntakePosition()),
         new ParallelCommandGroup(
             driveToGamePiece(m_drive),
-            new InstantCommand(() -> m_intake.intakeCone())));
+            new InstantCommand(() -> m_intake.intakeCube())));
   }
 
   public Command driveToGamePiece(DriveSubsystem m_drive) {

@@ -23,9 +23,9 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
-/** An example command that uses an example subsystem. */
-public class AutoTestPickupCargoSlowerIntakeWheels extends SequentialCommandGroup {
-    public AutoTestPickupCargoSlowerIntakeWheels(
+// Used for picking up cargo from the "clean" side of the field
+public class AutoPickupConeClean extends SequentialCommandGroup {
+    public AutoPickupConeClean(
             DriveSubsystem m_drive,
             Altitude m_altitude,
             Extension m_extension,
@@ -37,7 +37,7 @@ public class AutoTestPickupCargoSlowerIntakeWheels extends SequentialCommandGrou
                                 m_extension.ExtensionIsInIntakePosition()),
                 new ParallelCommandGroup(
                         driveToGamePiece(m_drive),
-                        new InstantCommand(() -> m_intake.intakeCube())));
+                        new InstantCommand(() -> m_intake.intakeCone())));
     }
 
     public Command driveToGamePiece(DriveSubsystem m_drive) {
