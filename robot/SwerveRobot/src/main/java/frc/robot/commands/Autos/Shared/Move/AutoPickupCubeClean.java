@@ -18,14 +18,15 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
+import frc.robot.commands.Autos.Shared.AutoTrajectoryVariableSpeedCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 // Used for picking up cargo from the "clean" side of the field
-public class AutoPickupConeClean extends SequentialCommandGroup {
-  public AutoPickupConeClean(
+public class AutoPickupCubeClean extends SequentialCommandGroup {
+  public AutoPickupCubeClean(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension,
@@ -42,7 +43,7 @@ public class AutoPickupConeClean extends SequentialCommandGroup {
 
   public Command driveToGamePiece(DriveSubsystem m_drive) {
     // Create config for trajectory
-    TrajectoryConfig config = AutoTrajectoryCommand.config(false);
+    TrajectoryConfig config = AutoTrajectoryVariableSpeedCommand.config(false, 1);
 
     // An example trajectory to follow. All units in meters.
     Trajectory pickupCargo = TrajectoryGenerator.generateTrajectory(
@@ -54,6 +55,6 @@ public class AutoPickupConeClean extends SequentialCommandGroup {
         new Pose2d(5, 0.35, Rotation2d.fromDegrees(0)),
         config);
 
-    return AutoTrajectoryCommand.command(m_drive, pickupCargo);
+    return AutoTrajectoryVariableSpeedCommand.command(m_drive, pickupCargo);
   }
 }
