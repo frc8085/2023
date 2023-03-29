@@ -28,6 +28,7 @@ public class AutoMoveToPickupAndStartLoweringIntake extends SequentialCommandGro
             Altitude m_altitude,
             Extension m_extension) {
         addCommands(
+                // start lowering altitude while it's moving to the pickup spot.
                 new ParallelRaceGroup(
                         new InstantCommand(m_altitude::lowerAltitude, m_altitude),
                         travelBackwardsThenSpin(m_drive)));
@@ -46,7 +47,7 @@ public class AutoMoveToPickupAndStartLoweringIntake extends SequentialCommandGro
                 // NOTE: MUST have a waypoint. CANNOT be a straight line.
                 List.of(new Translation2d(2.5, 0.7)),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(4, 0.35, Rotation2d.fromDegrees(2)),
+                new Pose2d(4, 0.35, Rotation2d.fromDegrees(5)),
                 config);
 
         m_drive.zeroHeading();
