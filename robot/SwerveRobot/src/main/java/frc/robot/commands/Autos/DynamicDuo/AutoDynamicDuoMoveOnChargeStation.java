@@ -25,28 +25,28 @@ import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoDynamicDuoMoveOnChargeStation extends SequentialCommandGroup {
-    public AutoDynamicDuoMoveOnChargeStation(
-            DriveSubsystem m_drive) {
-        addCommands(
-                moveOnChargeStation(m_drive));
-    }
+  public AutoDynamicDuoMoveOnChargeStation(
+      DriveSubsystem m_drive) {
+    addCommands(
+        moveOnChargeStation(m_drive));
+  }
 
-    public Command moveOnChargeStation(DriveSubsystem m_drive) {
-        // Create config for trajectory
-        TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+  public Command moveOnChargeStation(DriveSubsystem m_drive) {
+    // Create config for trajectory
+    TrajectoryConfig config = AutoTrajectoryCommand.config(true);
 
-        // An example trajectory to follow. All units in meters.
-        // Should the points be negative or positive? Does it decide based on the
-        // reversed being true?
-        Trajectory goOnChargeStation = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(0.5, 1.8, Rotation2d.fromDegrees(45)),
-                // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                List.of(new Translation2d(2, 1.9)),
-                // Drive backwards for a meter
-                new Pose2d(3, 2, Rotation2d.fromDegrees(45)),
-                config);
+    // An example trajectory to follow. All units in meters.
+    // Should the points be negative or positive? Does it decide based on the
+    // reversed being true?
+    Trajectory goOnChargeStation = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0.5, 1.8, Rotation2d.fromDegrees(90)),
+        // NOTE: MUST have a waypoint. CANNOT be a straight line.
+        List.of(new Translation2d(2, 1.9)),
+        // Drive backwards for a meter
+        new Pose2d(3, 2, Rotation2d.fromDegrees(90)),
+        config);
 
-        return AutoTrajectoryCommand.command(m_drive, goOnChargeStation);
-    }
+    return AutoTrajectoryCommand.command(m_drive, goOnChargeStation);
+  }
 }

@@ -42,22 +42,11 @@ public class AutoDynamicDuoMoveToChargeStation extends SequentialCommandGroup {
         // Start at the origin facing the +X direction
         new Pose2d(0.3, .3, Rotation2d.fromDegrees(-180)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(0.4, 1.2)),
+        List.of(new Translation2d(0.5, 1.8)),
         // Drive backwards for a meter
-        new Pose2d(0.5, 1.8, Rotation2d.fromDegrees(90)),
+        new Pose2d(3, 2, Rotation2d.fromDegrees(90)),
         config);
 
-    Trajectory goOnChargeStation = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0.5, 1.8, Rotation2d.fromDegrees(90)),
-        // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2, 1.9)),
-        // Drive backwards for a meter
-        new Pose2d(3, 2, Rotation2d.fromDegrees(45)),
-        config);
-
-    var concatTraj = goToChargeStation.concatenate(goOnChargeStation);
-
-    return AutoTrajectoryCommand.command(m_drive, concatTraj);
+    return AutoTrajectoryCommand.command(m_drive, goToChargeStation);
   }
 }

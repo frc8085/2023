@@ -52,7 +52,7 @@ public class AutoPickupCargo extends SequentialCommandGroup {
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(4.5, .3)),
         // End 2 meters straight ahead of where we started still facing forward
-        new Pose2d(5, 0.35, Rotation2d.fromDegrees(5)),
+        new Pose2d(5, 0.35, Rotation2d.fromDegrees(0)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, pickupCargo);

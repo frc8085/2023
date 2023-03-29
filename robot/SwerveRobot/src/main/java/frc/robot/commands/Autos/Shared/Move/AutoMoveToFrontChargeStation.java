@@ -44,12 +44,12 @@ public class AutoMoveToFrontChargeStation extends SequentialCommandGroup {
     // First trajectory. All units in meters.
     Trajectory moveToChargeStation = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(3.25, -0.1, Rotation2d.fromDegrees(-10)),
+        new Pose2d(5, .35, Rotation2d.fromDegrees(5)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2.75, -1)),
+        List.of(new Translation2d(4.5, 1.6)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(2.45, -1.5, Rotation2d.fromDegrees(-180)),
+        new Pose2d(4, 2.05, Rotation2d.fromDegrees(120)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, moveToChargeStation);

@@ -46,7 +46,7 @@ public class AutoDynamicDuoReturnToScore extends SequentialCommandGroup {
     // reversed being true?
     Trajectory returnToScoreOne = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(5.0, .35, Rotation2d.fromDegrees(0)),
+        new Pose2d(5.0, .35, Rotation2d.fromDegrees(5)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(2.5, 0.3)),
         // Drive backwards for a meter
