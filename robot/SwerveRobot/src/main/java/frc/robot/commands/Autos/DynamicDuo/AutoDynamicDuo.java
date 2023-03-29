@@ -27,25 +27,25 @@ public class AutoDynamicDuo extends SequentialCommandGroup {
       Extension m_extension,
       Intake m_intake) {
     addCommands(
-        new ParallelCommandGroup(
-            // new ParallelCommandGroup(
-            // Reset Heading & Odometry
-            // new AutoResetOdometry(m_drive),
-            // 1. Score Cone
-            new SequentialCommandGroup(
-                new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
-                // 2. Move to pickup cargo position
-                new AutoMoveToPickup(m_drive, m_altitude, m_extension),
-                // 3. Intake down and pickup cargo
-                new AutoPickupCargo(m_drive, m_altitude, m_extension, m_intake),
-                // 4. Intake up and move back to grid
-                new AutoDynamicDuoReturnToScore(m_drive, m_altitude, m_extension, m_intake),
-                // 5. Shoot cube
-                new AutoDynamicDuoSecondScore(m_altitude, m_extension, m_intake),
-                // 6. Move to Charge Station
-                new AutoDynamicDuoMoveToChargeStation(m_drive)),
-            // 7. Lock Wheels at End of Auto
-            new LockWheelsAtEndOfAuto(m_drive))
+        // new ParallelCommandGroup(
+        // new ParallelCommandGroup(
+        // Reset Heading & Odometry
+        // new AutoResetOdometry(m_drive),
+        // 1. Score Cone
+        new SequentialCommandGroup(
+            new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
+            // 2. Move to pickup cargo position
+            new AutoMoveToPickup(m_drive, m_altitude, m_extension),
+            // 3. Intake down and pickup cargo
+            new AutoPickupCargo(m_drive, m_altitude, m_extension, m_intake),
+            // 4. Intake up and move back to grid
+            new AutoDynamicDuoReturnToScore(m_drive, m_altitude, m_extension, m_intake),
+            // 5. Shoot cube
+            new AutoDynamicDuoSecondScore(m_altitude, m_extension, m_intake),
+            // 6. Move to Charge Station
+            new AutoDynamicDuoMoveToChargeStation(m_drive))
+    // 7. Lock Wheels at End of Auto
+    // new LockWheelsAtEndOfAuto(m_drive))
     // 7. Move on Charge Station
     // new AutoDynamicDuoMoveOnChargeStation(m_drive)
     );

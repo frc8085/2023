@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
     DriverStationJNI.getAllianceStation();
 
     // Turn on the limelight LED
-    m_robotContainer.turnOnLimelightLED();
+    // m_robotContainer.turnOnLimelightLED();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -140,7 +140,7 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
 
     // Turn on the limelight LED
-    m_robotContainer.turnOnLimelightLED();
+    // m_robotContainer.turnOnLimelightLED();
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
