@@ -11,7 +11,7 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 public final class Autos {
-  public static Alliance m_alliance;
+  public static Alliance m_alliance = Alliance.RED;
 
   public enum Auto {
     SIDEKICK, SUPERHERO, MAIN_CHARACTER, DYNAMIC_DUO
