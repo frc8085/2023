@@ -4,17 +4,12 @@
 
 package frc.robot.commands.Autos.SuperHero;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Autos.Shared.LockWheelsAtEndOfAuto;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveOnChargeStationFromFront;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveToFrontChargeStation;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickupAndStartLoweringIntakeClean;
-import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickupClean;
-import frc.robot.commands.Autos.Shared.Move.AutoPickupCubeClean;
 import frc.robot.commands.Autos.Shared.Move.AutoPickupConeClean;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
 import frc.robot.subsystems.Altitude;

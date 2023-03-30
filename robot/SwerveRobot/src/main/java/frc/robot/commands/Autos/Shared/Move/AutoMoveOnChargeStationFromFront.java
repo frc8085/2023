@@ -13,16 +13,14 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.MoveToTravelAfterIntake;
+import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Autos.Autos.Alliance;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
-import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoMoveOnChargeStationFromFront extends SequentialCommandGroup {
@@ -60,16 +58,17 @@ public class AutoMoveOnChargeStationFromFront extends SequentialCommandGroup {
   public Command moveOnChargeStationFromFront(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+    int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
     // First trajectory. All units in meters.
     Trajectory moveOnChargeStation = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(4, 2.05, Rotation2d.fromDegrees(120)),
+        new Pose2d(4, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2.5, 2.0)),
+        List.of(new Translation2d(2.5, sign * 2.0)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(-0.5, 2.05, Rotation2d.fromDegrees(120)),
+        new Pose2d(-0.5, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, moveOnChargeStation);

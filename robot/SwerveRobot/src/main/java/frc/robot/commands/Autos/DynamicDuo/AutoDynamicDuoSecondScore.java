@@ -6,7 +6,6 @@ package frc.robot.commands.Autos.DynamicDuo;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.ScoreCube;
-import frc.robot.commands.ScoreHighCube;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;

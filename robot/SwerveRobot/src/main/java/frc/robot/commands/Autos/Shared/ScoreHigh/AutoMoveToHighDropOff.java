@@ -2,7 +2,6 @@ package frc.robot.commands.Autos.Shared.ScoreHigh;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.commands.Extend;

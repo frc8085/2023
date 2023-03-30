@@ -11,10 +11,10 @@ import frc.robot.subsystems.DriveSubsystem;
 
 /** Reset the heading and odometry */
 public class AutoResetOdometry extends SequentialCommandGroup {
-    public AutoResetOdometry(
-            DriveSubsystem m_drive) {
-        addCommands(
-                new RunCommand(() -> m_drive.zeroHeading()).withTimeout(0.5),
-                new RunCommand(() -> m_drive.resetOdometry(new Pose2d())).withTimeout((0.5)));
-    }
+  public AutoResetOdometry(
+      DriveSubsystem m_drive) {
+    addCommands(
+        new RunCommand(() -> m_drive.zeroHeading()).withTimeout(0.5),
+        new RunCommand(() -> m_drive.resetOdometry(new Pose2d())).withTimeout((0.5)));
+  }
 }

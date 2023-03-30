@@ -14,6 +14,8 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Autos.Autos.Alliance;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
@@ -21,30 +23,31 @@ import frc.robot.subsystems.Extension;
 
 /** An example command that uses an example subsystem. */
 public class AutoMainCharacterLeaveCommunity extends SequentialCommandGroup {
-    public AutoMainCharacterLeaveCommunity(
-            DriveSubsystem m_drive,
-            Altitude m_altitude,
-            Extension m_extension) {
-        addCommands(
-                travelToLeaveCommunity(m_drive));
+  public AutoMainCharacterLeaveCommunity(
+      DriveSubsystem m_drive,
+      Altitude m_altitude,
+      Extension m_extension) {
+    addCommands(
+        travelToLeaveCommunity(m_drive));
 
-    }
+  }
 
-    public Command travelToLeaveCommunity(DriveSubsystem m_drive) {
-        // Create config for trajectory
-        TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+  public Command travelToLeaveCommunity(DriveSubsystem m_drive) {
+    // Create config for trajectory
+    TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+    int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
-        // First trajectory. All units in meters.
-        Trajectory leaveCommunity = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(0, 0, Rotation2d.fromDegrees(-180)),
-                // Pass through these two interior waypoints, making an 's' curve path
-                // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                List.of(new Translation2d(2, -0.01)),
-                // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(4, -0.1, Rotation2d.fromDegrees(0)),
-                config);
+    // First trajectory. All units in meters.
+    Trajectory leaveCommunity = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, sign * 0, Rotation2d.fromDegrees(sign * -180)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        // NOTE: MUST have a waypoint. CANNOT be a straight line.
+        List.of(new Translation2d(2, sign * -0.01)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(4, sign * -0.1, Rotation2d.fromDegrees(sign * 0)),
+        config);
 
-        return AutoTrajectoryCommand.command(m_drive, leaveCommunity);
-    }
+    return AutoTrajectoryCommand.command(m_drive, leaveCommunity);
+  }
 }

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.commands.MoveToTravelAfterScoring;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveToTravelAfterScoring;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;

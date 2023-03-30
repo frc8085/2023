@@ -4,12 +4,8 @@
 
 package frc.robot.commands.Autos.MainCharacter;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveToFrontChargeStation;
-import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickupClean;
-import frc.robot.commands.Autos.Shared.Move.AutoPickupCubeClean;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;

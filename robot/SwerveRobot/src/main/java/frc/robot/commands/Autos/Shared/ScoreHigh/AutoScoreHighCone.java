@@ -12,14 +12,14 @@ import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoScoreHighCone extends SequentialCommandGroup {
-    public AutoScoreHighCone(
-            DriveSubsystem m_drive,
-            Altitude m_altitude,
-            Extension m_extension,
-            Intake m_intake) {
-        addCommands(
-                new AutoMoveToHighDropOff(m_altitude, m_extension),
-                new AutoEjectCone(m_altitude, m_extension, m_intake));
-    }
+  public AutoScoreHighCone(
+      DriveSubsystem m_drive,
+      Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    addCommands(
+        new AutoMoveToHighDropOff(m_altitude, m_extension),
+        new AutoEjectCone(m_altitude, m_extension, m_intake));
+  }
 
 }

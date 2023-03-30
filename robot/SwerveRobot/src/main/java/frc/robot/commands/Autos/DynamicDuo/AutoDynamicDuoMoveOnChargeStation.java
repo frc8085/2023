@@ -13,15 +13,11 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.MoveToTravelAfterIntake;
+import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Autos.Autos.Alliance;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
-import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Extension;
-import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoDynamicDuoMoveOnChargeStation extends SequentialCommandGroup {
@@ -56,17 +52,18 @@ public class AutoDynamicDuoMoveOnChargeStation extends SequentialCommandGroup {
   public Command moveOnChargeStation(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+    int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
     // An example trajectory to follow. All units in meters.
     // Should the points be negative or positive? Does it decide based on the
     // reversed being true?
     Trajectory goOnChargeStation = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(0.5, 1.8, Rotation2d.fromDegrees(120)),
+        new Pose2d(0.5, sign * 1.8, Rotation2d.fromDegrees(sign * 120)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2, 1.9)),
+        List.of(new Translation2d(2, sign * 1.9)),
         // Drive backwards for a meter
-        new Pose2d(3, 2, Rotation2d.fromDegrees(120)),
+        new Pose2d(3, sign * 2, Rotation2d.fromDegrees(sign * 120)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, goOnChargeStation);

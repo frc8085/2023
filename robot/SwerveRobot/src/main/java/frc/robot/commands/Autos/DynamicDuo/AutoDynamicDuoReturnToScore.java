@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.MoveToTravelAfterIntake;
+import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Autos.Autos.Alliance;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
@@ -62,17 +64,18 @@ public class AutoDynamicDuoReturnToScore extends SequentialCommandGroup {
   public Command returnToScore(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+    int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
     // An example trajectory to follow. All units in meters.
     // Should the points be negative or positive? Does it decide based on the
     // reversed being true?
     Trajectory returnToScoreOne = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(5.0, .35, Rotation2d.fromDegrees(5)),
+        new Pose2d(5.0, sign * .35, Rotation2d.fromDegrees(sign * 5)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2.5, 0.3)),
+        List.of(new Translation2d(2.5, sign * 0.3)),
         // Drive backwards for a meter
-        new Pose2d(0.3, 0.3, Rotation2d.fromDegrees(-180)),
+        new Pose2d(0.3, sign * 0.3, Rotation2d.fromDegrees(sign * -180)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, returnToScoreOne);

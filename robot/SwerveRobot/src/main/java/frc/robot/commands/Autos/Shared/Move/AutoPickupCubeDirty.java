@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
+import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Autos.Autos.Alliance;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryVariableSpeedCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
@@ -67,15 +68,16 @@ public class AutoPickupCubeDirty extends SequentialCommandGroup {
   public Command driveToGamePiece(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryVariableSpeedCommand.config(false, 1);
+    int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
     // An example trajectory to follow. All units in meters.
     Trajectory pickupCargo = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing forward
-        new Pose2d(4, -.35, Rotation2d.fromDegrees(-5)),
+        new Pose2d(4, sign * -.35, Rotation2d.fromDegrees(sign * -5)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(4.5, -0.3)),
+        List.of(new Translation2d(4.5, sign * -0.3)),
         // End 2 meters straight ahead of where we started still facing forward
-        new Pose2d(5, -0.35, Rotation2d.fromDegrees(0)),
+        new Pose2d(5, sign * -0.35, Rotation2d.fromDegrees(sign * 0)),
         config);
 
     return AutoTrajectoryVariableSpeedCommand.command(m_drive, pickupCargo);
