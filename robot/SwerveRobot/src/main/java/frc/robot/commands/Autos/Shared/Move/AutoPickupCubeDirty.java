@@ -24,7 +24,8 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
-// Used for picking up cargo from the "clean" side of the field
+// These numbers were written for Red
+// Used for picking up cargo from the "dirty" - bump side of the field
 public class AutoPickupCubeDirty extends SequentialCommandGroup {
   public AutoPickupCubeDirty(
       DriveSubsystem m_drive,
@@ -40,6 +41,28 @@ public class AutoPickupCubeDirty extends SequentialCommandGroup {
             driveToGamePiece(m_drive),
             new InstantCommand(() -> m_intake.intakeCone())));
   }
+
+  /**
+   * could we do something like this?
+   * Starting point
+   * R1x = 4;
+   * R1y = -0.35;
+   * R1h = -5;
+   * R2x = 4.5;
+   * R2y = -0.3;
+   * R3x = 5;
+   * R3y = -0.35
+   * R3h = 0;
+   * B1x = 4;
+   * B1y = 0.35;
+   * B1h = 5;
+   * B2x = 4.5;
+   * B2y = 0.3;
+   * B3x = 0;
+   * B3y = 0.35;
+   * B3h = 0;
+   * 
+   */
 
   public Command driveToGamePiece(DriveSubsystem m_drive) {
     // Create config for trajectory

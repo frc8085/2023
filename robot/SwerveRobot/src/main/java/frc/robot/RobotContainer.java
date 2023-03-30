@@ -23,6 +23,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos.Autos;
+import frc.robot.commands.Autos.Autos.Alliance;
 import frc.robot.commands.Autos.Autos.Auto;
 import frc.robot.commands.Autos.Shared.AutoPositionWithLimelight;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
@@ -74,6 +75,7 @@ import java.util.List;
  */
 public class RobotContainer {
     protected SendableChooser<Auto> autoSelection = new SendableChooser<>();
+    protected SendableChooser<Alliance> allianceColor = new SendableChooser<>();
 
     // The robot's subsystems
     private final Extension m_extension = new Extension();
@@ -97,6 +99,7 @@ public class RobotContainer {
         turnOffLimelightLED();
 
         // Configure the Auto Selector
+        configureAlliance();
         configureAuto();
         // Configure the button bindings
         configureButtonBindings();
@@ -133,6 +136,17 @@ public class RobotContainer {
 
         // Put the chooser on the dashboard
         SmartDashboard.putData("Auto Routine", autoSelection);
+    }
+
+    private void configureAlliance() {
+        for (Alliance color : Alliance.values()) {
+            allianceColor.addOption(
+                    color.name(),
+                    color);
+        }
+
+        // Put the chooser on the dashboard
+        SmartDashboard.putData("Alliance", allianceColor);
     }
 
     /**
@@ -377,7 +391,7 @@ public class RobotContainer {
         m_robotDrive.zeroHeading();
         m_robotDrive.resetOdometry(new Pose2d());
         // return new AutoTest(m_robotDrive, m_altitude, m_extension, m_intake);
-        return Autos.SelectAuto(autoSelection.getSelected(), m_robotDrive,
+        return Autos.SelectAuto(autoSelection.getSelected(), allianceColor.getSelected(), m_robotDrive,
                 m_altitude, m_extension, m_intake);
     }
 

@@ -106,7 +106,6 @@ public class Robot extends TimedRobot {
     m_timer.start();
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    DriverStationJNI.getAllianceStation();
 
     // Turn on the limelight LED
     // m_robotContainer.turnOnLimelightLED();

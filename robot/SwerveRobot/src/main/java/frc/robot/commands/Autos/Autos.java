@@ -11,9 +11,14 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 public final class Autos {
+  public static Alliance m_alliance = Alliance.RED;
 
   public enum Auto {
     SIDEKICK, SUPERHERO, MAIN_CHARACTER, DYNAMIC_DUO
+  }
+
+  public enum Alliance {
+    BLUE, RED
   }
 
   public static String GetAutoName(Auto selected) {
@@ -38,9 +43,14 @@ public final class Autos {
     return name;
   }
 
-  public static Command SelectAuto(Auto selected, DriveSubsystem m_drive, Altitude m_altitude,
+  public Alliance getAlliance() {
+    return m_alliance;
+  }
+
+  public static Command SelectAuto(Auto selected, Alliance alliance, DriveSubsystem m_drive, Altitude m_altitude,
       Extension m_extension, Intake m_intake) {
     Command autoCommand;
+    m_alliance = alliance;
 
     switch (selected) {
       case SIDEKICK:

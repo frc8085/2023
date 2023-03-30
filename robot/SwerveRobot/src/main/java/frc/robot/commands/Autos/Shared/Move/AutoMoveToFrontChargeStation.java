@@ -37,6 +37,28 @@ public class AutoMoveToFrontChargeStation extends SequentialCommandGroup {
         travelToChargeStation(m_drive));
   }
 
+  /**
+   * could we do something like this?
+   * Starting point
+   * R1x = 5;
+   * R1y = 0.35;
+   * R1h = 5;
+   * R2x = 4.5;
+   * R2y = 1.6;
+   * R3x = 4;
+   * R3y = 2.05;
+   * R3h = 120;
+   * B1x = 5;
+   * B1y = -0.35;
+   * B1h = -5;
+   * B2x = 4.5;
+   * B2y = -1.6;
+   * B3x = 4;
+   * B3y = -2.05;
+   * B3h = -120;
+   * 
+   */
+
   public Command travelToChargeStation(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);

@@ -6,13 +6,6 @@ package frc.robot.commands.Autos.Shared.Balance;
 
 import edu.wpi.first.math.controller.PIDController;
 
-// Copyright (c) 2023 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file at
-// the root directory of this project.
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 

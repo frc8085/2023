@@ -31,6 +31,28 @@ public class AutoDynamicDuoMoveOnChargeStation extends SequentialCommandGroup {
         moveOnChargeStation(m_drive));
   }
 
+  /**
+   * could we do something like this?
+   * Starting point
+   * R1x = 0.5;
+   * R1y = 1.8;
+   * R1h = 120;
+   * R2x = 2;
+   * R2y = 1.9;
+   * R3x = 3;
+   * R3y = 2;
+   * R3h = 120;
+   * B1x = 0.5;
+   * B1y = -1.8;
+   * B1h = -120;
+   * B2x = 2;
+   * B2y = -1.9;
+   * B3x = 3;
+   * B3y = -2;
+   * B3h = -120;
+   * 
+   */
+
   public Command moveOnChargeStation(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);
@@ -40,11 +62,11 @@ public class AutoDynamicDuoMoveOnChargeStation extends SequentialCommandGroup {
     // reversed being true?
     Trajectory goOnChargeStation = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(0.5, 1.8, Rotation2d.fromDegrees(90)),
+        new Pose2d(0.5, 1.8, Rotation2d.fromDegrees(120)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(2, 1.9)),
         // Drive backwards for a meter
-        new Pose2d(3, 2, Rotation2d.fromDegrees(90)),
+        new Pose2d(3, 2, Rotation2d.fromDegrees(120)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, goOnChargeStation);

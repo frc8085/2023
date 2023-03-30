@@ -30,6 +30,28 @@ public class AutoMoveToPickupClean extends SequentialCommandGroup {
 
   }
 
+  /**
+   * could we do something like this?
+   * Starting point
+   * R1x = 0;
+   * R1y = 0;
+   * R1h = -180;
+   * R2x = 2.5;
+   * R2y = 0.7;
+   * R3x = 4;
+   * R3y = 0.35
+   * R3h = 5;
+   * B1x = 0;
+   * B1y = 0;
+   * B1h = -180;
+   * B2x = 2.5;
+   * B2y = -0.7;
+   * B3x = 4;
+   * B3y = -0.35;
+   * B3h = -5;
+   * 
+   */
+
   public Command travelBackwardsThenSpin(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);
