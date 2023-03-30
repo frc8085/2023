@@ -27,6 +27,7 @@ import frc.robot.commands.Autos.Autos.Auto;
 import frc.robot.commands.Autos.Shared.AutoPositionWithLimelight;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
 import frc.robot.commands.Autos.SuperHero.AutoSuperHero;
+import frc.robot.commands.Autos.Test.AutoTest;
 import frc.robot.commands.AutoTurnToDegreeGyro;
 import frc.robot.commands.DriverShootCube;
 import frc.robot.commands.DropCube;
@@ -377,8 +378,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     m_robotDrive.zeroHeading();
     m_robotDrive.resetOdometry(new Pose2d());
-    // return new AutoSidekick(m_robotDrive, m_altitude, m_extension, m_intake);
-    return Autos.SelectAuto(autoSelection.getSelected(), m_robotDrive, m_altitude, m_extension, m_intake);
+    return new AutoTest(m_robotDrive, m_altitude, m_extension, m_intake);
+    // return Autos.SelectAuto(autoSelection.getSelected(), m_robotDrive,
+    // m_altitude, m_extension, m_intake);
   }
 
 }

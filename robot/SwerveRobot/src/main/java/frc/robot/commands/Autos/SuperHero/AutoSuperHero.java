@@ -9,7 +9,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveOnChargeStationFromFront;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveToFrontChargeStation;
-import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickup;
+import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickupAndStartLoweringIntakeClean;
+import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickupClean;
 import frc.robot.commands.Autos.Shared.Move.AutoPickupCubeClean;
 import frc.robot.commands.Autos.Shared.Move.AutoPickupConeClean;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
@@ -29,7 +30,7 @@ public class AutoSuperHero extends SequentialCommandGroup {
         // 1. Score Cone
         new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
         // 2. Move to pickup cargo position
-        new AutoMoveToPickup(m_drive, m_altitude, m_extension),
+        new AutoMoveToPickupAndStartLoweringIntakeClean(m_drive, m_altitude, m_extension),
         // 3. Intake down and pickup cargo
         new AutoPickupConeClean(m_drive, m_altitude, m_extension, m_intake),
         // 4. Intake up and move to charge station
