@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Autos.Shared.Move;
+package frc.robot.commands.Autos.Henchman;
 
 import java.util.List;
 
@@ -16,44 +16,41 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.commands.MoveToTravelAfterIntake;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
-// Used for picking up cargo from the "clean" side of the field
-public class AutoPickupConeClean extends SequentialCommandGroup {
-  public AutoPickupConeClean(
+/** An example command that uses an example subsystem. */
+public class AutoHenchmanReturnToPickup extends SequentialCommandGroup {
+  public AutoHenchmanReturnToPickup(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension,
       Intake m_intake) {
     addCommands(
-        new AutoMoveToIntake(m_extension, m_altitude),
-        new WaitUntilCommand(
-            () -> m_altitude.AltitudeIsInAutoIntakePosition() &&
-                m_extension.ExtensionIsInIntakePosition()),
-        new ParallelCommandGroup(
-            driveToGamePiece(m_drive),
-            new InstantCommand(() -> m_intake.intakeCone())));
+        returnToPickup(m_drive));
   }
 
-  public Command driveToGamePiece(DriveSubsystem m_drive) {
+  // This has been tuned for red. For Blue, y values and turns should be negated.
+  public Command returnToPickup(DriveSubsystem m_drive) {
     // Create config for trajectory
-    TrajectoryConfig config = AutoTrajectoryCommand.config(false);
+    TrajectoryConfig config = AutoTrajectoryCommand.config(true);
 
     // An example trajectory to follow. All units in meters.
-    Trajectory pickupCargo = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing forward
-        new Pose2d(4, .35, Rotation2d.fromDegrees(5)),
+    // Should the points be negative or positive? Does it decide based on the
+    // reversed being true?
+    Trajectory returnToPickup = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(-0.1, -0.3, Rotation2d.fromDegrees(-178)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(4.5, .3)),
-        // End 2 meters straight ahead of where we started still facing forward
-        new Pose2d(5, 0.35, Rotation2d.fromDegrees(0)),
+        List.of(new Translation2d(2.5, -0.7)),
+        // Drive backwards for a meter
+        new Pose2d(4, -0.3, Rotation2d.fromDegrees(-5)),
         config);
 
-    return AutoTrajectoryCommand.command(m_drive, pickupCargo);
+    return AutoTrajectoryCommand.command(m_drive, returnToPickup);
   }
 }

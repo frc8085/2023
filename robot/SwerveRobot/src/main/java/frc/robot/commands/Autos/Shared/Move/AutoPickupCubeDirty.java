@@ -18,14 +18,15 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
+import frc.robot.commands.Autos.Shared.AutoTrajectoryVariableSpeedCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 // Used for picking up cargo from the "clean" side of the field
-public class AutoPickupCargoClean extends SequentialCommandGroup {
-  public AutoPickupCargoClean(
+public class AutoPickupCubeDirty extends SequentialCommandGroup {
+  public AutoPickupCubeDirty(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension,
@@ -37,23 +38,23 @@ public class AutoPickupCargoClean extends SequentialCommandGroup {
                 m_extension.ExtensionIsInIntakePosition()),
         new ParallelCommandGroup(
             driveToGamePiece(m_drive),
-            new InstantCommand(() -> m_intake.intakeCube())));
+            new InstantCommand(() -> m_intake.intakeCone())));
   }
 
   public Command driveToGamePiece(DriveSubsystem m_drive) {
     // Create config for trajectory
-    TrajectoryConfig config = AutoTrajectoryCommand.config(false);
+    TrajectoryConfig config = AutoTrajectoryVariableSpeedCommand.config(false, 1);
 
     // An example trajectory to follow. All units in meters.
     Trajectory pickupCargo = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing forward
-        new Pose2d(4, .35, Rotation2d.fromDegrees(5)),
+        new Pose2d(4, -.35, Rotation2d.fromDegrees(-5)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(4.5, .3)),
+        List.of(new Translation2d(4.5, -0.3)),
         // End 2 meters straight ahead of where we started still facing forward
-        new Pose2d(5, 0.35, Rotation2d.fromDegrees(0)),
+        new Pose2d(5, -0.35, Rotation2d.fromDegrees(0)),
         config);
 
-    return AutoTrajectoryCommand.command(m_drive, pickupCargo);
+    return AutoTrajectoryVariableSpeedCommand.command(m_drive, pickupCargo);
   }
 }

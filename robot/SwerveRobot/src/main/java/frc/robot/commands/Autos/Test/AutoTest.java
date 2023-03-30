@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Autos.Shared.AutoResetOdometry;
-import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickup;
-import frc.robot.commands.Autos.Shared.Move.AutoPickupCargo;
+import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickupAndStartLoweringIntake;
+import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickupClean;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
@@ -26,7 +26,7 @@ public class AutoTest extends SequentialCommandGroup {
       Intake m_intake) {
     addCommands(
         // testing PickupCargo sequences and a racewith command to lock wheels
-        new AutoPickupCargo(m_drive, m_altitude, m_extension, m_intake));
+        new AutoMoveToPickupAndStartLoweringIntake(m_drive, m_altitude, m_extension));
   }
 
 }
