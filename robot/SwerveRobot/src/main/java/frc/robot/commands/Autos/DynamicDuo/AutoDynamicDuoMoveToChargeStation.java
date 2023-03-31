@@ -27,28 +27,6 @@ public class AutoDynamicDuoMoveToChargeStation extends SequentialCommandGroup {
         moveToChargeStation(m_drive));
   }
 
-  /**
-   * could we do something like this?
-   * Starting point
-   * R1x = 0.3;
-   * R1y = 0.3;
-   * R1h = -180;
-   * R2x = 0.5;
-   * R2y = 1.8;
-   * R3x = 3;
-   * R3y = 2;
-   * R3h = 120;
-   * B1x = 0.3;
-   * B1y = -0.3;
-   * B1h = 180;
-   * B2x = 0.5;
-   * B2y = -1.8;
-   * B3x = 3;
-   * B3y = -2;
-   * B3h = -120;
-   * 
-   */
-
   public Command moveToChargeStation(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);

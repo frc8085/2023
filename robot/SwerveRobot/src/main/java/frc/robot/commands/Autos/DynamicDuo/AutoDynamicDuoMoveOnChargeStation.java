@@ -49,6 +49,7 @@ public class AutoDynamicDuoMoveOnChargeStation extends SequentialCommandGroup {
    * 
    */
 
+  // THIS PATH IS ALREADY IN MOVE TO CHARGE STATION
   public Command moveOnChargeStation(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);
