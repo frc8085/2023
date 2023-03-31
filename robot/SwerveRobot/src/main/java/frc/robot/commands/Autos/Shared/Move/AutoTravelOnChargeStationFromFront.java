@@ -13,70 +13,64 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.MoveToTravelAfterIntake;
 import frc.robot.commands.Autos.Autos;
 import frc.robot.commands.Autos.Autos.Alliance;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
-import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class AutoMoveToFrontChargeStation extends SequentialCommandGroup {
-  public AutoMoveToFrontChargeStation(
+public class AutoTravelOnChargeStationFromFront extends SequentialCommandGroup {
+  public AutoTravelOnChargeStationFromFront(
       DriveSubsystem m_drive,
       Altitude m_altitude,
-      Extension m_extension,
-      Intake m_intake) {
+      Extension m_extension) {
     addCommands(
-        new ParallelCommandGroup(
-            new InstantCommand(() -> m_intake.holdCargo()),
-            new MoveToTravelAfterIntake(m_extension, m_altitude)),
-        travelToChargeStation(m_drive));
+        moveOnChargeStationFromFront(m_drive),
+        new RunCommand(m_drive::lock));
   }
 
   /**
    * could we do something like this?
    * Starting point
-   * R1x = 5;
-   * R1y = 0.35;
-   * R1h = 5;
-   * R2x = 4.5;
-   * R2y = 1.6;
-   * R3x = 4;
+   * R1x = 4;
+   * R1y = 2.05;
+   * R1h = 120;
+   * R2x = 2.5;
+   * R2y = 2.0;
+   * R3x = -0.5;
    * R3y = 2.05;
    * R3h = 120;
-   * B1x = 5;
-   * B1y = -0.35;
-   * B1h = -5;
-   * B2x = 4.5;
-   * B2y = -1.6;
-   * B3x = 4;
+   * B1x = 4;
+   * B1y = -2.05;
+   * B1h = -120;
+   * B2x = 2.5;
+   * B2y = -2.0;
+   * B3x = -0.5;
    * B3y = -2.05;
    * B3h = -120;
    * 
    */
 
-  public Command travelToChargeStation(DriveSubsystem m_drive) {
+  public Command moveOnChargeStationFromFront(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);
     int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
     // First trajectory. All units in meters.
-    Trajectory moveToChargeStation = TrajectoryGenerator.generateTrajectory(
+    Trajectory moveOnChargeStation = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(5, sign * .35, Rotation2d.fromDegrees(sign * 5)),
+        new Pose2d(4, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(4.5, sign * 1.6)),
+        List.of(new Translation2d(2.5, sign * 2.0)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(4, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
+        new Pose2d(-0.5, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
         config);
 
-    return AutoTrajectoryCommand.command(m_drive, moveToChargeStation);
+    return AutoTrajectoryCommand.command(m_drive, moveOnChargeStation);
   }
 }

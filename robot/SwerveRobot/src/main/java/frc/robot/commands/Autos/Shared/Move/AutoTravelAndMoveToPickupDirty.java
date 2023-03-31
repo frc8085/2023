@@ -22,8 +22,8 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 
 /** An example command that uses an example subsystem. */
-public class AutoMoveToPickupClean extends SequentialCommandGroup {
-  public AutoMoveToPickupClean(
+public class AutoTravelAndMoveToPickupDirty extends SequentialCommandGroup {
+  public AutoTravelAndMoveToPickupDirty(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension) {
@@ -39,18 +39,18 @@ public class AutoMoveToPickupClean extends SequentialCommandGroup {
    * R1y = 0;
    * R1h = -180;
    * R2x = 2.5;
-   * R2y = 0.7;
+   * R2y = -0.7;
    * R3x = 4;
-   * R3y = 0.35
-   * R3h = 5;
+   * R3y = -0.35
+   * R3h = -5;
    * B1x = 0;
    * B1y = 0;
-   * B1h = -180;
+   * B1h = 180;
    * B2x = 2.5;
-   * B2y = -0.7;
+   * B2y = 0.7;
    * B3x = 4;
-   * B3y = -0.35;
-   * B3h = -5;
+   * B3y = 0.35;
+   * B3h = 5;
    * 
    */
 
@@ -65,9 +65,9 @@ public class AutoMoveToPickupClean extends SequentialCommandGroup {
         new Pose2d(0, sign * 0, Rotation2d.fromDegrees(sign * -180)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2.5, sign * 0.7)),
+        List.of(new Translation2d(2.5, sign * -0.7)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(4, sign * 0.35, Rotation2d.fromDegrees(sign * 5)),
+        new Pose2d(4, sign * -0.5, Rotation2d.fromDegrees(sign * -5)),
         config);
 
     m_drive.zeroHeading();

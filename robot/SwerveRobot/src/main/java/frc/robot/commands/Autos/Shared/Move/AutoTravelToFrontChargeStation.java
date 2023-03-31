@@ -13,78 +13,70 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.AltitudeConstants;
-import frc.robot.Constants.ExtensionConstants;
-import frc.robot.commands.Extend;
-import frc.robot.commands.RaiseLower;
+import frc.robot.commands.MoveToTravelAfterIntake;
 import frc.robot.commands.Autos.Autos;
 import frc.robot.commands.Autos.Autos.Alliance;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
+import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class AutoMoveToPickupAndStartLoweringIntakeClean extends SequentialCommandGroup {
-  public AutoMoveToPickupAndStartLoweringIntakeClean(
+public class AutoTravelToFrontChargeStation extends SequentialCommandGroup {
+  public AutoTravelToFrontChargeStation(
       DriveSubsystem m_drive,
       Altitude m_altitude,
-      Extension m_extension) {
+      Extension m_extension,
+      Intake m_intake) {
     addCommands(
         new ParallelCommandGroup(
-            // new RaiseLower(m_altitude, AltitudeConstants.kAltitudeAutoIntakePosition),
-            // new Extend(m_extension, ExtensionConstants.kExtensionPositionIntakeOut),
-            travelBackwardsThenSpin(m_drive),
-            new SequentialCommandGroup(
-                new WaitCommand(.5),
-                new AutoMoveToIntake(m_extension, m_altitude))));
+            new InstantCommand(() -> m_intake.holdCargo()),
+            new MoveToTravelAfterIntake(m_extension, m_altitude)),
+        travelToChargeStation(m_drive));
   }
 
   /**
    * could we do something like this?
    * Starting point
-   * R1x = 0;
-   * R1y = 0;
-   * R1h = -180;
-   * R2x = 2.5;
-   * R2y = 0.7;
+   * R1x = 5;
+   * R1y = 0.35;
+   * R1h = 5;
+   * R2x = 4.5;
+   * R2y = 1.6;
    * R3x = 4;
-   * R3y = 0.35
-   * R3h = 5;
-   * B1x = 0;
-   * B1y = 0;
-   * B1h = 180;
-   * B2x = 2.5;
-   * B2y = -0.7;
+   * R3y = 2.05;
+   * R3h = 120;
+   * B1x = 5;
+   * B1y = -0.35;
+   * B1h = -5;
+   * B2x = 4.5;
+   * B2y = -1.6;
    * B3x = 4;
-   * B3y = -0.35;
-   * B3h = -5;
+   * B3y = -2.05;
+   * B3h = -120;
    * 
    */
 
-  public Command travelBackwardsThenSpin(DriveSubsystem m_drive) {
+  public Command travelToChargeStation(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);
     int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
     // First trajectory. All units in meters.
-    Trajectory moveToPosition = TrajectoryGenerator.generateTrajectory(
+    Trajectory moveToChargeStation = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(0, sign * 0, Rotation2d.fromDegrees(sign * -180)),
+        new Pose2d(5, sign * .35, Rotation2d.fromDegrees(sign * 5)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2.5, sign * 0.7)),
+        List.of(new Translation2d(4.5, sign * 1.6)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(4, sign * 0.35, Rotation2d.fromDegrees(sign * 5)),
+        new Pose2d(4, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
         config);
 
-    m_drive.zeroHeading();
-    m_drive.resetOdometry(moveToPosition.getInitialPose());
-
-    return AutoTrajectoryCommand.command(m_drive, moveToPosition);
+    return AutoTrajectoryCommand.command(m_drive, moveToChargeStation);
   }
 }

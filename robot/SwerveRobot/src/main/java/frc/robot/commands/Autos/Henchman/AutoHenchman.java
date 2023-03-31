@@ -5,8 +5,8 @@
 package frc.robot.commands.Autos.Henchman;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickupDirty;
-import frc.robot.commands.Autos.Shared.Move.AutoPickupCubeDirty;
+import frc.robot.commands.Autos.Shared.Move.AutoTravelAndMoveToPickupDirty;
+import frc.robot.commands.Autos.Shared.Move.AutoTravelAndPickupCubeDirty;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
@@ -27,9 +27,9 @@ public class AutoHenchman extends SequentialCommandGroup {
         // 1. Score Cone
         new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
         // 2. Move to pickup cargo position
-        new AutoMoveToPickupDirty(m_drive, m_altitude, m_extension),
+        new AutoTravelAndMoveToPickupDirty(m_drive, m_altitude, m_extension),
         // 3. Intake down and pickup cargo
-        new AutoPickupCubeDirty(m_drive, m_altitude, m_extension, m_intake),
+        new AutoTravelAndPickupCubeDirty(m_drive, m_altitude, m_extension, m_intake),
         // 4. Intake up and move back to grid
         new AutoHenchmanReturnToScore(m_drive, m_altitude, m_extension, m_intake),
         // 5. Shoot cube

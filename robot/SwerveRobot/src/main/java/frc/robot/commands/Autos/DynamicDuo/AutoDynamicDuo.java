@@ -4,10 +4,11 @@
 
 package frc.robot.commands.Autos.DynamicDuo;
 
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickupAndStartLoweringIntakeClean;
-import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickupClean;
-import frc.robot.commands.Autos.Shared.Move.AutoPickupCubeClean;
+import frc.robot.commands.Autos.Shared.Move.AutoTravelToPickupAndStartLoweringIntakeClean;
+import frc.robot.commands.Autos.Shared.Move.AutoTravelToPickupClean;
+import frc.robot.commands.Autos.Shared.Move.AutoTravelAndPickupCubeClean;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
@@ -30,15 +31,17 @@ public class AutoDynamicDuo extends SequentialCommandGroup {
         new SequentialCommandGroup(
             new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
             // 2. Move to pickup cargo position
-            new AutoMoveToPickupClean(m_drive, m_altitude, m_extension),
+            new AutoTravelToPickupClean(m_drive, m_altitude, m_extension),
             // 3. Intake down and pickup cargo
-            new AutoPickupCubeClean(m_drive, m_altitude, m_extension, m_intake),
+            new AutoTravelAndPickupCubeClean(m_drive, m_altitude, m_extension, m_intake),
             // 4. Intake up and move back to grid
             new AutoDynamicDuoReturnToScore(m_drive, m_altitude, m_extension, m_intake),
             // 5. Shoot cube
             new AutoDynamicDuoSecondScore(m_altitude, m_extension, m_intake),
             // 6. Move to Charge Station
-            new AutoDynamicDuoMoveToChargeStation(m_drive))
+            new AutoDynamicDuoMoveToChargeStation(m_drive),
+            new AutoDynamicDuoMoveOnChargeStation(m_drive),
+            new RunCommand(m_drive::lock, m_drive))
     // 7. Move on Charge Station
     // new AutoDynamicDuoMoveOnChargeStation(m_drive))
     );

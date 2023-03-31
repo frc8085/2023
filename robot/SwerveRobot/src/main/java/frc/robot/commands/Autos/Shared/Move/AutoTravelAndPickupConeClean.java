@@ -26,8 +26,8 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 // Used for picking up cargo from the "clean" side of the field
-public class AutoPickupConeClean extends SequentialCommandGroup {
-  public AutoPickupConeClean(
+public class AutoTravelAndPickupConeClean extends SequentialCommandGroup {
+  public AutoTravelAndPickupConeClean(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension,

@@ -25,9 +25,10 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
-// Used for picking up cargo from the "clean" side of the field
-public class AutoPickupCubeClean extends SequentialCommandGroup {
-  public AutoPickupCubeClean(
+// These numbers were written for Red
+// Used for picking up cargo from the "dirty" - bump side of the field
+public class AutoTravelAndPickupCubeDirty extends SequentialCommandGroup {
+  public AutoTravelAndPickupCubeDirty(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension,
@@ -46,23 +47,24 @@ public class AutoPickupCubeClean extends SequentialCommandGroup {
    * could we do something like this?
    * Starting point
    * R1x = 4;
-   * R1y = 0.35;
-   * R1h = 5;
+   * R1y = -0.35;
+   * R1h = -5;
    * R2x = 4.5;
-   * R2y = 0.3;
+   * R2y = -0.3;
    * R3x = 5;
-   * R3y = 0.35
+   * R3y = -0.35
    * R3h = 0;
    * B1x = 4;
-   * B1y = -0.35;
-   * B1h = -5;
+   * B1y = 0.35;
+   * B1h = 5;
    * B2x = 4.5;
-   * B2y = -0.3;
+   * B2y = 0.3;
    * B3x = 0;
-   * B3y = -0.35;
+   * B3y = 0.35;
    * B3h = 0;
    * 
    */
+
   public Command driveToGamePiece(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryVariableSpeedCommand.config(false, 1);
@@ -71,11 +73,11 @@ public class AutoPickupCubeClean extends SequentialCommandGroup {
     // An example trajectory to follow. All units in meters.
     Trajectory pickupCargo = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing forward
-        new Pose2d(4, sign * .35, Rotation2d.fromDegrees(sign * 5)),
+        new Pose2d(4, sign * -.5, Rotation2d.fromDegrees(sign * -5)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(4.5, sign * .3)),
+        List.of(new Translation2d(4.5, sign * -0.51)),
         // End 2 meters straight ahead of where we started still facing forward
-        new Pose2d(5, sign * 0.35, Rotation2d.fromDegrees(sign * 0)),
+        new Pose2d(5, sign * -0.5, Rotation2d.fromDegrees(sign * 0)),
         config);
 
     return AutoTrajectoryVariableSpeedCommand.command(m_drive, pickupCargo);

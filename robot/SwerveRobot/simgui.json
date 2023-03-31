@@ -21,6 +21,11 @@
           "open": true
         }
       }
+    },
+    "Timing": {
+      "window": {
+        "visible": false
+      }
     }
   },
   "NTProvider": {
@@ -31,6 +36,7 @@
       "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
       "/LiveWindow/Ungrouped/Pigeon 2 [15]": "Gyro",
       "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
+      "/SmartDashboard/Alliance": "String Chooser",
       "/SmartDashboard/Auto Routine": "String Chooser"
     },
     "windows": {
