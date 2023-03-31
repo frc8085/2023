@@ -50,11 +50,11 @@ public class AutoMainCharacterReturnToScore extends SequentialCommandGroup {
     // reversed being true?
     Trajectory returnToScoreOne = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(7.0, sign * .35, Rotation2d.fromDegrees(sign * 0)),
+        new Pose2d(6.0, sign * -0.1, Rotation2d.fromDegrees(sign * 0)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(5, sign * 1.5)),
+        List.of(new Translation2d(5, sign * -0.5)),
         // Drive backwards for a meter
-        new Pose2d(3, sign * 0.3, Rotation2d.fromDegrees(sign * 178)),
+        new Pose2d(3, sign * -0.5, Rotation2d.fromDegrees(sign * 178)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, returnToScoreOne);
