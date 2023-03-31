@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -27,6 +29,8 @@ import frc.robot.subsystems.Intake;
 
 // Used for picking up cargo from the "clean" side of the field
 public class AutoTravelAndPickupConeClean extends SequentialCommandGroup {
+  private final Field2d m_field = new Field2d();
+
   public AutoTravelAndPickupConeClean(
       DriveSubsystem m_drive,
       Altitude m_altitude,
@@ -42,28 +46,6 @@ public class AutoTravelAndPickupConeClean extends SequentialCommandGroup {
             new InstantCommand(() -> m_intake.intakeCone())));
   }
 
-  /**
-   * could we do something like this?
-   * Starting point
-   * R1x = 4;
-   * R1y = 0.35;
-   * R1h = 5;
-   * R2x = 4.5;
-   * R2y = 0.3;
-   * R3x = 5;
-   * R3y = 0.35
-   * R3h = 0;
-   * B1x = 4;
-   * B1y = -0.35;
-   * B1h = -5;
-   * B2x = 4.5;
-   * B2y = -0.3;
-   * B3x = 0;
-   * B3y = -0.35;
-   * B3h = 0;
-   * 
-   */
-
   public Command driveToGamePiece(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(false);
@@ -78,6 +60,9 @@ public class AutoTravelAndPickupConeClean extends SequentialCommandGroup {
         // End 2 meters straight ahead of where we started still facing forward
         new Pose2d(5, sign * 0.35, Rotation2d.fromDegrees(sign * 0)),
         config);
+
+    SmartDashboard.putData(m_field);
+    m_field.getObject("traj2").setTrajectory(pickupCargo);
 
     return AutoTrajectoryCommand.command(m_drive, pickupCargo);
   }

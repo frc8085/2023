@@ -54,7 +54,7 @@ public final class Autos {
         name = "(21pt) SUPERHERO: 1x Score, Pickup, Balance - INTAKE MOVES DURING TRAVEL";
         break;
       case MAIN_CHARACTER_OLD:
-        name = "(21pt) MAIN CHARACTER: 1x Score, Leave, Balance";
+        name = "(21pt) MAIN CHARACTER: 1x Score, Leave, Balance - WATERBURY CODE";
         break;
       case DYNAMIC_DUO_NEW:
         name = "(23pt) DYNAMIC DUO: 2x Score High, Leave, Dock - INTAKE MOVES DURING TRAVEL";

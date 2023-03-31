@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -27,6 +29,8 @@ import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoHenchmanReturnToScore extends SequentialCommandGroup {
+  private final Field2d m_field = new Field2d();
+
   public AutoHenchmanReturnToScore(
       DriveSubsystem m_drive,
       Altitude m_altitude,
@@ -56,6 +60,9 @@ public class AutoHenchmanReturnToScore extends SequentialCommandGroup {
         // Drive backwards for a meter
         new Pose2d(-0.1, sign * -0.3, Rotation2d.fromDegrees(sign * -178)),
         config);
+
+    SmartDashboard.putData(m_field);
+    m_field.getObject("traj3").setTrajectory(returnToScoreOne);
 
     return AutoTrajectoryCommand.command(m_drive, returnToScoreOne);
   }

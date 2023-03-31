@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -30,6 +32,8 @@ import frc.robot.subsystems.Extension;
 
 /** An example command that uses an example subsystem. */
 public class AutoTravelToPickupAndStartLoweringIntakeClean extends SequentialCommandGroup {
+  private final Field2d m_field = new Field2d();
+
   public AutoTravelToPickupAndStartLoweringIntakeClean(
       DriveSubsystem m_drive,
       Altitude m_altitude,
@@ -43,28 +47,6 @@ public class AutoTravelToPickupAndStartLoweringIntakeClean extends SequentialCom
                 new WaitCommand(.5),
                 new AutoMoveToIntake(m_extension, m_altitude))));
   }
-
-  /**
-   * could we do something like this?
-   * Starting point
-   * R1x = 0;
-   * R1y = 0;
-   * R1h = -180;
-   * R2x = 2.5;
-   * R2y = 0.7;
-   * R3x = 4;
-   * R3y = 0.35
-   * R3h = 5;
-   * B1x = 0;
-   * B1y = 0;
-   * B1h = 180;
-   * B2x = 2.5;
-   * B2y = -0.7;
-   * B3x = 4;
-   * B3y = -0.35;
-   * B3h = -5;
-   * 
-   */
 
   public Command travelBackwardsThenSpin(DriveSubsystem m_drive) {
     // Create config for trajectory
@@ -84,6 +66,8 @@ public class AutoTravelToPickupAndStartLoweringIntakeClean extends SequentialCom
 
     m_drive.zeroHeading();
     m_drive.resetOdometry(moveToPosition.getInitialPose());
+    SmartDashboard.putData(m_field);
+    m_field.getObject("traj").setTrajectory(moveToPosition);
 
     return AutoTrajectoryCommand.command(m_drive, moveToPosition);
   }

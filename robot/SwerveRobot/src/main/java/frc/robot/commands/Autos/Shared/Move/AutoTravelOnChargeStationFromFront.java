@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -24,6 +26,8 @@ import frc.robot.subsystems.Extension;
 
 /** An example command that uses an example subsystem. */
 public class AutoTravelOnChargeStationFromFront extends SequentialCommandGroup {
+  private final Field2d m_field = new Field2d();
+
   public AutoTravelOnChargeStationFromFront(
       DriveSubsystem m_drive,
       Altitude m_altitude,
@@ -32,28 +36,6 @@ public class AutoTravelOnChargeStationFromFront extends SequentialCommandGroup {
         moveOnChargeStationFromFront(m_drive),
         new RunCommand(m_drive::lock));
   }
-
-  /**
-   * could we do something like this?
-   * Starting point
-   * R1x = 4;
-   * R1y = 2.05;
-   * R1h = 120;
-   * R2x = 2.5;
-   * R2y = 2.0;
-   * R3x = -0.5;
-   * R3y = 2.05;
-   * R3h = 120;
-   * B1x = 4;
-   * B1y = -2.05;
-   * B1h = -120;
-   * B2x = 2.5;
-   * B2y = -2.0;
-   * B3x = -0.5;
-   * B3y = -2.05;
-   * B3h = -120;
-   * 
-   */
 
   public Command moveOnChargeStationFromFront(DriveSubsystem m_drive) {
     // Create config for trajectory
@@ -66,10 +48,13 @@ public class AutoTravelOnChargeStationFromFront extends SequentialCommandGroup {
         new Pose2d(4, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2.5, sign * 2.0)),
+        List.of(new Translation2d(3.5, sign * 2.2)),
         // End 3 meters straight ahead of where we started, facing forward
         new Pose2d(0, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
         config);
+
+    SmartDashboard.putData(m_field);
+    m_field.getObject("traj4").setTrajectory(moveOnChargeStation);
 
     return AutoTrajectoryCommand.command(m_drive, moveOnChargeStation);
   }

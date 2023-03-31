@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Autos.Autos;
@@ -21,33 +23,13 @@ import frc.robot.subsystems.DriveSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class AutoDynamicDuoMoveOnChargeStation extends SequentialCommandGroup {
+  private final Field2d m_field = new Field2d();
+
   public AutoDynamicDuoMoveOnChargeStation(
       DriveSubsystem m_drive) {
     addCommands(
         moveOnChargeStation(m_drive));
   }
-
-  /**
-   * could we do something like this?
-   * Starting point
-   * R1x = 0.5;
-   * R1y = 1.8;
-   * R1h = 120;
-   * R2x = 2;
-   * R2y = 1.9;
-   * R3x = 3;
-   * R3y = 2;
-   * R3h = 120;
-   * B1x = 0.5;
-   * B1y = -1.8;
-   * B1h = -120;
-   * B2x = 2;
-   * B2y = -1.9;
-   * B3x = 3;
-   * B3y = -2;
-   * B3h = -120;
-   * 
-   */
 
   public Command moveOnChargeStation(DriveSubsystem m_drive) {
     // Create config for trajectory
@@ -65,6 +47,9 @@ public class AutoDynamicDuoMoveOnChargeStation extends SequentialCommandGroup {
         // Drive backwards for a meter
         new Pose2d(3, sign * 2, Rotation2d.fromDegrees(sign * 120)),
         config);
+
+    SmartDashboard.putData(m_field);
+    m_field.getObject("traj6").setTrajectory(goOnChargeStation);
 
     return AutoTrajectoryCommand.command(m_drive, goOnChargeStation);
   }

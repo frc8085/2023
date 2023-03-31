@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -27,6 +29,8 @@ import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoTravelToFrontChargeStation extends SequentialCommandGroup {
+  private final Field2d m_field = new Field2d();
+
   public AutoTravelToFrontChargeStation(
       DriveSubsystem m_drive,
       Altitude m_altitude,
@@ -38,28 +42,6 @@ public class AutoTravelToFrontChargeStation extends SequentialCommandGroup {
             new MoveToTravelAfterIntake(m_extension, m_altitude)),
         travelToChargeStation(m_drive));
   }
-
-  /**
-   * could we do something like this?
-   * Starting point
-   * R1x = 5;
-   * R1y = 0.35;
-   * R1h = 5;
-   * R2x = 4.5;
-   * R2y = 1.6;
-   * R3x = 4;
-   * R3y = 2.05;
-   * R3h = 120;
-   * B1x = 5;
-   * B1y = -0.35;
-   * B1h = -5;
-   * B2x = 4.5;
-   * B2y = -1.6;
-   * B3x = 4;
-   * B3y = -2.05;
-   * B3h = -120;
-   * 
-   */
 
   public Command travelToChargeStation(DriveSubsystem m_drive) {
     // Create config for trajectory
@@ -76,6 +58,9 @@ public class AutoTravelToFrontChargeStation extends SequentialCommandGroup {
         // End 3 meters straight ahead of where we started, facing forward
         new Pose2d(4, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
         config);
+
+    SmartDashboard.putData(m_field);
+    m_field.getObject("traj3").setTrajectory(moveToChargeStation);
 
     return AutoTrajectoryCommand.command(m_drive, moveToChargeStation);
   }

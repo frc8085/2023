@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Autos.Autos;
@@ -24,6 +26,8 @@ import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoHenchmanReturnToPickup extends SequentialCommandGroup {
+  private final Field2d m_field = new Field2d();
+
   public AutoHenchmanReturnToPickup(
       DriveSubsystem m_drive,
       Altitude m_altitude,
@@ -50,6 +54,9 @@ public class AutoHenchmanReturnToPickup extends SequentialCommandGroup {
         // Drive backwards for a meter
         new Pose2d(4, sign * -0.3, Rotation2d.fromDegrees(sign * -5)),
         config);
+
+    SmartDashboard.putData(m_field);
+    m_field.getObject("traj4").setTrajectory(returnToPickup);
 
     return AutoTrajectoryCommand.command(m_drive, returnToPickup);
   }

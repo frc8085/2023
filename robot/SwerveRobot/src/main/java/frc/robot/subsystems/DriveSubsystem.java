@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
@@ -77,6 +78,8 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearRight.getPosition()
       });
 
+  private final Field2d m_field = new Field2d();
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(Altitude Altitude, Extension Extension) {
     m_altitude = Altitude;
@@ -99,6 +102,7 @@ public class DriveSubsystem extends SubsystemBase {
     // Returned in degrees per second
     m_gyro.getRawGyro(pitchYawRollVelocitiesDegreesPerSecond);
 
+    m_field.setRobotPose(m_odometry.getPoseMeters());
     log();
 
   }
@@ -108,6 +112,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("X Pose", getPose().getX());
     SmartDashboard.putNumber("Y Pose", getPose().getY());
     SmartDashboard.putNumber("Yaw", getYaw());
+    SmartDashboard.putData("Field", m_field);
 
     SmartDashboard.putNumberArray("XYZ_DPS", pitchYawRollVelocitiesDegreesPerSecond);
   }

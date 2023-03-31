@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -27,6 +29,8 @@ import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoDynamicDuoReturnToScore extends SequentialCommandGroup {
+  private final Field2d m_field = new Field2d();
+
   public AutoDynamicDuoReturnToScore(
       DriveSubsystem m_drive,
       Altitude m_altitude,
@@ -38,28 +42,6 @@ public class AutoDynamicDuoReturnToScore extends SequentialCommandGroup {
             new MoveToTravelAfterIntake(m_extension, m_altitude)),
         returnToScore(m_drive));
   }
-
-  /**
-   * could we do something like this?
-   * Starting point
-   * R1x = 5.0;
-   * R1y = .35;
-   * R1h = 5;
-   * R2x = 2.5;
-   * R2y = 0.3;
-   * R3x = 0.3;
-   * R3y = 0.3;
-   * R3h = -180;
-   * B1x = 5.0;
-   * B1y = -0.35;
-   * B1h = -5;
-   * B2x = 2.5;
-   * B2y = -0.3;
-   * B3x = 0.3;
-   * B3y = -0.3;
-   * B3h = 180;
-   * 
-   */
 
   public Command returnToScore(DriveSubsystem m_drive) {
     // Create config for trajectory
@@ -77,6 +59,9 @@ public class AutoDynamicDuoReturnToScore extends SequentialCommandGroup {
         // Drive backwards for a meter
         new Pose2d(0.3, sign * 0.3, Rotation2d.fromDegrees(sign * -180)),
         config);
+
+    SmartDashboard.putData(m_field);
+    m_field.getObject("traj3").setTrajectory(returnToScoreOne);
 
     return AutoTrajectoryCommand.command(m_drive, returnToScoreOne);
   }
