@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -107,7 +108,7 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Heading", getHeading());
     SmartDashboard.putNumber("X Pose", getPose().getX());
     SmartDashboard.putNumber("Y Pose", getPose().getY());
-    SmartDashboard.putNumber("Yaw", getYaw());
+    SmartDashboard.putNumber("Yaw", getYaw().getDegrees());
 
     SmartDashboard.putNumberArray("XYZ_DPS", pitchYawRollVelocitiesDegreesPerSecond);
   }
@@ -121,8 +122,8 @@ public class DriveSubsystem extends SubsystemBase {
     return m_odometry.getPoseMeters();
   }
 
-  public double getYaw() {
-    return m_gyro.getYaw();
+  public Rotation2d getYaw() {
+    return Rotation2d.fromDegrees(m_gyro.getYaw());
   }
 
   /**
@@ -275,15 +276,42 @@ public class DriveSubsystem extends SubsystemBase {
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                xSpeedDelivered,
+                ySpeedDelivered,
+                rotDelivered,
                 m_gyro.getRotation2d())
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
+  }
+
+  public void driveWithPose(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
+    SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
+            translation.getX(),
+            translation.getY(),
+            rotation,
+            m_odometry.getPoseMeters().getRotation())
+            : new ChassisSpeeds(
+                translation.getX(),
+                translation.getY(),
+                rotation));
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+
+    // SmartDashboard.putNumber("X Translation", translation.getX());
+    // SmartDashboard.putNumber("Y Translation", translation.getY());
+    // SmartDashboard.putNumber("Rotation Value", rotation);
   }
 
   /**

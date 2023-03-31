@@ -5,12 +5,10 @@
 package frc.robot.subsystems.limelight;
 
 import frc.robot.Constants;
-import frc.robot.Constants.TuningModeConstants;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.SendableCameraWrapper;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -22,24 +20,24 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class LimelightSubsystem extends SubsystemBase {
   /** Creates a new LimelightSubsystem. */
-  NetworkTable tableRear = NetworkTableInstance.getDefault().getTable("limelight-rear");
-  NetworkTable tableFront = NetworkTableInstance.getDefault().getTable("limelight-front");
+  NetworkTable tableLeft = NetworkTableInstance.getDefault().getTable("limelight-left");
+  NetworkTable tableRight = NetworkTableInstance.getDefault().getTable("limelight-right");
 
-  public static HttpCamera m_limelightRear;
-  public static HttpCamera m_limelightFront;
+  public static HttpCamera m_limelightLeft;
+  public static HttpCamera m_limelightRight;
 
   private boolean m_visionMode;
 
   public LimelightSubsystem() {
-    m_limelightRear = new HttpCamera("RearLL", "http://limelight.rear:5809/stream.mjpg");
-    m_limelightRear.setResolution(320, 240);
-    m_limelightRear.setFPS(90);
-    m_limelightFront = new HttpCamera("FrontLL", "http://limelight.front:5809/stream.mjpg");
-    m_limelightFront.setResolution(320, 240);
-    m_limelightFront.setFPS(90);
+    m_limelightLeft = new HttpCamera("LeftLL", "http://10.80.85.11:5809/stream.mjpg");
+    m_limelightLeft.setResolution(320, 240);
+    m_limelightLeft.setFPS(90);
+    m_limelightRight = new HttpCamera("RightLL", "http://10.80.85.12:5809/stream.mjpg");
+    m_limelightRight.setResolution(320, 240);
+    m_limelightRight.setFPS(90);
 
-    CameraServer.addCamera(m_limelightRear);
-    CameraServer.addCamera(m_limelightFront);
+    CameraServer.addCamera(m_limelightLeft);
+    CameraServer.addCamera(m_limelightRight);
 
   }
 
@@ -47,57 +45,56 @@ public class LimelightSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // read values periodically
-    SmartDashboard.putData(SendableCameraWrapper.wrap(m_limelightRear));
-    SmartDashboard.putData(SendableCameraWrapper.wrap(m_limelightFront));
-    if (TuningModeConstants.kLimelightTuning) {
-      SmartDashboard.putNumber("X offset", getXFront());
-      SmartDashboard.putNumber("Y offset", getYFront());
-      SmartDashboard.putNumber("Target Area", getAreaFront());
-      SmartDashboard.putBoolean("Has target", hasTargetFront());
+    // SmartDashboard.putData(SendableCameraWrapper.wrap(m_limelightLeft));
+    // SmartDashboard.putData(SendableCameraWrapper.wrap(m_limelightRight));
+    if (Constants.TuningModeConstants.kLimelightTuning) {
+      SmartDashboard.putNumber("X offset", getXRight());
+      SmartDashboard.putNumber("Y offset", getYRight());
+      SmartDashboard.putNumber("Target Area", getAreaRight());
     }
 
   }
 
-  public double getXRear() {
-    return tableRear.getEntry("tx").getDouble(0.0);
+  public double getXLeft() {
+    return tableLeft.getEntry("tx").getDouble(0.0);
   }
 
-  public double getYRear() {
-    return tableRear.getEntry("ty").getDouble(0.0);
+  public double getYLeft() {
+    return tableLeft.getEntry("ty").getDouble(0.0);
   }
 
-  public double getAreaRear() {
-    return tableRear.getEntry("ta").getDouble(0.0);
+  public double getAreaLeft() {
+    return tableLeft.getEntry("ta").getDouble(0.0);
   }
 
-  public boolean hasTargetRear() {
-    return tableRear.getEntry("tv").getDouble(0.0) == 1;
+  public boolean hasTargetLeft() {
+    return tableLeft.getEntry("tv").getDouble(0.0) == 1;
   }
 
-  public int getIDRear() {
-    return (int) tableRear.getEntry("tid").getDouble(0.0);
+  public int getIDLeft() {
+    return (int) tableLeft.getEntry("tid").getDouble(0.0);
   }
 
-  public double getLatPipRear() {
-    return tableRear.getEntry("tl").getDouble(0.0) / 1000.0;
+  public double getLatPipLeft() {
+    return tableLeft.getEntry("tl").getDouble(0.0) / 1000.0;
   }
 
-  public double getLatCapRear() {
-    return tableRear.getEntry("cl").getDouble(0.0) / 1000.0;
+  public double getLatCapLeft() {
+    return tableLeft.getEntry("cl").getDouble(0.0) / 1000.0;
   }
 
   public Pose3d getBotPose() {
-    double[] pose = tableRear.getEntry("botpose").getDoubleArray(new double[6]);
+    double[] pose = tableLeft.getEntry("botpose").getDoubleArray(new double[6]);
     return new Pose3d(new Translation3d(pose[0], pose[1], pose[2]), new Rotation3d(pose[3], pose[4], pose[5]));
   }
 
   public Pose3d getBotPoseRed() {
-    double[] pose = tableRear.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
+    double[] pose = tableLeft.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
     return new Pose3d(new Translation3d(pose[0], pose[1], pose[2]), new Rotation3d(pose[3], pose[4], pose[5]));
   }
 
   public Pose3d getBotPoseBlue() {
-    double[] pose = tableRear.getEntry("botpose_wpired").getDoubleArray(new double[6]);
+    double[] pose = tableLeft.getEntry("botpose_wpired").getDoubleArray(new double[6]);
     return new Pose3d(new Translation3d(pose[0], pose[1], pose[2]), new Rotation3d(pose[3], pose[4], pose[5]));
   }
 
@@ -106,43 +103,43 @@ public class LimelightSubsystem extends SubsystemBase {
   }
 
   public double getLastEntryTimeStamp() {
-    return Timer.getFPGATimestamp() - getLatCapRear() - getLatPipRear();
+    return Timer.getFPGATimestamp() - getLatCapLeft() - getLatPipLeft();
   }
 
   /**
    * @param piplineNumber driver = 0, aprilTags = 1, retroreflective = 2
    */
-  public void setPipelineRear(int pipelineNumber) {
+  public void setPipelineLeft(int pipelineNumber) {
     Number numObj = (Number) pipelineNumber;
-    tableRear.getEntry("pipeline").setNumber(numObj);
+    tableLeft.getEntry("pipeline").setNumber(numObj);
   }
 
-  public double getXFront() {
-    return tableFront.getEntry("tx").getDouble(0.0);
+  public double getXRight() {
+    return tableRight.getEntry("tx").getDouble(0.0);
   }
 
-  public double getYFront() {
-    return tableFront.getEntry("ty").getDouble(0.0);
+  public double getYRight() {
+    return tableRight.getEntry("ty").getDouble(0.0);
   }
 
-  public double getAreaFront() {
-    return tableFront.getEntry("ta").getDouble(0.0);
+  public double getAreaRight() {
+    return tableRight.getEntry("ta").getDouble(0.0);
   }
 
-  public boolean hasTargetFront() {
-    return tableFront.getEntry("tv").getDouble(0.0) == 1;
+  public boolean hasTargetRight() {
+    return tableRight.getEntry("tv").getDouble(0.0) == 1;
   }
 
-  public int getIDFront() {
-    return (int) tableFront.getEntry("tid").getDouble(0.0);
+  public int getIDRight() {
+    return (int) tableRight.getEntry("tid").getDouble(0.0);
   }
 
   /**
    * @param piplineNumber 0 = april tags
    */
-  public void setPipelineFront(int pipelineNumber) {
+  public void setPipelineRight(int pipelineNumber) {
     Number numObj = (Number) pipelineNumber;
-    tableFront.getEntry("pipeline").setNumber(numObj);
+    tableRight.getEntry("pipeline").setNumber(numObj);
   }
 
   public boolean inVisionMode() {
