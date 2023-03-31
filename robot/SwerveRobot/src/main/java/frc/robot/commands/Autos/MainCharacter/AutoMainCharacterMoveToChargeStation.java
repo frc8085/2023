@@ -34,13 +34,13 @@ public class AutoMainCharacterMoveToChargeStation extends SequentialCommandGroup
 
   public Command returnToChargeStation(DriveSubsystem m_drive) {
     // Create config for trajectory
-    TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+    TrajectoryConfig config = AutoTrajectoryCommand.config(false);
     int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
     // First trajectory. All units in meters.
     Trajectory returnToChargeStation = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(4, sign * -0.1, Rotation2d.fromDegrees(sign * 0)),
+        new Pose2d(6, sign * -0.1, Rotation2d.fromDegrees(sign * 5)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(3, sign * -0.01)),

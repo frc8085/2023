@@ -13,8 +13,10 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AltitudeConstants;
 import frc.robot.Constants.ExtensionConstants;
 import frc.robot.commands.Extend;
@@ -33,10 +35,13 @@ public class AutoMoveToPickupAndStartLoweringIntakeClean extends SequentialComma
       Altitude m_altitude,
       Extension m_extension) {
     addCommands(
-        new ParallelDeadlineGroup(
+        new ParallelCommandGroup(
+            // new RaiseLower(m_altitude, AltitudeConstants.kAltitudeAutoIntakePosition),
+            // new Extend(m_extension, ExtensionConstants.kExtensionPositionIntakeOut),
             travelBackwardsThenSpin(m_drive),
-            new RaiseLower(m_altitude, AltitudeConstants.kAltitudeAutoIntakePosition),
-            new Extend(m_extension, ExtensionConstants.kExtensionPositionIntakeOut)));
+            new SequentialCommandGroup(
+                new WaitCommand(.5),
+                new AutoMoveToIntake(m_extension, m_altitude))));
   }
 
   /**

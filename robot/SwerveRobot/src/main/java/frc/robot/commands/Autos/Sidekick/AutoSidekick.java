@@ -6,6 +6,7 @@ package frc.robot.commands.Autos.Sidekick;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickupAndStartLoweringIntakeClean;
+import frc.robot.commands.Autos.Shared.Move.AutoMoveToPickupClean;
 import frc.robot.commands.Autos.Shared.Move.AutoPickupCubeClean;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
 import frc.robot.subsystems.Altitude;
@@ -27,7 +28,7 @@ public class AutoSidekick extends SequentialCommandGroup {
         // 1. Score Cone
         new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
         // 2. Move to pickup cargo position
-        new AutoMoveToPickupAndStartLoweringIntakeClean(m_drive, m_altitude, m_extension),
+        new AutoMoveToPickupClean(m_drive, m_altitude, m_extension),
         // 3. Intake down and pickup cargo
         new AutoPickupCubeClean(m_drive, m_altitude, m_extension, m_intake),
         // 4. Intake up and move back to grid

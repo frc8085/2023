@@ -25,7 +25,8 @@ public class AutoMainCharacter extends SequentialCommandGroup {
         // 2. Move to leave community
         new AutoMainCharacterLeaveCommunity(m_drive, m_altitude, m_extension),
         // 3. Move to charge station
-        new AutoMoveToFrontChargeStation(m_drive, m_altitude, m_extension, m_intake)
+        new AutoMainCharacterPickupCubeClean(m_drive, m_altitude, m_extension, m_intake),
+        new AutoMainCharacterReturnToScore(m_drive, m_altitude, m_extension, m_intake)
     // 5. Shoot cube
     // new AutoBalance(m_altitude, m_extension, m_intake)
 

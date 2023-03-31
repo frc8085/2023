@@ -43,10 +43,13 @@ public class AutoMainCharacterLeaveCommunity extends SequentialCommandGroup {
         new Pose2d(0, sign * 0, Rotation2d.fromDegrees(sign * -180)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2, sign * -0.01)),
+        List.of(new Translation2d(3, sign * -0.01)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(4, sign * -0.1, Rotation2d.fromDegrees(sign * 0)),
+        new Pose2d(5, sign * -0.1, Rotation2d.fromDegrees(sign * 5)),
         config);
+
+    m_drive.zeroHeading();
+    m_drive.resetOdometry(leaveCommunity.getInitialPose());
 
     return AutoTrajectoryCommand.command(m_drive, leaveCommunity);
   }

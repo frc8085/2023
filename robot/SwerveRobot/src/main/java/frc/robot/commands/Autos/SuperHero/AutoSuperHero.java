@@ -25,21 +25,17 @@ public class AutoSuperHero extends SequentialCommandGroup {
       Extension m_extension,
       Intake m_intake) {
     addCommands(
-        new ParallelRaceGroup(
-            new SequentialCommandGroup(
-                // 1. Score Cone
-                new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
-                // 2. Move to pickup cargo position
-                new AutoMoveToPickupAndStartLoweringIntakeClean(m_drive, m_altitude, m_extension),
-                // 3. Intake down and pickup cargo
-                new AutoPickupConeClean(m_drive, m_altitude, m_extension, m_intake),
-                // 4. Intake up and move to charge station
-                new AutoMoveToFrontChargeStation(m_drive, m_altitude, m_extension, m_intake),
-                // 5. Move on Charge Station
-                new AutoMoveOnChargeStationFromFront(m_drive, m_altitude, m_extension)
-            // 6. Rotate so camera can see apriltags
-            ),
-            new LockWheelsAtEndOfAuto(m_drive))
+        // 1. Score Cone
+        new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
+        // 2. Move to pickup cargo position
+        new AutoMoveToPickupAndStartLoweringIntakeClean(m_drive, m_altitude, m_extension),
+        // 3. Intake down and pickup cargo
+        new AutoPickupConeClean(m_drive, m_altitude, m_extension, m_intake),
+        // 4. Intake up and move to charge station
+        new AutoMoveToFrontChargeStation(m_drive, m_altitude, m_extension, m_intake),
+        // 5. Move on Charge Station
+        new AutoMoveOnChargeStationFromFront(m_drive, m_altitude, m_extension)
+    // 6. Rotate so camera can see apriltags
 
     );
   }
