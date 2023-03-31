@@ -39,28 +39,6 @@ public class AutoDynamicDuoReturnToScore extends SequentialCommandGroup {
         returnToScore(m_drive));
   }
 
-  /**
-   * could we do something like this?
-   * Starting point
-   * R1x = 5.0;
-   * R1y = .35;
-   * R1h = 5;
-   * R2x = 2.5;
-   * R2y = 0.3;
-   * R3x = 0.3;
-   * R3y = 0.3;
-   * R3h = -180;
-   * B1x = 5.0;
-   * B1y = -0.35;
-   * B1h = -5;
-   * B2x = 2.5;
-   * B2y = -0.3;
-   * B3x = 0.3;
-   * B3y = -0.3;
-   * B3h = 180;
-   * 
-   */
-
   public Command returnToScore(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);

@@ -20,34 +20,12 @@ import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.DriveSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class AutoDynamicDuoMoveOnChargeStation extends SequentialCommandGroup {
-  public AutoDynamicDuoMoveOnChargeStation(
+public class NOTUSEDAutoDynamicDuoMoveOnChargeStation extends SequentialCommandGroup {
+  public NOTUSEDAutoDynamicDuoMoveOnChargeStation(
       DriveSubsystem m_drive) {
     addCommands(
         moveOnChargeStation(m_drive));
   }
-
-  /**
-   * could we do something like this?
-   * Starting point
-   * R1x = 0.5;
-   * R1y = 1.8;
-   * R1h = 120;
-   * R2x = 2;
-   * R2y = 1.9;
-   * R3x = 3;
-   * R3y = 2;
-   * R3h = 120;
-   * B1x = 0.5;
-   * B1y = -1.8;
-   * B1h = -120;
-   * B2x = 2;
-   * B2y = -1.9;
-   * B3x = 3;
-   * B3y = -2;
-   * B3h = -120;
-   * 
-   */
 
   // THIS PATH IS ALREADY IN MOVE TO CHARGE STATION
   public Command moveOnChargeStation(DriveSubsystem m_drive) {
