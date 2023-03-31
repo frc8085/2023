@@ -41,7 +41,7 @@ public class AutoDynamicDuoMoveToChargeStation extends SequentialCommandGroup {
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(0.5, sign * 1.8)),
         // Drive backwards for a meter
-        new Pose2d(3, sign * 2, Rotation2d.fromDegrees(sign * 120)),
+        new Pose2d(3, sign * 2.5, Rotation2d.fromDegrees(sign * 120)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, goToChargeStation);
