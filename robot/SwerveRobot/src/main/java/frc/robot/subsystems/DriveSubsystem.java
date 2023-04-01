@@ -104,12 +104,14 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   private void log() {
-    SmartDashboard.putNumber("Heading", getHeading());
-    SmartDashboard.putNumber("X Pose", getPose().getX());
-    SmartDashboard.putNumber("Y Pose", getPose().getY());
-    SmartDashboard.putNumber("Yaw", getYaw());
+    if (TuningModeConstants.kDriveTuning) {
+      SmartDashboard.putNumber("Heading", getHeading());
+      SmartDashboard.putNumber("X Pose", getPose().getX());
+      SmartDashboard.putNumber("Y Pose", getPose().getY());
+      SmartDashboard.putNumber("Yaw", getYaw());
 
-    SmartDashboard.putNumberArray("XYZ_DPS", pitchYawRollVelocitiesDegreesPerSecond);
+      SmartDashboard.putNumberArray("XYZ_DPS", pitchYawRollVelocitiesDegreesPerSecond);
+    }
   }
 
   /**

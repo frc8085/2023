@@ -32,7 +32,7 @@ public final class Constants {
     public static final boolean kAltitudeTuning = false;
     public static final boolean kExtensionTuning = false;
     public static final boolean kIntakeTuning = false;
-    public static final boolean kDriveTuning = true;
+    public static final boolean kDriveTuning = false;
     public static final boolean kLimelightTuning = false;
   }
 

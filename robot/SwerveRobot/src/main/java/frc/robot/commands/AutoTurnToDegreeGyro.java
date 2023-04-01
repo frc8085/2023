@@ -73,7 +73,7 @@ public class AutoTurnToDegreeGyro extends PIDCommand {
   public void initialize() {
 
     super.initialize();
-    SmartDashboard.putNumber("Desired turning deg", m_degree);
+    // SmartDashboard.putNumber("Desired turning deg", m_degree);
 
     // Only zero the heading if we are turning relative (e.g., turn 3 degrees from
     // my current position). Do not zero it if turning absolute (e.g., turn TO 55
