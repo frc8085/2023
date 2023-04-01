@@ -46,7 +46,7 @@ public class AutoTravelOnChargeStationFromFront extends SequentialCommandGroup {
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(2.5, sign * 2.0)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(0.5, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
+        new Pose2d(0.4, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, moveOnChargeStation);

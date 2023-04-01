@@ -30,7 +30,8 @@ public class AutoMainCharacterOld extends SequentialCommandGroup {
         // 2. Move to leave community
         new AutoDriveBackwardsMeters(m_drive, 4.25, 0.4),
         new AutoDriveForwardsMeters(m_drive, 2.0),
-        new AutoTurnToDegreeGyro(-90, m_drive, false)
+        new RunCommand(m_drive::lock, m_drive)
+
     // 5. Shoot cube
     // new AutoBalance(m_altitude, m_extension, m_intake)
 

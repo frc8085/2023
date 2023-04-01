@@ -26,8 +26,8 @@ import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class AutoMainCharacterReturnToScore extends SequentialCommandGroup {
-  public AutoMainCharacterReturnToScore(
+public class AutoMainCharacterReturnToDock extends SequentialCommandGroup {
+  public AutoMainCharacterReturnToDock(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension,

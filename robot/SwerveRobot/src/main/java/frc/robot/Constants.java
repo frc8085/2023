@@ -54,7 +54,7 @@ public final class Constants {
     // Intake Cube Power
     public static final double kIntakeCubePower = 0.8;
     public static final double kEjectCubePower = .8;
-    public static final double kShootCubePower = 1;
+    public static final double kShootCubePower = .9;
     public static final double kIntakeHoldCubePower = 0.15;
     public static final double kDropCubePower = 0.25;
 

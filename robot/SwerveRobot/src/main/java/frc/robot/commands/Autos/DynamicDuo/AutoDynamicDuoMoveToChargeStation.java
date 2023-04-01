@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Autos.Autos;
 import frc.robot.commands.Autos.Autos.Alliance;
 import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
+import frc.robot.commands.Autos.Shared.AutoTrajectoryVariableSpeedCommand;
 import frc.robot.subsystems.DriveSubsystem;
 
 /** An example command that uses an example subsystem. */
@@ -29,7 +30,7 @@ public class AutoDynamicDuoMoveToChargeStation extends SequentialCommandGroup {
 
   public Command moveToChargeStation(DriveSubsystem m_drive) {
     // Create config for trajectory
-    TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+    TrajectoryConfig config = AutoTrajectoryVariableSpeedCommand.config(true, 2);
     int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
     // An example trajectory to follow. All units in meters.
@@ -37,13 +38,13 @@ public class AutoDynamicDuoMoveToChargeStation extends SequentialCommandGroup {
     // reversed being true?
     Trajectory goToChargeStation = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(0.3, sign * .3, Rotation2d.fromDegrees(sign * -180)),
+        new Pose2d(0.3, sign * .3, Rotation2d.fromDegrees(sign * 178)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(0.5, sign * 1.8)),
         // Drive backwards for a meter
-        new Pose2d(3, sign * 2.5, Rotation2d.fromDegrees(sign * 120)),
+        new Pose2d(4, sign * 2.5, Rotation2d.fromDegrees(sign * 30)),
         config);
 
-    return AutoTrajectoryCommand.command(m_drive, goToChargeStation);
+    return AutoTrajectoryVariableSpeedCommand.command(m_drive, goToChargeStation);
   }
 }
