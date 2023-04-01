@@ -20,8 +20,8 @@ import frc.robot.commands.Autos.Shared.AutoTrajectoryCommand;
 import frc.robot.subsystems.DriveSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class AutoDynamicDuoMoveToChargeStation extends SequentialCommandGroup {
-  public AutoDynamicDuoMoveToChargeStation(
+public class AutoDynamicDuoMoveToThenOnChargeStation extends SequentialCommandGroup {
+  public AutoDynamicDuoMoveToThenOnChargeStation(
       DriveSubsystem m_drive) {
     addCommands(
         moveToChargeStation(m_drive));
