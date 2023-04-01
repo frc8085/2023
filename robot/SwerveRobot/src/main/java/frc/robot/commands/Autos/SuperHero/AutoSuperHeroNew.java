@@ -19,26 +19,26 @@ import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoSuperHeroNew extends SequentialCommandGroup {
-    public AutoSuperHeroNew(
-            DriveSubsystem m_drive,
-            Altitude m_altitude,
-            Extension m_extension,
-            Intake m_intake) {
-        addCommands(
-                // 1. Score Cone
-                new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
-                // 2. Move to pickup cargo position
-                new AutoTravelToPickupAndStartLoweringIntakeClean(m_drive, m_altitude, m_extension),
-                // 3. Intake down and pickup cargo
-                new AutoTravelAndPickupConeClean(m_drive, m_altitude, m_extension, m_intake),
-                // 4. Intake up and move to charge station
-                new AutoTravelToFrontChargeStation(m_drive, m_altitude, m_extension, m_intake),
-                // 5. Move on Charge Station
-                new AutoTravelOnChargeStationFromFront(m_drive, m_altitude, m_extension),
-                // 6. Rotate so camera can see apriltags
-                new RunCommand(m_drive::lock, m_drive)
+  public AutoSuperHeroNew(
+      DriveSubsystem m_drive,
+      Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    addCommands(
+        // 1. Score Cone
+        new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
+        // 2. Move to pickup cargo position
+        new AutoTravelToPickupAndStartLoweringIntakeClean(m_drive, m_altitude, m_extension),
+        // 3. Intake down and pickup cargo
+        new AutoTravelAndPickupConeClean(m_drive, m_altitude, m_extension, m_intake),
+        // 4. Intake up and move to charge station
+        new AutoTravelToFrontChargeStation(m_drive, m_altitude, m_extension, m_intake),
+        // 5. Move on Charge Station
+        new AutoTravelOnChargeStationFromFront(m_drive, m_altitude, m_extension),
+        // 6. Rotate so camera can see apriltags
+        new RunCommand(m_drive::lock, m_drive)
 
-        );
-    }
+    );
+  }
 
 }

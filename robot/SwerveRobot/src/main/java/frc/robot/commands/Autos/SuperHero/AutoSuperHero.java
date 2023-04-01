@@ -38,8 +38,7 @@ public class AutoSuperHero extends SequentialCommandGroup {
         new AutoTravelToFrontChargeStation(m_drive, m_altitude, m_extension, m_intake),
         // 5. Move on Charge Station
         new AutoTravelOnChargeStationFromFront(m_drive, m_altitude, m_extension),
-        // 6. Rotate so camera can see apriltags
-        new AutoTurnToDegreeGyro(90, m_drive, false),
+        // 6. Lock wheels
         new RunCommand(m_drive::lock, m_drive));
 
   }
