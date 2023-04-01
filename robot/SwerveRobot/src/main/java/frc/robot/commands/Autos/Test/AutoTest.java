@@ -7,6 +7,7 @@ package frc.robot.commands.Autos.Test;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Autos.Shared.AutoResetOdometry;
 import frc.robot.commands.Autos.Shared.Move.AutoTravelToPickupAndStartLoweringIntakeClean;
@@ -20,13 +21,12 @@ import frc.robot.subsystems.Intake;
 /** An example command that uses an example subsystem. */
 public class AutoTest extends SequentialCommandGroup {
   public AutoTest(
-      DriveSubsystem m_drive,
-      Altitude m_altitude,
-      Extension m_extension,
-      Intake m_intake) {
+      DriveSubsystem m_drive) {
     addCommands(
         // testing PickupCargo sequences and a racewith command to lock wheels
-        new AutoTravelToPickupAndStartLoweringIntakeClean(m_drive, m_altitude, m_extension));
+        // new AutoTravelToPickupAndStartLoweringIntakeClean(m_drive, m_altitude,
+        // m_extension));
+        new RunCommand(m_drive::lock, m_drive));
   }
 
 }

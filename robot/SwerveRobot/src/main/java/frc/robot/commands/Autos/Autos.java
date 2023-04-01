@@ -1,6 +1,7 @@
 package frc.robot.commands.Autos;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.ResetPositionToStart;
 import frc.robot.commands.Autos.DynamicDuo.AutoDynamicDuo;
 import frc.robot.commands.Autos.DynamicDuo.AutoDynamicDuoNew;
 import frc.robot.commands.Autos.Henchman.AutoHenchman;
@@ -10,6 +11,7 @@ import frc.robot.commands.Autos.Sidekick.AutoSidekick;
 import frc.robot.commands.Autos.Sidekick.AutoSidekickNew;
 import frc.robot.commands.Autos.SuperHero.AutoSuperHero;
 import frc.robot.commands.Autos.SuperHero.AutoSuperHeroNew;
+import frc.robot.commands.Autos.Test.AutoTest;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
@@ -20,7 +22,7 @@ public final class Autos {
 
   public enum Auto {
     SIDEKICK, SUPERHERO, MAIN_CHARACTER, DYNAMIC_DUO, HENCHMAN, SIDEKICK_NEW, SUPERHERO_NEW, DYNAMIC_DUO_NEW,
-    MAIN_CHARACTER_OLD
+    MAIN_CHARACTER_OLD, TEST
   }
 
   public enum Alliance {
@@ -54,13 +56,16 @@ public final class Autos {
         name = "(21pt) SUPERHERO: 1x Score, Pickup, Balance - INTAKE MOVES DURING TRAVEL";
         break;
       case MAIN_CHARACTER_OLD:
-        name = "(21pt) MAIN CHARACTER: 1x Score, Leave, Balance";
+        name = "(21pt) MAIN CHARACTER: 1x Score, Leave, Balance - OLD";
         break;
       case DYNAMIC_DUO_NEW:
         name = "(23pt) DYNAMIC DUO: 2x Score High, Leave, Dock - INTAKE MOVES DURING TRAVEL";
         break;
       case HENCHMAN:
         name = "(15pt) HENCHMAN: 2x Score High, Leave - DIRTY SIDE";
+        break;
+      case TEST:
+        name = "TEST";
         break;
       default:
         throw new AssertionError("Illegal value" + selected);
@@ -101,11 +106,16 @@ public final class Autos {
       case HENCHMAN:
         autoCommand = new AutoHenchman(m_drive, m_altitude, m_extension, m_intake);
         break;
+      case TEST:
+        autoCommand = new AutoTest(m_drive);
+        break;
       default:
         throw new AssertionError("Illegal value" + selected);
     }
 
-    return autoCommand;
+    Command reset = new ResetPositionToStart(m_altitude, m_extension);
+
+    return reset.andThen(autoCommand);
 
   }
 

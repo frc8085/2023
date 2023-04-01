@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -94,6 +95,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    m_robotContainer.lockWheelsAuto();
   }
 
   /**
@@ -126,9 +128,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if (m_timer.get() > 14.9 && m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    // if (m_timer.get() > 14.9 && m_autonomousCommand != null) {
+    // m_autonomousCommand.cancel();
+    // }
   }
 
   @Override
@@ -144,6 +146,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.lockWheelsAuto();
   }
 
   /** This function is called periodically during operator control. */
