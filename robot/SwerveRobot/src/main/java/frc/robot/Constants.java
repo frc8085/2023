@@ -56,7 +56,7 @@ public final class Constants {
     public static final double kEjectCubePower = .8;
     public static final double kShootCubePower = .9;
     public static final double kIntakeHoldCubePower = 0.15;
-    public static final double kDropCubePower = 0.25;
+    public static final double kDropCubePower = 0.3;
 
     public static final double kEjectWaitTime = 0.5;
     public static final double kAutoEjectWaitTime = .5;
@@ -152,7 +152,7 @@ public final class Constants {
 
     // angle conversions for 2.14.2023 altitude readings
     // Altitude at Top Position
-    public static double kAltitudeTravelPositionDegrees = 1;
+    public static double kAltitudeTravelPositionDegrees = 2;
     // Altitude at DropOff Position
     public static double kAltitudeDropOffPositionDegrees = 27;
     // Altitude when delivering high cone that it lowers to after extending fully
@@ -160,9 +160,9 @@ public final class Constants {
     // Altitude at position that it releases the cone
     public static double kAltitudeMidDropOffPositionDegrees = 32.0;
     // Altitude at position that it releases the High cone
-    public static double kAltitudeHighDropOffFinalPositionDegrees = 40;
+    public static double kAltitudeHighDropOffFinalPositionDegrees = 36.8;
     // Altitude at position that it releases the Mid cone
-    public static double kAltitudeMidDropOffFinalPositionDegrees = 40;
+    public static double kAltitudeMidDropOffFinalPositionDegrees = 36;
     // Altitude at high cube shoot Altitude
     public static double kAltitudeHighCubeShootPositionDegrees = 11.8;
     // Altitude at Bottom Position

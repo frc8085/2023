@@ -7,6 +7,7 @@ package frc.robot.subsystems.limelight;
 import frc.robot.Constants;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -55,6 +56,13 @@ public class LimelightSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Bot X", getBotPoseBlue().getX());
       SmartDashboard.putNumber("Bot y", getBotPoseBlue().getY());
       SmartDashboard.putNumber("Bot Rot", getBotPoseBlue().getZ());
+
+      if (RobotState.isAutonomous()) {
+        if (hasTargetLeft() || hasTargetRight()) {
+          System.out.println("Bot X: Red " + getBotPoseRed().getX());
+          System.out.println("Bot X Blue: " + getBotPoseBlue().getY());
+        }
+      }
     }
 
   }

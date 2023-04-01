@@ -50,7 +50,7 @@ public class AutoSidekickReturnToScore extends SequentialCommandGroup {
     // reversed being true?
     Trajectory returnToScoreOne = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(5.0, sign * .35, Rotation2d.fromDegrees(sign * 0)),
+        new Pose2d(5.3, sign * .35, Rotation2d.fromDegrees(sign * 0)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(2.5, sign * 0.7)),
         // Drive backwards for a meter

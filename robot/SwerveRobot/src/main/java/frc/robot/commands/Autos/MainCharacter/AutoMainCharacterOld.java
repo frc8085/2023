@@ -28,8 +28,9 @@ public class AutoMainCharacterOld extends SequentialCommandGroup {
         // 1. Score Cone
         new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
         // 2. Move to leave community
-        new AutoDriveBackwardsMeters(m_drive, 4.25, 0.4),
-        new AutoDriveForwardsMeters(m_drive, 2.0),
+        new AutoDriveBackwardsMeters(m_drive, 4.75, 0.4),
+        new WaitCommand(1),
+        new AutoDriveForwardsMeters(m_drive, 2.50),
         new RunCommand(m_drive::lock, m_drive)
 
     // 5. Shoot cube

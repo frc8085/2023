@@ -54,12 +54,12 @@ public class Robot extends TimedRobot {
 
     // Setup Port Forwarding to enable Limelight communication
     // while tethered to our robot over USB
-    PortForwarder.add(5800, "limelight-left.local", 5800);
-    PortForwarder.add(5801, "limelight-left.local", 5801);
-    PortForwarder.add(5802, "limelight-left.local", 5802);
-    PortForwarder.add(5803, "limelight-left.local", 5803);
-    PortForwarder.add(5804, "limelight-left.local", 5804);
-    PortForwarder.add(5805, "limelight-left.local", 5805);
+    PortForwarder.add(5800, "limelight-right.local", 5800);
+    PortForwarder.add(5801, "limelight-right.local", 5801);
+    PortForwarder.add(5802, "limelight-right.local", 5802);
+    PortForwarder.add(5803, "limelight-right.local", 5803);
+    PortForwarder.add(5804, "limelight-right.local", 5804);
+    PortForwarder.add(5805, "limelight-right.local", 5805);
   }
 
   /**

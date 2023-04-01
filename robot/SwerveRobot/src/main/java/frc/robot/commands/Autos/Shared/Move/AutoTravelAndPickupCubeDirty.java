@@ -43,28 +43,6 @@ public class AutoTravelAndPickupCubeDirty extends SequentialCommandGroup {
             new InstantCommand(() -> m_intake.intakeCone())));
   }
 
-  /**
-   * could we do something like this?
-   * Starting point
-   * R1x = 4;
-   * R1y = -0.35;
-   * R1h = -5;
-   * R2x = 4.5;
-   * R2y = -0.3;
-   * R3x = 5;
-   * R3y = -0.35
-   * R3h = 0;
-   * B1x = 4;
-   * B1y = 0.35;
-   * B1h = 5;
-   * B2x = 4.5;
-   * B2y = 0.3;
-   * B3x = 0;
-   * B3y = 0.35;
-   * B3h = 0;
-   * 
-   */
-
   public Command driveToGamePiece(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryVariableSpeedCommand.config(false, 1);
@@ -77,7 +55,7 @@ public class AutoTravelAndPickupCubeDirty extends SequentialCommandGroup {
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(4.5, sign * -0.51)),
         // End 2 meters straight ahead of where we started still facing forward
-        new Pose2d(5, sign * -0.5, Rotation2d.fromDegrees(sign * 0)),
+        new Pose2d(5.3, sign * -0.5, Rotation2d.fromDegrees(sign * 0)),
         config);
 
     return AutoTrajectoryVariableSpeedCommand.command(m_drive, pickupCargo);

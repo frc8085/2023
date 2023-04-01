@@ -39,28 +39,6 @@ public class AutoTravelToFrontChargeStation extends SequentialCommandGroup {
         travelToChargeStation(m_drive));
   }
 
-  /**
-   * could we do something like this?
-   * Starting point
-   * R1x = 5;
-   * R1y = 0.35;
-   * R1h = 5;
-   * R2x = 4.5;
-   * R2y = 1.6;
-   * R3x = 4;
-   * R3y = 2.05;
-   * R3h = 120;
-   * B1x = 5;
-   * B1y = -0.35;
-   * B1h = -5;
-   * B2x = 4.5;
-   * B2y = -1.6;
-   * B3x = 4;
-   * B3y = -2.05;
-   * B3h = -120;
-   * 
-   */
-
   public Command travelToChargeStation(DriveSubsystem m_drive) {
     // Create config for trajectory
     TrajectoryConfig config = AutoTrajectoryCommand.config(true);
@@ -69,12 +47,12 @@ public class AutoTravelToFrontChargeStation extends SequentialCommandGroup {
     // First trajectory. All units in meters.
     Trajectory moveToChargeStation = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(5, sign * .35, Rotation2d.fromDegrees(sign * 5)),
+        new Pose2d(5.3, sign * .35, Rotation2d.fromDegrees(sign * 5)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
         List.of(new Translation2d(4.5, sign * 1.6)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(4, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
+        new Pose2d(4.25, sign * 2.05, Rotation2d.fromDegrees(sign * 120)),
         config);
 
     return AutoTrajectoryCommand.command(m_drive, moveToChargeStation);
