@@ -50,6 +50,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.limelight.LimelightSubsystem;
 import frc.utils.LimelightConfiguration.LedMode;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -82,7 +83,8 @@ public class RobotContainer {
   private final Altitude m_altitude = new Altitude(m_extension);
   private final Intake m_intake = new Intake();
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_altitude, m_extension);
-  private final Limelight limelight = new Limelight();
+  // private final Limelight limelight = new Limelight();
+  private final LimelightSubsystem limelight2 = new LimelightSubsystem();
 
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -184,7 +186,7 @@ public class RobotContainer {
 
     final Trigger autoCenter = m_driverController.povUp();
 
-    autoCenter.onTrue(new AutoPositionWithLimelight(m_robotDrive, limelight));
+    // autoCenter.onTrue(new AutoPositionWithLimelight(m_robotDrive, limelight2));
 
     // Commands to face the robot in different drections
 
@@ -380,11 +382,11 @@ public class RobotContainer {
   }
 
   public void turnOffLimelightLED() {
-    limelight.setLEDMode(LedMode.kforceOff);
+    // limelight.setLEDMode(LedMode.kforceOff);
   }
 
   public void turnOnLimelightLED() {
-    limelight.setLEDMode(LedMode.kforceOn);
+    // limelight.setLEDMode(LedMode.kforceOn);
   }
 
   public void lockWheelsAuto() {
