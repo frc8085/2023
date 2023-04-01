@@ -38,12 +38,9 @@ public class AutoDynamicDuo extends SequentialCommandGroup {
             new AutoDynamicDuoReturnToScore(m_drive, m_altitude, m_extension, m_intake),
             // 5. Shoot cube
             new AutoDynamicDuoSecondScore(m_altitude, m_extension, m_intake),
-            // 6. Move to Charge Station
-            new AutoDynamicDuoMoveToChargeStation(m_drive),
-            new RunCommand(m_drive::lock, m_drive))
-    // 7. Move on Charge Station
-    // new AutoDynamicDuoMoveOnChargeStation(m_drive))
-    );
+            // 6. Move to Charge Station then Climb
+            new AutoDynamicDuoMoveToThenOnChargeStation(m_drive),
+            new RunCommand(m_drive::lock, m_drive)));
 
   }
 
