@@ -51,7 +51,7 @@ public class AutoDynamicDuoReturnToScore extends SequentialCommandGroup {
         // Start at the origin facing the +X direction
         new Pose2d(5.3, sign * .35, Rotation2d.fromDegrees(sign * 0)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2.5, sign * 0.7)),
+        List.of(new Translation2d(1, sign * 0.8)),
         // Drive backwards for a meter
         new Pose2d(.3, sign * 0.3, Rotation2d.fromDegrees(sign * 178)),
         config);

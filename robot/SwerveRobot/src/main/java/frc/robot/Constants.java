@@ -162,11 +162,11 @@ public final class Constants {
     // Altitude at position that it releases the High cone
     public static double kAltitudeHighDropOffFinalPositionDegrees = 36.8;
     // Altitude at position that it releases the Mid cone
-    public static double kAltitudeMidDropOffFinalPositionDegrees = 36;
+    public static double kAltitudeMidDropOffFinalPositionDegrees = 38;
     // Altitude at high cube shoot Altitude
     public static double kAltitudeHighCubeShootPositionDegrees = 11.8;
     // Altitude at Bottom Position
-    public static double kAltitudeIntakePositionDegrees = 71.1;
+    public static double kAltitudeIntakePositionDegrees = 65;
     // Altitude at Intake Position for Autos
     public static double kAltitudeAutoIntakePositionDegrees = 68;
     // Altitude at Shelf Position

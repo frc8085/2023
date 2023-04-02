@@ -8,6 +8,7 @@ import frc.robot.commands.Autos.Henchman.AutoHenchman;
 import frc.robot.commands.Autos.MainCharacter.AutoMainCharacter;
 import frc.robot.commands.Autos.MainCharacter.AutoMainCharacterOld;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
+import frc.robot.commands.Autos.Sidekick.AutoSidekickCone;
 import frc.robot.commands.Autos.Sidekick.AutoSidekickNew;
 import frc.robot.commands.Autos.SuperHero.AutoSuperHero;
 import frc.robot.commands.Autos.SuperHero.AutoSuperHeroNew;
@@ -16,12 +17,14 @@ import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.limelight.LimelightSubsystem;
 
 public final class Autos {
   public static Alliance m_alliance = Alliance.RED;
+  private LimelightSubsystem m_limelight;
 
   public enum Auto {
-    SIDEKICK, SUPERHERO, MAIN_CHARACTER, DYNAMIC_DUO, HENCHMAN, SIDEKICK_NEW, SUPERHERO_NEW, DYNAMIC_DUO_NEW,
+    SIDEKICK, SUPERHERO, MAIN_CHARACTER, DYNAMIC_DUO, HENCHMAN, SIDEKICK_CONE, SUPERHERO_NEW, DYNAMIC_DUO_NEW,
     MAIN_CHARACTER_OLD, TEST
   }
 
@@ -49,8 +52,8 @@ public final class Autos {
       case DYNAMIC_DUO:
         name = "(23pt) DYNAMIC DUO: 2x Score High, Leave, Dock";
         break;
-      case SIDEKICK_NEW:
-        name = "(15pt) SIDEKICK: 2x Score High, Leave - INTAKE MOVES DURING TRAVEL";
+      case SIDEKICK_CONE:
+        name = "(15pt) SIDEKICK: 2x Score High, Leave - PICKUP CONE";
         break;
       case SUPERHERO_NEW:
         name = "(21pt) SUPERHERO: 1x Score, Pickup, Balance - INTAKE MOVES DURING TRAVEL";
@@ -74,10 +77,9 @@ public final class Autos {
   }
 
   public static Command SelectAuto(Auto selected, Alliance alliance, DriveSubsystem m_drive, Altitude m_altitude,
-      Extension m_extension, Intake m_intake) {
+      Extension m_extension, Intake m_intake, LimelightSubsystem limelight) {
     Command autoCommand;
     m_alliance = alliance;
-
     switch (selected) {
       case SIDEKICK:
         autoCommand = new AutoSidekick(m_drive, m_altitude, m_extension, m_intake);
@@ -91,8 +93,8 @@ public final class Autos {
       case DYNAMIC_DUO:
         autoCommand = new AutoDynamicDuo(m_drive, m_altitude, m_extension, m_intake);
         break;
-      case SIDEKICK_NEW:
-        autoCommand = new AutoSidekickNew(m_drive, m_altitude, m_extension, m_intake);
+      case SIDEKICK_CONE:
+        autoCommand = new AutoSidekickCone(m_drive, m_altitude, m_extension, m_intake);
         break;
       case SUPERHERO_NEW:
         autoCommand = new AutoSuperHeroNew(m_drive, m_altitude, m_extension, m_intake);
@@ -107,7 +109,7 @@ public final class Autos {
         autoCommand = new AutoHenchman(m_drive, m_altitude, m_extension, m_intake);
         break;
       case TEST:
-        autoCommand = new AutoTest(m_drive);
+        autoCommand = new AutoTest(m_drive, limelight);
         break;
       default:
         throw new AssertionError("Illegal value" + selected);

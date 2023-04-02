@@ -398,7 +398,7 @@ public class RobotContainer {
     m_robotDrive.resetOdometry(new Pose2d());
     // return new AutoTest(m_robotDrive, m_altitude, m_extension, m_intake);
     return Autos.SelectAuto(autoSelection.getSelected(), allianceColor.getSelected(), m_robotDrive,
-        m_altitude, m_extension, m_intake);
+        m_altitude, m_extension, m_intake, limelight2);
   }
 
 }
