@@ -5,6 +5,7 @@ import frc.robot.commands.ResetPositionToStart;
 import frc.robot.commands.Autos.DynamicDuo.AutoDynamicDuo;
 import frc.robot.commands.Autos.DynamicDuo.AutoDynamicDuoNew;
 import frc.robot.commands.Autos.Henchman.AutoHenchman;
+import frc.robot.commands.Autos.Henchman.AutoHenchmanCone;
 import frc.robot.commands.Autos.MainCharacter.AutoMainCharacter;
 import frc.robot.commands.Autos.MainCharacter.AutoMainCharacterOld;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
@@ -24,7 +25,8 @@ public final class Autos {
   private LimelightSubsystem m_limelight;
 
   public enum Auto {
-    SIDEKICK, SUPERHERO, MAIN_CHARACTER, DYNAMIC_DUO, HENCHMAN, SIDEKICK_CONE, SUPERHERO_NEW, DYNAMIC_DUO_NEW,
+    SIDEKICK, SUPERHERO, MAIN_CHARACTER, DYNAMIC_DUO, HENCHMAN, SIDEKICK_CONE, SUPERHERO_NEW,
+    HENCHMAN_CONE, DYNAMIC_DUO_NEW,
     MAIN_CHARACTER_OLD, TEST
   }
 
@@ -67,6 +69,9 @@ public final class Autos {
       case HENCHMAN:
         name = "(15pt) HENCHMAN: 2x Score High, Leave - DIRTY SIDE";
         break;
+      case HENCHMAN_CONE:
+        name = "(15pt) HENCHMAN CONE: 2x Score High, Leave - DIRTY SIDE";
+        break;
       case TEST:
         name = "TEST";
         break;
@@ -108,8 +113,11 @@ public final class Autos {
       case HENCHMAN:
         autoCommand = new AutoHenchman(m_drive, m_altitude, m_extension, m_intake);
         break;
+      case HENCHMAN_CONE:
+        autoCommand = new AutoHenchmanCone(m_drive, m_altitude, m_extension, m_intake);
+        break;
       case TEST:
-        autoCommand = new AutoTest(m_drive, limelight);
+        autoCommand = new AutoTest(m_drive, m_altitude, m_extension, m_intake, limelight);
         break;
       default:
         throw new AssertionError("Illegal value" + selected);

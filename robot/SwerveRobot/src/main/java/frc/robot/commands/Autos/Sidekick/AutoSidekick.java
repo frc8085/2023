@@ -34,9 +34,10 @@ public class AutoSidekick extends SequentialCommandGroup {
         // 4. Intake up and move back to grid
         new AutoSidekickReturnToScore(m_drive, m_altitude, m_extension, m_intake),
         // 5. Shoot cube
-        new AutoSidekickSecondScore(m_altitude, m_extension, m_intake),
-        // 6. Go back to pickup again
-        new AutoSidekickReturnToPickup(m_drive, m_altitude, m_extension, m_intake));
+        new AutoSidekickSecondScore(m_altitude, m_extension, m_intake)
+    // 6. Go back to pickup again
+    // new AutoSidekickReturnToPickup(m_drive, m_altitude, m_extension, m_intake)
+    );
 
   }
 

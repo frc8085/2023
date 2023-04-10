@@ -22,7 +22,7 @@ public class AutoTurnToDegreeGyro extends PIDCommand {
   private boolean m_relative;
   private double m_degree;
 
-  static double kP = 0.025;
+  static double kP = 0.03;
   static double kI = 0;
   static double kD = 0;
 

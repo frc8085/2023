@@ -170,6 +170,11 @@ public class Intake extends SubsystemBase {
     m_intakeMotor.set(-IntakeConstants.kEjectConePower);
   }
 
+  // Run the intake reverse to eject CONE
+  public void autoEjectCone() {
+    m_intakeMotor.set(-1);
+  }
+
   // Run the intake reverse to eject CUBE
   public void ejectCube() {
     m_intakeMotor.set(-IntakeConstants.kEjectCubePower);

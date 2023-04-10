@@ -159,6 +159,8 @@ public class Altitude extends SubsystemBase {
     m_altitudeTopLimit.enableLimitSwitch(SmartDashboard.getBoolean("Altitude Top Limit Switch Enabled", true));
     m_altitudeBottomLimit.enableLimitSwitch(SmartDashboard.getBoolean("Altitude Bottom Limit Switch Enabled", true));
 
+    // Testing
+    // SmartDashboard.getBoolean("Disable Limit Switches", true))
   }
 
   public void logPositionsReached() {

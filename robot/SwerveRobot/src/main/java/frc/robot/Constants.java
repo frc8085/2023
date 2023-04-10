@@ -91,9 +91,9 @@ public final class Constants {
     // Converted 2.14.23 Encoder readings into inches
     public static double kExtensionPositionInchesFullyRetracted = 0;
     public static double kExtensionPositionInchesIntakeOut = 13.1;
-    public static double kExtensionPositionInchesMidDropOff = 29.3;
+    public static double kExtensionPositionInchesMidDropOff = 27.5;
     public static double kExtensionPositionInchesHighDropOff = 44.2;
-    public static double kExtensionPositionInchesAutoHighDropOff = 46.2;
+    public static double kExtensionPositionInchesAutoHighDropOff = 47.2;
     public static double kExtensionPositionInchesHighDropOffReturn = 34.1;
     // public static double kExtensionPositionInchesSingleSubstation = 6;
     public static double kExtensionPositionInchesSingleSubstation = 4;
@@ -153,22 +153,25 @@ public final class Constants {
     // angle conversions for 2.14.2023 altitude readings
     // Altitude at Top Position
     public static double kAltitudeTravelPositionDegrees = 2;
+    // Altitude at Intial Scoring Position
+    public static double kAltitudeInitialScorePositionDegrees = 24;
     // Altitude at DropOff Position
     public static double kAltitudeDropOffPositionDegrees = 27;
     // Altitude when delivering high cone that it lowers to after extending fully
-    public static double kAltitudeHighDropOffPositionDegrees = 36.8;
+    // changed from kAltitudeHighDropOffPositionDegrees = 36.8;
+    public static double kAltitudeHighDropOffPositionDegrees = 32.8;
     // Altitude at position that it releases the cone
-    public static double kAltitudeMidDropOffPositionDegrees = 32.0;
+    public static double kAltitudeMidDropOffPositionDegrees = 30.0;
     // Altitude at position that it releases the High cone
-    public static double kAltitudeHighDropOffFinalPositionDegrees = 36.8;
+    public static double kAltitudeHighDropOffFinalPositionDegrees = 38;
     // Altitude at position that it releases the Mid cone
-    public static double kAltitudeMidDropOffFinalPositionDegrees = 38;
+    public static double kAltitudeMidDropOffFinalPositionDegrees = 45;
     // Altitude at high cube shoot Altitude
     public static double kAltitudeHighCubeShootPositionDegrees = 11.8;
     // Altitude at Bottom Position
-    public static double kAltitudeIntakePositionDegrees = 65;
+    public static double kAltitudeIntakePositionDegrees = 64;
     // Altitude at Intake Position for Autos
-    public static double kAltitudeAutoIntakePositionDegrees = 68;
+    public static double kAltitudeAutoIntakePositionDegrees = 64;
     // Altitude at Shelf Position
     public static double kAltitudeDoubleSubstationPositionDegrees = 36.2;
     public static double kAltitudeSingleSubstationPositionDegrees = 9.;
@@ -176,6 +179,9 @@ public final class Constants {
     // encoder readings of altitude as of 2.14.2023
     // Altitude at Top Position
     public static double kAltitudeTravelPosition = kAltitudeTravelPositionDegrees
+        * kAltitudeRevolutionsPerDegree;
+    // Altitude at Intial Scoring Position
+    public static double kAltitudeInitialScorePosition = kAltitudeInitialScorePositionDegrees
         * kAltitudeRevolutionsPerDegree;
     // Altitude at DropOff Position
     public static double kAltitudeDropOffPosition = kAltitudeDropOffPositionDegrees
@@ -212,7 +218,7 @@ public final class Constants {
     public static double kAltitudeError = 1;
 
     // Range for safe Travel altitude > -0.7
-    public static double kAltitudeSafeMin = -18;
+    public static double kAltitudeSafeMin = -50;
 
     public static double kAltitudeSafeExtensionMin = kAltitudeDropOffPosition - kAltitudePositionTolerance;
 
