@@ -354,12 +354,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   public boolean isWithinSafeDrivingLimits() {
     boolean altitudeInSafeLimit = m_altitude.getCurrentAltitude() > AltitudeConstants.kAltitudeSafeMin;
-    boolean extenstionInSafeLimit = m_extension
+    boolean extensionInSafeLimit = m_extension
         .getCurrentExtensionPosition() < ExtensionConstants.kExtensionSafeMax;
 
     // If in Auto, it is safe to drive faster
     // But if in Teleop, consider us within safe driving limits only if the altitude
     // and extension are within safe limits
-    return RobotState.isAutonomous() || (altitudeInSafeLimit && extenstionInSafeLimit);
+    return RobotState.isAutonomous() || (altitudeInSafeLimit && extensionInSafeLimit);
   }
 }

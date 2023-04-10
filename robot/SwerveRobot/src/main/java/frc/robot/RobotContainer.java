@@ -36,6 +36,7 @@ import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.IntakeCargoFromDoubleSubstation;
 import frc.robot.commands.IntakeCargoFromSingleSubstation;
 import frc.robot.commands.MoveToHighConeDropOff;
+import frc.robot.commands.MoveToInitialScore;
 import frc.robot.commands.MoveToMidConeDropOff;
 import frc.robot.commands.MoveToTravel;
 import frc.robot.commands.MoveToTravelAfterIntake;
@@ -216,7 +217,7 @@ public class RobotContainer {
     final Trigger intakeButton = m_operatorController.rightTrigger();
     final Trigger manualIntakeButton = m_operatorController.rightBumper();
     final Trigger ejectButton = m_operatorController.leftTrigger();
-    final Trigger highCubeEjectButton = m_operatorController.leftBumper();
+    final Trigger initialScoreButton = m_operatorController.leftBumper();
     // final Trigger midCubeEjectButton = m_operatorController.;
     final Trigger setDoubleSubstationButton = m_operatorController.povUp();
     final Trigger setSingleSubstationButton = m_operatorController.povDown();
@@ -276,8 +277,7 @@ public class RobotContainer {
     ejectButton.onTrue(new ScoreBasedOnPosition(m_altitude, m_extension,
         m_intake));
 
-    highCubeEjectButton.onTrue(new ScoreHighCube(m_altitude, m_extension,
-        m_intake));
+    initialScoreButton.onTrue(new MoveToInitialScore(m_extension, m_altitude));
 
     // midCubeEjectButton.onTrue(new ScoreMidCube(m_altitude, m_extension,
     // m_intake));
@@ -321,10 +321,11 @@ public class RobotContainer {
         m_altitude))
         .onFalse(new SequentialCommandGroup(
             new WaitUntilCommand(
-                () -> m_extension.ExtensionIsInHighScoringPosition()),
+                () -> m_extension.ExtensionIsInMidScoringPosition()),
             new InstantCommand(
                 () -> m_altitude.keepPosition(
                     AltitudeConstants.kAltitudeHighDropOffPosition))));
+
     prepareTravelButton.onTrue(new MoveToTravel(m_extension, m_altitude));
 
   }
@@ -398,7 +399,7 @@ public class RobotContainer {
     m_robotDrive.resetOdometry(new Pose2d());
     // return new AutoTest(m_robotDrive, m_altitude, m_extension, m_intake);
     return Autos.SelectAuto(autoSelection.getSelected(), allianceColor.getSelected(), m_robotDrive,
-        m_altitude, m_extension, m_intake);
+        m_altitude, m_extension, m_intake, limelight2);
   }
 
 }

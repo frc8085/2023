@@ -22,8 +22,8 @@ public class AutoEjectCone extends SequentialCommandGroup {
       Intake m_intake) {
     addCommands(
         // Start Retracting at fixed speed until it reaches release position
-        new InstantCommand(() -> m_extension.retractExtension())
-            .until(m_extension::ExtensionIsInReleasePosition),
+        // new InstantCommand(() -> m_extension.retractExtension())
+        // .until(m_extension::ExtensionIsInReleasePosition),
         new ParallelCommandGroup(
             new SequentialCommandGroup(
                 new InstantCommand(() -> m_intake.ejectCone()),

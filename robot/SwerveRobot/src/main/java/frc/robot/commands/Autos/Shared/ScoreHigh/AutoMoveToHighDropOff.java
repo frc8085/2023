@@ -16,8 +16,8 @@ public class AutoMoveToHighDropOff extends SequentialCommandGroup {
       Extension m_extension) {
     addCommands(
         new ParallelCommandGroup(
-            new Extend(m_extension, ExtensionConstants.kExtensionPositionAutoHighDropOff),
-            new RaiseLower(m_altitude, AltitudeConstants.kAltitudeHighDropOffPosition + 2)));
+            new Extend(m_extension, ExtensionConstants.kExtensionPositionAutoHighDropOff + 2),
+            new RaiseLower(m_altitude, AltitudeConstants.kAltitudeHighDropOffPosition - 2.5)));
 
   }
 }

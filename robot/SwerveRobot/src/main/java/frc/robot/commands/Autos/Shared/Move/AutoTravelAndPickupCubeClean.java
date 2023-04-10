@@ -44,7 +44,7 @@ public class AutoTravelAndPickupCubeClean extends SequentialCommandGroup {
 
   public Command driveToGamePiece(DriveSubsystem m_drive) {
     // Create config for trajectory
-    TrajectoryConfig config = AutoTrajectoryVariableSpeedCommand.config(false, 1);
+    TrajectoryConfig config = AutoTrajectoryVariableSpeedCommand.config(false, .9);
     int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
     // An example trajectory to follow. All units in meters.
