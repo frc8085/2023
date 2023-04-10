@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
   UsbCamera camera1;
   UsbCamera camera2;
 
-  private final Timer m_timer = new Timer();
+  private static Timer m_timer = new Timer();
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -123,6 +123,13 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+  }
+
+  /*
+   * Get the elapsed time since the start of Auto
+   */
+  public static double getElapsedTime() {
+    return m_timer.get();
   }
 
   /** This function is called periodically during autonomous. */
