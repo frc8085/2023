@@ -25,6 +25,8 @@ public final class Autos {
   private boolean TESTING_BALANCE = TuningModeConstants.kBalanceTuning;
 
   public enum Auto {
+    JASON,
+
     TEST_MICHAEL,
     TEST_TAHANI,
     TEST_CHIDI,
@@ -60,6 +62,8 @@ public final class Autos {
         name = "(21pt) TAHANI: PitchRoll Balance Main Char";
       case CHIDI:
         name = "(21pt) CHIDI: Decreasing Speed Balance Main Char";
+      case JASON:
+        name = "JASON: No balance";
 
       case TEST_MICHAEL:
         name = "Balance Consntant Speed";
@@ -109,6 +113,11 @@ public final class Autos {
         break;
       case TEST_CHIDI:
         autoCommand = new AutoDecreasingSpeedBalance(m_drive);
+        break;
+
+      case JASON:
+        autoCommand = new AutoMainCharacters(m_drive, m_altitude, m_extension, m_intake,
+            new InstantCommand());
         break;
 
       case MICHAEL:
