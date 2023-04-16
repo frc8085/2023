@@ -10,7 +10,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class AutoFinalBalanceWithTimeout extends CommandBase {
+public class AutoConstantSpeedFinalBalance extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_drive;
   private double m_speed = AutoConstants.kFinalBalanceSpeed;
@@ -19,7 +19,7 @@ public class AutoFinalBalanceWithTimeout extends CommandBase {
   private double autoEndTime = 14.8; // Lock before Auto ends
   private boolean timeIsUp = false;
 
-  public AutoFinalBalanceWithTimeout(DriveSubsystem drive) {
+  public AutoConstantSpeedFinalBalance(DriveSubsystem drive) {
     m_drive = drive;
     addRequirements(m_drive);
   }

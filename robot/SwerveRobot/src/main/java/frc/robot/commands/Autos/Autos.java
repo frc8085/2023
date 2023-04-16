@@ -6,7 +6,10 @@ import frc.robot.commands.ResetPositionToStart;
 import frc.robot.commands.Autos.DynamicDuo.AutoDynamicDuoNew;
 import frc.robot.commands.Autos.Henchman.AutoHenchman;
 import frc.robot.commands.Autos.Henchman.AutoHenchmanCone;
-import frc.robot.commands.Autos.MainCharacters.AutoMichael;
+import frc.robot.commands.Autos.MainCharacters.AutoMainCharacters;
+import frc.robot.commands.Autos.Shared.Balance.AutoDecreasingSpeedBalance;
+import frc.robot.commands.Autos.Shared.Balance.AutoFinalBalanceWithTimeout;
+import frc.robot.commands.Autos.Shared.Balance.AutoPitchRollBalance;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
 import frc.robot.commands.Autos.Sidekick.AutoSidekickCone;
 import frc.robot.commands.Autos.SuperHero.AutoSuperHero;
@@ -20,6 +23,9 @@ public final class Autos {
 
   public enum Auto {
     MICHAEL,
+    TAHANI,
+    CHIDI,
+
     SIDEKICK,
     SUPERHERO,
     DYNAMIC_DUO,
@@ -42,7 +48,11 @@ public final class Autos {
 
     switch (selected) {
       case MICHAEL:
-        name = "(21pt) MICHAEL: Score High, Leave, Engage";
+        name = "(21pt) MICHAEL: Slow Final Balance Main Char";
+      case TAHANI:
+        name = "(21pt) TAHANI: PitchRoll Balance Main Char";
+      case CHIDI:
+        name = "(21pt) CHIDI: Decreasing Speed Balance Main Char";
       case SIDEKICK:
         name = "(15pt) SIDEKICK: 2x Score High, Leave";
         break;
@@ -76,7 +86,16 @@ public final class Autos {
     m_alliance = alliance;
     switch (selected) {
       case MICHAEL:
-        autoCommand = new AutoMichael(m_drive, m_altitude, m_extension, m_intake);
+        autoCommand = new AutoMainCharacters(m_drive, m_altitude, m_extension, m_intake,
+            new AutoFinalBalanceWithTimeout(m_drive));
+        break;
+      case TAHANI:
+        autoCommand = new AutoMainCharacters(m_drive, m_altitude, m_extension, m_intake,
+            new AutoPitchRollBalance(m_drive));
+        break;
+      case CHIDI:
+        autoCommand = new AutoMainCharacters(m_drive, m_altitude, m_extension, m_intake,
+            new AutoDecreasingSpeedBalance(m_drive));
         break;
       case SIDEKICK:
         autoCommand = new AutoSidekick(m_drive, m_altitude, m_extension, m_intake);

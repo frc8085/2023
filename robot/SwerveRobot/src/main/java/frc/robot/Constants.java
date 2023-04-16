@@ -423,6 +423,8 @@ public final class Constants {
     public static final double kDriveToBalanceFactor = 0.7;
     public static final double kFinalBalanceSpeed = kDriveOnStationMaxSpeed * (kDriveToBalanceFactor / 2);
     public static final double kAutoGyroTolerance = 2;
+    public static final double kChargingStationExtraDriveSeconds = 1;
+    public static final double kPitchReachedStationDegrees = 10;
 
   }
 

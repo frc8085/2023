@@ -1,18 +1,21 @@
 package frc.robot.commands.Autos.Shared.Balance;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class AutoPitchVelocityBalance extends CommandBase {
+public class AutoPitchRollBalance extends CommandBase {
   private final DriveSubsystem m_drive;
 
   private static final double speedMetersPerSecond = 0.2;
   private static final double pitchToleranceDegress = 3.0;
-  private static final double velocityToleranceDegreesPerSecond = 8.0;
 
   private double pitchDegrees;
 
-  public AutoPitchVelocityBalance(DriveSubsystem drive) {
+  private double autoEndTime = 14.8; // Lock before Auto ends
+  private boolean timeIsUp = false;
+
+  public AutoPitchRollBalance(DriveSubsystem drive) {
     m_drive = drive;
     addRequirements(drive);
   }
@@ -24,19 +27,22 @@ public class AutoPitchVelocityBalance extends CommandBase {
 
   @Override
   public void execute() {
+    // Get the elapsed time since the start of Auto
+    double autoElapsedTime = Robot.getElapsedTime();
+
+    // Unsure if the clock resets at end of Auto
+    // Just to be safe, don't let this turn back to false
+    timeIsUp = timeIsUp || autoElapsedTime >= autoEndTime;
+
     // Calculate charge station angle and velocity
     pitchDegrees = m_drive.getRotation().getCos() * m_drive.getPitch().getDegrees()
         + m_drive.getRotation().getSin() * m_drive.getRoll().getDegrees();
-    double angleVelocityDegreesPerSec = m_drive.getRotation().getCos()
-        * m_drive.getPitchVelocity()
-        + m_drive.getRotation().getSin() * m_drive.getRollVelocity();
-    boolean shouldStop = (pitchDegrees < 0.0 && angleVelocityDegreesPerSec > velocityToleranceDegreesPerSecond)
-        || (pitchDegrees > 0.0
-            && angleVelocityDegreesPerSec < -velocityToleranceDegreesPerSecond);
+
+    boolean isBalanced = Math.abs(pitchDegrees) < pitchToleranceDegress;
 
     // Drive
-    if (shouldStop) {
-      m_drive.stop();
+    if (timeIsUp || isBalanced) {
+      m_drive.lock();
     } else {
       m_drive.drive(
           speedMetersPerSecond,
