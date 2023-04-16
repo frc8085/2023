@@ -397,6 +397,7 @@ public final class Constants {
     public static final double kDriveOnStationMaxSpeed = 0.15;
     public static final double kDriveToBalanceFactor = 0.7;
     public static final double kFinalBalanceSpeed = kDriveOnStationMaxSpeed * (kDriveToBalanceFactor / 2);
+    public static final double kPitchTolerance = 2;
   }
 
   public static final class OldAutoConstants {
