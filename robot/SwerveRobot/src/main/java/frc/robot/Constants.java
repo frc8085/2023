@@ -34,6 +34,7 @@ public final class Constants {
     public static final boolean kIntakeTuning = false;
     public static final boolean kDriveTuning = false;
     public static final boolean kLimelightTuning = true;
+    public static boolean kBalanceTuning;
   }
 
   public static final class SubsystemMotorConstants {

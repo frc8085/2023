@@ -2,6 +2,7 @@ package frc.robot.commands.Autos;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.TuningModeConstants;
 import frc.robot.commands.ResetPositionToStart;
 import frc.robot.commands.Autos.DynamicDuo.AutoDynamicDuoNew;
 import frc.robot.commands.Autos.Henchman.AutoHenchman;
@@ -21,7 +22,13 @@ import frc.robot.subsystems.Intake;
 public final class Autos {
   public static Alliance m_alliance = Alliance.RED;
 
+  private boolean TESTING_BALANCE = TuningModeConstants.kBalanceTuning;
+
   public enum Auto {
+    TEST_MICHAEL,
+    TEST_TAHANI,
+    TEST_CHIDI,
+
     MICHAEL,
     TAHANI,
     CHIDI,
@@ -53,6 +60,14 @@ public final class Autos {
         name = "(21pt) TAHANI: PitchRoll Balance Main Char";
       case CHIDI:
         name = "(21pt) CHIDI: Decreasing Speed Balance Main Char";
+
+      case TEST_MICHAEL:
+        name = "Balance Consntant Speed";
+      case TEST_TAHANI:
+        name = "Balance Pitch and Roll";
+      case TEST_CHIDI:
+        name = "Balance Decreasing Speed";
+
       case SIDEKICK:
         name = "(15pt) SIDEKICK: 2x Score High, Leave";
         break;
@@ -84,7 +99,18 @@ public final class Autos {
       Extension m_extension, Intake m_intake) {
     Command autoCommand;
     m_alliance = alliance;
+
     switch (selected) {
+      case TEST_MICHAEL:
+        autoCommand = new AutoConstantSpeedFinalBalance(m_drive);
+        break;
+      case TEST_TAHANI:
+        autoCommand = new AutoPitchRollBalance(m_drive);
+        break;
+      case TEST_CHIDI:
+        autoCommand = new AutoDecreasingSpeedBalance(m_drive);
+        break;
+
       case MICHAEL:
         autoCommand = new AutoMainCharacters(m_drive, m_altitude, m_extension, m_intake,
             new AutoConstantSpeedFinalBalance(m_drive));
@@ -97,6 +123,7 @@ public final class Autos {
         autoCommand = new AutoMainCharacters(m_drive, m_altitude, m_extension, m_intake,
             new AutoDecreasingSpeedBalance(m_drive));
         break;
+
       case SIDEKICK:
         autoCommand = new AutoSidekick(m_drive, m_altitude, m_extension, m_intake);
         break;
