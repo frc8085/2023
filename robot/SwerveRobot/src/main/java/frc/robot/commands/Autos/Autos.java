@@ -8,7 +8,7 @@ import frc.robot.commands.Autos.Henchman.AutoHenchman;
 import frc.robot.commands.Autos.Henchman.AutoHenchmanCone;
 import frc.robot.commands.Autos.MainCharacters.AutoMainCharacters;
 import frc.robot.commands.Autos.Shared.Balance.AutoDecreasingSpeedBalance;
-import frc.robot.commands.Autos.Shared.Balance.AutoFinalBalanceWithTimeout;
+import frc.robot.commands.Autos.Shared.Balance.AutoConstantSpeedFinalBalance;
 import frc.robot.commands.Autos.Shared.Balance.AutoPitchRollBalance;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
 import frc.robot.commands.Autos.Sidekick.AutoSidekickCone;
@@ -87,7 +87,7 @@ public final class Autos {
     switch (selected) {
       case MICHAEL:
         autoCommand = new AutoMainCharacters(m_drive, m_altitude, m_extension, m_intake,
-            new AutoFinalBalanceWithTimeout(m_drive));
+            new AutoConstantSpeedFinalBalance(m_drive));
         break;
       case TAHANI:
         autoCommand = new AutoMainCharacters(m_drive, m_altitude, m_extension, m_intake,

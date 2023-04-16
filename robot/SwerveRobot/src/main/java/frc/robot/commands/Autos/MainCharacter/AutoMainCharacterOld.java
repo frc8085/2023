@@ -31,7 +31,7 @@ public class AutoMainCharacterOld extends SequentialCommandGroup {
         // 3. Let the charging station stabilize
         new WaitCommand(1),
         // 4. Drive onto the charging station
-        new AutoDriveForwardsMeters(m_drive, 2.50),
+        new AutoDriveForwardsMeters(m_drive, 2.50, 0.4),
         // 5. Attempt to balance until time runs out
         new AutoDecreasingSpeedBalance(m_drive),
         // 6. We should never reach this command, but adding as fail-safe
