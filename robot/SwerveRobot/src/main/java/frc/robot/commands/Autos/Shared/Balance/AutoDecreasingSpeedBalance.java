@@ -21,7 +21,7 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
   private Timer localTimer = new Timer();
 
   private double autoEndTime = 14.8; // Lock before Auto ends
-  boolean timeIsUp = false;
+  private boolean timeIsUp = false;
 
   // Creates a new flat moving average filter
   // Average will be taken over the last 10 samples
@@ -81,6 +81,8 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
      * T = 14.8s | S = 0.10 / ( 14.8 / 7 ) = 0.047 <-- Lock time
      * 
      */
+
+    // Only update the speed periodically
     if (elapsedLocalTime > 0.5) {
       decreasingSpeed = Math.min(maxSpeed, maxSpeed / (autoElapsedTime / 7));
       localTimer.reset();
