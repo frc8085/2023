@@ -134,6 +134,11 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The pitch.
    */
   public Rotation2d getPitch() {
+    // Log our pitch if we're reading it in Auto
+    if (RobotState.isAutonomous()) {
+      System.out.println("Auto Pitch: " + m_gyro.getPitch());
+    }
+
     return Rotation2d.fromDegrees(m_gyro.getPitch());
   }
 
