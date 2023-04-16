@@ -1,6 +1,7 @@
 package frc.robot.commands.Autos.Shared.Balance;
 
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveSubsystem;
@@ -8,14 +9,18 @@ import frc.robot.subsystems.DriveSubsystem;
 /**
  * Final balance for main character auto
  */
-public class AutoMainCharacterBalance extends CommandBase {
+public class AutoDecreasingSpeedBalance extends CommandBase {
   private final DriveSubsystem m_drive;
 
   private double maxSpeed = 0.10;
   private double setpoint = 0; // Balance = 0 degrees
   private double tolerance = 3; // 3 Degree tolerance
 
-  private double endTime = 14.8; // Lock before Auto ends
+  private double decreasingSpeed = maxSpeed;
+
+  private Timer localTimer = new Timer();
+
+  private double autoEndTime = 14.8; // Lock before Auto ends
   boolean timeIsUp = false;
 
   // Creates a new flat moving average filter
@@ -23,9 +28,17 @@ public class AutoMainCharacterBalance extends CommandBase {
   LinearFilter pitchFilter = LinearFilter.movingAverage(10);
   LinearFilter absPitchFilter = LinearFilter.movingAverage(10);
 
-  public AutoMainCharacterBalance(DriveSubsystem drive) {
+  public AutoDecreasingSpeedBalance(DriveSubsystem drive) {
     m_drive = drive;
     addRequirements(m_drive);
+  }
+
+  // Called just before this Command runs the first time
+  @Override
+  public void initialize() {
+    super.initialize();
+    localTimer.reset();
+    localTimer.start();
   }
 
   @Override
@@ -33,24 +46,24 @@ public class AutoMainCharacterBalance extends CommandBase {
     super.execute();
 
     // Get the elapsed time since the start of Auto
-    double elapsedTime = Robot.getElapsedTime();
+    double autoElapsedTime = Robot.getElapsedTime();
+
+    // Get the elapsed time since our last local timer check
+    double elapsedLocalTime = localTimer.get();
 
     // Unsure if the clock resets at end of Auto
     // Just to be safe, don't let this turn back to false
-    timeIsUp = timeIsUp || elapsedTime >= endTime;
+    timeIsUp = timeIsUp || autoElapsedTime >= autoEndTime;
 
     // Get the pitch degrees averaged over 10 samples
-    // This is used to know if we should drive forward or backwards
     double averagePitch = pitchFilter.calculate(m_drive.getPitch().getDegrees());
-
-    // Get the absolute value of pitch degrees averaged over 10 samples
-    // This is used to determine if we are balanced. If we DIDN'T use the absolute
-    // value, we would mistakenly think we're balanced when we tip over because
-    // the average of positive and negative pitch readings would get close to 0
-    double averageAbsolutePitch = pitchFilter.calculate(Math.abs(m_drive.getPitch().getDegrees()));
+    double momentPitch = m_drive.getPitch().getDegrees();
 
     // Determine if we are balanced
-    boolean isBalanced = averageAbsolutePitch <= (setpoint + tolerance);
+    boolean isBalanced = averagePitch <= (setpoint + tolerance);
+
+    // Lock wheels if we're balanced or time is up
+    boolean timeToLock = timeIsUp || isBalanced;
 
     /*
      * Slow down from max speed as time elapses
@@ -68,30 +81,24 @@ public class AutoMainCharacterBalance extends CommandBase {
      * T = 14.8s | S = 0.10 / ( 14.8 / 7 ) = 0.047 <-- Lock time
      * 
      */
+    if (elapsedLocalTime > 0.5) {
+      decreasingSpeed = Math.min(maxSpeed, maxSpeed / (autoElapsedTime / 7));
+      localTimer.reset();
+    }
 
-    double decreasingSpeed = Math.min(maxSpeed, maxSpeed / (elapsedTime / 7));
-
-    // Lock wheels if we're balanced or time is up
-    boolean timeToLock = timeIsUp || isBalanced;
     if (timeToLock) {
       m_drive.lock();
     } else {
-      // Otherwise, drive up or down depending on the avg pitch reading.
+      // Otherwise, drive up or down depending on the current pitch reading.
       // Drive at a decreasing speed over time
       m_drive.drive(
           decreasingSpeed,
-          averagePitch > 0 ? -1 : 1,
+          momentPitch > 0 ? -1 : 1,
           0,
           0,
           false,
           false);
     }
-  }
-
-  // Called just before this Command runs the first time
-  @Override
-  public void initialize() {
-    super.initialize();
   }
 
   // Make this return true when this Command no longer needs to run execute()
