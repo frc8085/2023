@@ -8,6 +8,7 @@ import frc.robot.commands.Autos.DynamicDuo.AutoDynamicDuoNew;
 import frc.robot.commands.Autos.Henchman.AutoHenchman;
 import frc.robot.commands.Autos.Henchman.AutoHenchmanCone;
 import frc.robot.commands.Autos.MainCharacters.AutoMainCharacters;
+import frc.robot.commands.Autos.MainCharacters.AutoMainCharactersTurning;
 import frc.robot.commands.Autos.Shared.Balance.AutoDecreasingSpeedBalance;
 import frc.robot.commands.Autos.Shared.Balance.AutoConstantSpeedFinalBalance;
 import frc.robot.commands.Autos.Shared.Balance.AutoPitchRollBalance;
@@ -26,6 +27,7 @@ public final class Autos {
 
   public enum Auto {
     JASON,
+    DEREK,
 
     TEST_MICHAEL,
     TEST_TAHANI,
@@ -64,6 +66,8 @@ public final class Autos {
         name = "(21pt) CHIDI: Decreasing Speed Balance Main Char";
       case JASON:
         name = "JASON: No balance";
+      case DEREK:
+        name = "DEREK: No balance, turns between moves";
 
       case TEST_MICHAEL:
         name = "Balance Consntant Speed";
@@ -117,6 +121,11 @@ public final class Autos {
 
       case JASON:
         autoCommand = new AutoMainCharacters(m_drive, m_altitude, m_extension, m_intake,
+            new InstantCommand());
+        break;
+
+      case DEREK:
+        autoCommand = new AutoMainCharactersTurning(m_drive, m_altitude, m_extension, m_intake,
             new InstantCommand());
         break;
 
