@@ -57,7 +57,7 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
 
     // Get the pitch degrees averaged over 10 samples
     double averagePitch = pitchFilter.calculate(m_drive.getPitch().getDegrees());
-    double momentPitch = m_drive.getPitch().getDegrees();
+    double instantaneousPitch = m_drive.getPitch().getDegrees();
 
     // Determine if we are balanced
     boolean isBalanced = averagePitch <= (setpoint + tolerance);
@@ -93,7 +93,7 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
       // Drive at a decreasing speed over time
       m_drive.drive(
           decreasingSpeed,
-          momentPitch > 0 ? -1 : 1,
+          instantaneousPitch > 0 ? -1 : 1,
           0,
           0,
           false,
