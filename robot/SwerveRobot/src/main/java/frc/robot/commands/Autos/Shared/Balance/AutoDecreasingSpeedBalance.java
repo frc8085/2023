@@ -1,4 +1,4 @@
-package frc.robot.commands.Autos.MainCharacter;
+package frc.robot.commands.Autos.Shared.Balance;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj2.command.CommandBase;

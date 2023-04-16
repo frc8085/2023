@@ -7,6 +7,7 @@ package frc.robot.commands.Autos.MainCharacter;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.Autos.Shared.Balance.AutoMainCharacterBalance;
 import frc.robot.commands.Autos.Shared.Move.AutoDriveBackwardsMeters;
 import frc.robot.commands.Autos.Shared.Move.AutoDriveForwardsMeters;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
