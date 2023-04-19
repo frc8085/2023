@@ -15,7 +15,7 @@ public class AutoDriveSeconds extends CommandBase {
   private double m_speed;
   private double m_direction;
 
-  private Timer timer;
+  private Timer timer = new Timer();
 
   public AutoDriveSeconds(DriveSubsystem drive, double direction, double speed, double seconds) {
     m_drive = drive;

@@ -9,18 +9,16 @@ import frc.robot.subsystems.DriveSubsystem;
 /**
  * Final balance for main character auto
  */
-public class AutoDecreasingSpeedBalance extends CommandBase {
+public class BackupAutoDecreasingSpeedBalance extends CommandBase {
   private final DriveSubsystem m_drive;
 
   private double maxSpeed = 0.09;
   private double setpoint = 0; // Balance = 0 degrees
   private double tolerance = 6; // 3 Degree tolerance
 
-  private double lockDuration = 0.5;
-
   private double decreasingSpeed = maxSpeed;
 
-  private Timer lockTimer = new Timer();
+  private Timer localTimer = new Timer();
 
   private double autoEndTime = 14.8; // Lock before Auto ends
   private boolean timeIsUp = false;
@@ -30,7 +28,7 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
   LinearFilter pitchFilter = LinearFilter.movingAverage(10);
   LinearFilter absPitchFilter = LinearFilter.movingAverage(10);
 
-  public AutoDecreasingSpeedBalance(DriveSubsystem drive) {
+  public BackupAutoDecreasingSpeedBalance(DriveSubsystem drive) {
     m_drive = drive;
     addRequirements(m_drive);
   }
@@ -39,7 +37,8 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
   @Override
   public void initialize() {
     super.initialize();
-    lockTimer.reset();
+    localTimer.reset();
+    localTimer.start();
   }
 
   @Override
@@ -48,6 +47,9 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
 
     // Get the elapsed time since the start of Auto
     double autoElapsedTime = Robot.getElapsedTime();
+
+    // Get the elapsed time since our last local timer check
+    double elapsedLocalTime = localTimer.get();
 
     // Unsure if the clock resets at end of Auto
     // Just to be safe, don't let this turn back to false
@@ -80,20 +82,15 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
      * 
      */
 
-    System.out.println("Average ABS Pitch: " + averagePitch);
-
-    double timeSinceLock = lockTimer.get();
-
-    // If we just locked the wheels
-    // Wait for the lock duration before deciding whether to unlock and move
-    if ((timeSinceLock > 0) && (timeSinceLock <= lockDuration)) {
-      m_drive.lock();
+    // Only update the speed periodically
+    if (elapsedLocalTime > 0.5) {
+      System.out.println("Average ABS Pitch: " + averagePitch);
+      decreasingSpeed = Math.min(maxSpeed, maxSpeed / (autoElapsedTime / 6));
+      localTimer.reset();
     }
-    // If the time lock runs out, check if it's time to lock
-    // Which means we are either balanced or time's running out
-    else if (timeToLock) {
+
+    if (timeToLock) {
       m_drive.lock();
-      lockTimer.restart();
     } else {
       // Otherwise, drive up or down depending on the current pitch reading.
       // Drive at a decreasing speed over time
