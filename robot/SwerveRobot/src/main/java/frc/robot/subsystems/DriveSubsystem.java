@@ -101,7 +101,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_gyro.getRawGyro(pitchYawRollVelocitiesDegreesPerSecond);
 
     log();
-
+    // logSwerveStates();
   }
 
   private void log() {
@@ -112,6 +112,15 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Yaw", getYaw());
 
       SmartDashboard.putNumberArray("XYZ_DPS", pitchYawRollVelocitiesDegreesPerSecond);
+    }
+  }
+
+  private void logSwerveStates() {
+    if (RobotState.isAutonomous()) {
+      System.out.print("FL mps " + m_frontLeft.getState().speedMetersPerSecond);
+      System.out.print("FR mps " + m_frontRight.getState().speedMetersPerSecond);
+      System.out.print("RL mps " + m_rearLeft.getState().speedMetersPerSecond);
+      System.out.print("RR mps " + m_rearRight.getState().speedMetersPerSecond);
     }
   }
 

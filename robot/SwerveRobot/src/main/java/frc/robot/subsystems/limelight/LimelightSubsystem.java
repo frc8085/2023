@@ -57,7 +57,7 @@ public class LimelightSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Bot y", getBotPoseBlue().getY());
       SmartDashboard.putNumber("Bot Rot", getBotPoseBlue().getZ());
 
-      if (RobotState.isAutonomous()) {
+      if (false) {
         if (hasTargetLeft() || hasTargetRight()) {
           System.out.println("Bot X: Red " + getBotPoseRed().getX());
           System.out.println("Bot X Blue: " + getBotPoseBlue().getY());

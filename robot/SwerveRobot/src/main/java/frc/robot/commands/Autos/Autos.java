@@ -15,6 +15,7 @@ import frc.robot.commands.Autos.Shared.Balance.AutoPitchRollBalance;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
 import frc.robot.commands.Autos.Sidekick.AutoSidekickCone;
 import frc.robot.commands.Autos.SuperHero.AutoSuperHero;
+import frc.robot.commands.Autos.Test.AutoTest;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
@@ -64,10 +65,10 @@ public final class Autos {
         name = "(15pt) HENCHMAN: 2x Score High, Leave - DIRTY SIDE";
         break;
       case SIDEKICK_CONE:
-        name = "(15pt) SIDEKICK: 2x Score High, Leave - PICKUP CONE";
+        name = "(15pt) SIDEKICK CONE: 2x Score High, Leave - PICKUP CONE";
         break;
       case HENCHMAN_CONE:
-        name = "(15pt) HENCHMAN CONE: 2x Score High, Leave - DIRTY SIDE";
+        name = "(15pt) HENCHMAN CONE: 2x Score High, Leave - DIRTY SIDE CONE";
         break;
       case TEST:
         name = "TEST";
@@ -109,8 +110,11 @@ public final class Autos {
       case HENCHMAN_CONE:
         autoCommand = new AutoHenchmanCone(m_drive, m_altitude, m_extension, m_intake);
         break;
+      // case AUTOSCOREONLY:
+      // autoCommand = new AutoScoreOnly(m_drive, m_altitude, m_extension, m_intake);
+      // break;
       case TEST:
-        autoCommand = new InstantCommand();
+        autoCommand = new AutoTest(m_drive, m_altitude, m_extension, m_intake);
         break;
       default:
         throw new AssertionError("Illegal value" + selected);

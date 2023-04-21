@@ -12,11 +12,13 @@ import frc.robot.subsystems.DriveSubsystem;
 public class AutoDecreasingSpeedBalance extends CommandBase {
   private final DriveSubsystem m_drive;
 
-  private double maxSpeed = 0.09;
+  private double maxSpeed = 0.11;
   private double setpoint = 0; // Balance = 0 degrees
   private double tolerance = 6; // 3 Degree tolerance
 
-  private double lockDuration = 0.5;
+  private double lockDuration;
+  private double lockNormalDuration = 0.5;
+  private double firstLockDuration = 1.5;
 
   private double decreasingSpeed = maxSpeed;
 
@@ -40,6 +42,8 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
   public void initialize() {
     super.initialize();
     lockTimer.reset();
+    lockTimer.start();
+    lockDuration = firstLockDuration;
   }
 
   @Override
@@ -94,6 +98,7 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
     else if (timeToLock) {
       m_drive.lock();
       lockTimer.restart();
+      lockDuration = lockNormalDuration;
     } else {
       // Otherwise, drive up or down depending on the current pitch reading.
       // Drive at a decreasing speed over time

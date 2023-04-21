@@ -33,7 +33,7 @@ public final class Constants {
     public static final boolean kExtensionTuning = false;
     public static final boolean kIntakeTuning = false;
     public static final boolean kDriveTuning = false;
-    public static final boolean kLimelightTuning = true;
+    public static final boolean kLimelightTuning = false;
     public static boolean kBalanceTuning;
   }
 
@@ -54,7 +54,7 @@ public final class Constants {
 
     // Intake Cube Power
     public static final double kIntakeCubePower = 0.8;
-    public static final double kEjectCubePower = .8;
+    public static final double kEjectCubePower = .7;
     public static final double kShootCubePower = .9;
     public static final double kIntakeHoldCubePower = 0.15;
     public static final double kDropCubePower = 0.3;
@@ -162,17 +162,17 @@ public final class Constants {
     // changed from kAltitudeHighDropOffPositionDegrees = 36.8;
     public static double kAltitudeHighDropOffPositionDegrees = 32.8;
     // Altitude at position that it releases the cone
-    public static double kAltitudeMidDropOffPositionDegrees = 30.0;
+    public static double kAltitudeMidDropOffPositionDegrees = 32.0;
     // Altitude at position that it releases the High cone
     public static double kAltitudeHighDropOffFinalPositionDegrees = 38;
     // Altitude at position that it releases the Mid cone
-    public static double kAltitudeMidDropOffFinalPositionDegrees = 45;
+    public static double kAltitudeMidDropOffFinalPositionDegrees = 54;
     // Altitude at high cube shoot Altitude
     public static double kAltitudeHighCubeShootPositionDegrees = 11.8;
     // Altitude at Bottom Position
-    public static double kAltitudeIntakePositionDegrees = 64;
+    public static double kAltitudeIntakePositionDegrees = 60;
     // Altitude at Intake Position for Autos
-    public static double kAltitudeAutoIntakePositionDegrees = 64;
+    public static double kAltitudeAutoIntakePositionDegrees = 60;
     // Altitude at Shelf Position
     public static double kAltitudeDoubleSubstationPositionDegrees = 36.2;
     public static double kAltitudeSingleSubstationPositionDegrees = 9.;
@@ -424,7 +424,7 @@ public final class Constants {
     public static final double kDriveToBalanceFactor = 0.7;
     public static final double kFinalBalanceSpeed = kDriveOnStationMaxSpeed * (kDriveToBalanceFactor / 2);
     public static final double kAutoGyroTolerance = 2;
-    public static final double kChargingStationExtraDriveSeconds = 1;
+    public static final double kChargingStationExtraDriveSeconds = 1.1;
     public static final double kPitchReachedStationDegrees = 10;
 
   }

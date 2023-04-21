@@ -44,8 +44,9 @@ public class AutoMainCharacters extends SequentialCommandGroup {
         // 2. Move to leave community
 
         new InstantCommand(() -> System.out.println(Robot.getElapsedTime() + " AutoDriveBackwardMeters")),
-        new AutoDriveBackwardsMeters(m_drive, 4.75, 0.4),
-
+        new AutoDriveBackwardsMeters(m_drive, 3.1, 0.4),
+        new WaitCommand(.25),
+        new AutoDriveBackwardsMeters(m_drive, 1.4, 0.3),
         new InstantCommand(() -> System.out.println(Robot.getElapsedTime() + " WaitCommand")),
         new WaitCommand(1),
         // 3. Move to charge station

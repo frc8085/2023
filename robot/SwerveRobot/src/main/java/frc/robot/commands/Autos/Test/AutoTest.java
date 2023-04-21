@@ -20,24 +20,12 @@ import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.limelight.LimelightSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class AutoTest extends SequentialCommandGroup {
   public AutoTest(
-      DriveSubsystem m_drive, Altitude m_altitude, Extension m_extension, Intake m_intake,
-      LimelightSubsystem limelight) {
-    addCommands(
-        // testing PickupCargo sequences and a racewith command to lock wheels
-        // new AutoTravelToPickupAndStartLoweringIntakeClean(m_drive, m_altitude,
-        // m_extension));
-        // new AprilTagBalance(m_drive, limelight),
-        // new AutoFinalBalance(m_drive),
-        // new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake),
-        new DropCone(m_altitude, m_extension, m_intake),
-
-        new RunCommand(m_drive::lock, m_drive));
+      DriveSubsystem m_drive, Altitude m_altitude, Extension m_extension, Intake m_intake) {
+    addCommands(new AutoScoreHighCone(m_drive, m_altitude, m_extension, m_intake));
   }
 
 }

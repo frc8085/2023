@@ -28,9 +28,9 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  Thread m_visionThread;
-  UsbCamera camera1;
-  UsbCamera camera2;
+  // Thread m_visionThread;
+  // UsbCamera camera1;
+  // UsbCamera camera2;
 
   private static Timer m_timer = new Timer();
 
@@ -45,21 +45,21 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    m_robotContainer.turnOffLimelightLED();
+    // m_robotContainer.turnOffLimelightLED();
 
-    if (Robot.isReal()) {
-      camera1 = CameraServer.startAutomaticCapture(0);
-      camera2 = CameraServer.startAutomaticCapture(1);
-    }
+    // if (Robot.isReal()) {
+    // camera1 = CameraServer.startAutomaticCapture(0);
+    // camera2 = CameraServer.startAutomaticCapture(1);
+    // }
 
-    // Setup Port Forwarding to enable Limelight communication
+    // Setup Port Forwarding to enable communication
     // while tethered to our robot over USB
-    PortForwarder.add(5800, "limelight-right.local", 5800);
-    PortForwarder.add(5801, "limelight-right.local", 5801);
-    PortForwarder.add(5802, "limelight-right.local", 5802);
-    PortForwarder.add(5803, "limelight-right.local", 5803);
-    PortForwarder.add(5804, "limelight-right.local", 5804);
-    PortForwarder.add(5805, "limelight-right.local", 5805);
+    // PortForwarder.add(5800, "limelight-right.local", 5800);
+    // PortForwarder.add(5801, "limelight-right.local", 5801);
+    // PortForwarder.add(5802, "limelight-right.local", 5802);
+    // PortForwarder.add(5803, "limelight-right.local", 5803);
+    // PortForwarder.add(5804, "limelight-right.local", 5804);
+    // PortForwarder.add(5805, "limelight-right.local", 5805);
   }
 
   /**
@@ -89,7 +89,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
 
     // Turn off the limelight LED when disabled
-    m_robotContainer.turnOffLimelightLED();
+    // m_robotContainer.turnOffLimelightLED();
 
   }
 

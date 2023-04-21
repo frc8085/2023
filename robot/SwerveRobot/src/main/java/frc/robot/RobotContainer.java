@@ -85,7 +85,7 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final DriveSubsystem m_robotDrive = new DriveSubsystem(m_altitude, m_extension);
   // private final Limelight limelight = new Limelight();
-  private final LimelightSubsystem limelight2 = new LimelightSubsystem();
+  // private final LimelightSubsystem limelight2 = new LimelightSubsystem();
 
   // The driver's controller
   CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
@@ -99,7 +99,7 @@ public class RobotContainer {
     DriverStation.silenceJoystickConnectionWarning(true);
 
     // Make sure the limelight's LED is off when we turn on
-    turnOffLimelightLED();
+    // turnOffLimelightLED();
 
     // Configure the Auto Selector
     configureAlliance();
