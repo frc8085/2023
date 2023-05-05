@@ -109,8 +109,15 @@ public class Extension extends SubsystemBase {
 
   public void displayDisableExtensionLimitSwitch() {
     // enable/disable limit switches based on value read from SmartDashboard
-    m_extensionLimit.enableLimitSwitch(SmartDashboard.getBoolean("Extension Limit Switch Enabled", true));
-    m_retractionLimit.enableLimitSwitch(SmartDashboard.getBoolean("Retraction Limit Switch Enabled", true));
+    boolean isExtensionLimitEnabled = m_extensionLimit.isLimitSwitchEnabled();
+    boolean shouldExtensionLimitSwitchBeEnabled = SmartDashboard.getBoolean(
+        "Extend/Retract Limit Switch Enabled",
+        true);
+
+    if (isExtensionLimitEnabled != shouldExtensionLimitSwitchBeEnabled) {
+      m_extensionLimit.enableLimitSwitch(shouldExtensionLimitSwitchBeEnabled);
+      m_retractionLimit.enableLimitSwitch(shouldExtensionLimitSwitchBeEnabled);
+    }
 
   }
 
@@ -127,8 +134,7 @@ public class Extension extends SubsystemBase {
   public void addExtensionLimitSwitchDisableToDashboard() {
     m_extensionLimit.enableLimitSwitch(true);
     m_retractionLimit.enableLimitSwitch(true);
-    SmartDashboard.putBoolean("Extension Limit Switch Enabled", m_extensionLimit.isLimitSwitchEnabled());
-    SmartDashboard.putBoolean("Retraction Limit Switch Enabled", m_retractionLimit.isLimitSwitchEnabled());
+    SmartDashboard.putBoolean("Extend/Retract Limit Switch Enabled", m_extensionLimit.isLimitSwitchEnabled());
   }
 
   private void readExtensionPIDTuningFromDashboard() {
@@ -294,16 +300,14 @@ public class Extension extends SubsystemBase {
 
   public boolean ExtensionIsInMidScoringPosition() {
     return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionMidDropOff
-        + ExtensionConstants.kExtensionPositionTolerance &&
+        + ExtensionConstants.kExtensionPositionTolerance + .9 &&
         m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionMidDropOff
             - ExtensionConstants.kExtensionPositionTolerance;
   };
 
   public boolean ExtensionIsInHighScoringPosition() {
-    return m_extensionEncoder.getPosition() < ExtensionConstants.kExtensionPositionHighDropOff
-        + ExtensionConstants.kExtensionPositionTolerance &&
-        m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionHighDropOff
-            - ExtensionConstants.kExtensionPositionTolerance;
+    return m_extensionEncoder.getPosition() > ExtensionConstants.kExtensionPositionMidDropOff
+        + ExtensionConstants.kExtensionPositionTolerance + 1;
   };
 
   public boolean ExtensionIsInReleasePosition() {

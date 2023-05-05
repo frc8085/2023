@@ -33,9 +33,9 @@ public class AutoHenchman extends SequentialCommandGroup {
         // 4. Intake up and move back to grid
         new AutoHenchmanReturnToScore(m_drive, m_altitude, m_extension, m_intake),
         // 5. Shoot cube
-        new AutoHenchmanSecondScore(m_altitude, m_extension, m_intake),
-        // 6. Go back to pickup again
-        new AutoHenchmanReturnToPickup(m_drive, m_altitude, m_extension, m_intake));
+        new AutoHenchmanSecondScore(m_altitude, m_extension, m_intake));
+    // 6. Go back to pickup again
+    // new AutoHenchmanReturnToPickup(m_drive, m_altitude, m_extension, m_intake));
 
   }
 

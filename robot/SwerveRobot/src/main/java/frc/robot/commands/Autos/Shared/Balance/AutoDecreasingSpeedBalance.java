@@ -18,7 +18,7 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
 
   private double lockDuration;
   private double lockNormalDuration = 0.5;
-  private double firstLockDuration = 1.5;
+  private double firstLockDuration = 1;
 
   private double decreasingSpeed = maxSpeed;
 
@@ -44,6 +44,7 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
     lockTimer.reset();
     lockTimer.start();
     lockDuration = firstLockDuration;
+    maxSpeed = 0.11;
   }
 
   @Override
@@ -99,6 +100,8 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
       m_drive.lock();
       lockTimer.restart();
       lockDuration = lockNormalDuration;
+      maxSpeed = 0.10;
+
     } else {
       // Otherwise, drive up or down depending on the current pitch reading.
       // Drive at a decreasing speed over time

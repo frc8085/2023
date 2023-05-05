@@ -153,14 +153,20 @@ public class Altitude extends SubsystemBase {
 
   }
 
+  boolean altitudeTopLimit = false, altitudeBottomLimit = false;
+
   public void displayDisableAltitudeLimitSwitch() {
-
     // enable/disable limit switches based on value read from SmartDashboard
-    m_altitudeTopLimit.enableLimitSwitch(SmartDashboard.getBoolean("Altitude Top Limit Switch Enabled", true));
-    m_altitudeBottomLimit.enableLimitSwitch(SmartDashboard.getBoolean("Altitude Bottom Limit Switch Enabled", true));
 
-    // Testing
-    // SmartDashboard.getBoolean("Disable Limit Switches", true))
+    boolean isAltitudeTopSwitchEnabled = m_altitudeTopLimit.isLimitSwitchEnabled();
+
+    boolean shouldAltitudeTopSwitchBeEnabled = SmartDashboard.getBoolean("Altitude Limit Switch Enabled", true);
+
+    if (isAltitudeTopSwitchEnabled != shouldAltitudeTopSwitchBeEnabled) {
+      m_altitudeTopLimit.enableLimitSwitch(shouldAltitudeTopSwitchBeEnabled);
+      m_altitudeBottomLimit.enableLimitSwitch(shouldAltitudeTopSwitchBeEnabled);
+    }
+
   }
 
   public void logPositionsReached() {
@@ -186,9 +192,7 @@ public class Altitude extends SubsystemBase {
 
   private void addAltitudeLimitSwitchDisableToDashboard() {
     m_altitudeTopLimit.enableLimitSwitch(true);
-    m_altitudeBottomLimit.enableLimitSwitch(true);
-    SmartDashboard.putBoolean("Altitude Top Limit Switch Enabled", m_altitudeTopLimit.isLimitSwitchEnabled());
-    SmartDashboard.putBoolean("Altitude Bottom Limit Switch Enabled", m_altitudeBottomLimit.isLimitSwitchEnabled());
+    SmartDashboard.putBoolean("Altitude Limit Switch Enabled", m_altitudeTopLimit.isLimitSwitchEnabled());
   }
 
   private void addPIDToDashboard() {
