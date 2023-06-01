@@ -18,6 +18,7 @@ public class ScoreCube extends SequentialCommandGroup {
       Extension m_extension,
       Intake m_intake) {
     addCommands(
+        new InstantCommand(() -> System.out.println("**SCORE HIGH CUBE**")),
         new InstantCommand(() -> m_intake.ejectCube()),
         // 3. Wait X sec and then turn off intake
         new WaitCommand(IntakeConstants.kEjectWaitTime),

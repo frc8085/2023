@@ -29,6 +29,7 @@ public class ScoreHighCone extends SequentialCommandGroup {
             .until(m_extension::ExtensionIsInReleasePosition),
         new ParallelCommandGroup(
             new SequentialCommandGroup(
+                new InstantCommand(() -> System.out.println("**SCORE HIGH CONE**")),
                 new InstantCommand(() -> m_intake.ejectCone()),
                 new WaitCommand(IntakeConstants.kEjectWaitTime),
                 new InstantCommand(m_intake::stopIntake)),
