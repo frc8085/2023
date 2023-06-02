@@ -7,8 +7,10 @@ import frc.robot.commands.ResetPositionToStart;
 import frc.robot.commands.Autos.DynamicDuo.AutoDynamicDuoNew;
 import frc.robot.commands.Autos.Henchman.AutoHenchman;
 import frc.robot.commands.Autos.Henchman.AutoHenchmanCone;
+import frc.robot.commands.Autos.MainCharacter.AutoMainCharacterOld;
 import frc.robot.commands.Autos.MainCharacters.AutoMainCharacters;
 import frc.robot.commands.Autos.MainCharacters.AutoMainCharactersTurning;
+import frc.robot.commands.Autos.MainCharacters.AutoScoreBalance;
 import frc.robot.commands.Autos.Shared.Balance.AutoDecreasingSpeedBalance;
 import frc.robot.commands.Autos.Shared.Balance.AutoConstantSpeedFinalBalance;
 import frc.robot.commands.Autos.Shared.Balance.AutoPitchRollBalance;
@@ -27,6 +29,8 @@ public final class Autos {
   private boolean TESTING_BALANCE = TuningModeConstants.kBalanceTuning;
 
   public enum Auto {
+    BATTLECRY,
+    WATERBURY,
     CHIDI,
     SIDEKICK,
     SUPERHERO,
@@ -49,6 +53,12 @@ public final class Autos {
     String name;
 
     switch (selected) {
+      case BATTLECRY:
+        name = "Battlecry - Score and Balance";
+        break;
+      case WATERBURY:
+        name = "Waterbury - Score and Balance";
+        break;
       case CHIDI:
         name = "(21pt) CHIDI: Decreasing Speed Balance Main Char";
         break;
@@ -85,6 +95,15 @@ public final class Autos {
     m_alliance = alliance;
 
     switch (selected) {
+      case BATTLECRY:
+        autoCommand = new AutoScoreBalance(m_drive, m_altitude, m_extension, m_intake,
+            new AutoDecreasingSpeedBalance(m_drive));
+        break;
+
+      case WATERBURY:
+        autoCommand = new AutoMainCharacterOld(m_drive, m_altitude, m_extension, m_intake);
+        break;
+
       case CHIDI:
         autoCommand = new AutoMainCharacters(m_drive, m_altitude, m_extension, m_intake,
             new AutoDecreasingSpeedBalance(m_drive));

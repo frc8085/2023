@@ -134,8 +134,8 @@ public class RobotContainer {
     }
 
     autoSelection.setDefaultOption(
-        Autos.GetAutoName(Auto.SIDEKICK),
-        Auto.SIDEKICK);
+        Autos.GetAutoName(Auto.BATTLECRY),
+        Auto.BATTLECRY);
 
     // Put the chooser on the dashboard
     SmartDashboard.putData("Auto Routine", autoSelection);

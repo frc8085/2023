@@ -101,7 +101,6 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
       lockTimer.restart();
       lockDuration = lockNormalDuration;
       maxSpeed = 0.10;
-
     } else {
       // Otherwise, drive up or down depending on the current pitch reading.
       // Drive at a decreasing speed over time
