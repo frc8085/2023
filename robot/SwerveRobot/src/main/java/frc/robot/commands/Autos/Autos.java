@@ -2,8 +2,11 @@ package frc.robot.commands.Autos;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.TuningModeConstants;
+import frc.robot.commands.AutoDriveToBalance;
+import frc.robot.commands.AutoFinalBalance;
 import frc.robot.commands.ResetPositionToStart;
 import frc.robot.commands.Autos.DynamicDuo.AutoDynamicDuoNew;
 import frc.robot.commands.Autos.Henchman.AutoHenchman;
@@ -13,6 +16,9 @@ import frc.robot.commands.Autos.MainCharacters.AutoMainCharacters;
 import frc.robot.commands.Autos.MainCharacters.AutoMainCharactersTurning;
 import frc.robot.commands.Autos.MainCharacters.AutoScoreBalance;
 import frc.robot.commands.Autos.Shared.Balance.AutoDecreasingSpeedBalance;
+import frc.robot.commands.Autos.Shared.Balance.AutoDriveToBalanceWaterbury;
+import frc.robot.commands.Autos.Shared.Balance.AutoDriveToReachStationWaterbury;
+import frc.robot.commands.Autos.Shared.Balance.AutoFinalBalanceWaterbury;
 import frc.robot.commands.Autos.Shared.Balance.AutoConstantSpeedFinalBalance;
 import frc.robot.commands.Autos.Shared.Balance.AutoPitchRollBalance;
 import frc.robot.commands.Autos.Sidekick.AutoSidekick;
@@ -99,6 +105,14 @@ public final class Autos {
       case BATTLECRY:
         autoCommand = new AutoScoreBalance(m_drive, m_altitude, m_extension, m_intake,
             new AutoDecreasingSpeedBalance(m_drive));
+        break;
+      case WATERBURY:
+        autoCommand = new AutoScoreBalance(m_drive, m_altitude, m_extension, m_intake,
+            new SequentialCommandGroup(
+                new AutoDriveToReachStationWaterbury(m_drive),
+                new AutoDriveToBalanceWaterbury(m_drive),
+                new AutoFinalBalanceWaterbury(m_drive),
+                new RunCommand(m_drive::lock, m_drive)));
         break;
 
       case CHIDI:
