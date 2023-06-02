@@ -2,6 +2,7 @@ package frc.robot.commands.Autos;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.TuningModeConstants;
 import frc.robot.commands.ResetPositionToStart;
 import frc.robot.commands.Autos.DynamicDuo.AutoDynamicDuoNew;
@@ -98,10 +99,6 @@ public final class Autos {
       case BATTLECRY:
         autoCommand = new AutoScoreBalance(m_drive, m_altitude, m_extension, m_intake,
             new AutoDecreasingSpeedBalance(m_drive));
-        break;
-
-      case WATERBURY:
-        autoCommand = new AutoMainCharacterOld(m_drive, m_altitude, m_extension, m_intake);
         break;
 
       case CHIDI:
