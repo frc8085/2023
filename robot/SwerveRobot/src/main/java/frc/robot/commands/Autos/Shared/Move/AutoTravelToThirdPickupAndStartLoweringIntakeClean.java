@@ -29,8 +29,8 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Extension;
 
 /** An example command that uses an example subsystem. */
-public class AutoTravelToPickupAndStartLoweringIntakeClean extends SequentialCommandGroup {
-  public AutoTravelToPickupAndStartLoweringIntakeClean(
+public class AutoTravelToThirdPickupAndStartLoweringIntakeClean extends SequentialCommandGroup {
+  public AutoTravelToThirdPickupAndStartLoweringIntakeClean(
       DriveSubsystem m_drive,
       Altitude m_altitude,
       Extension m_extension) {
@@ -40,7 +40,7 @@ public class AutoTravelToPickupAndStartLoweringIntakeClean extends SequentialCom
             // new Extend(m_extension, ExtensionConstants.kExtensionPositionIntakeOut),
             travelBackwardsThenSpin(m_drive),
             new SequentialCommandGroup(
-                new WaitCommand(.5),
+                new WaitCommand(1),
                 new AutoHMMoveToIntake(m_extension, m_altitude))));
   }
 
@@ -50,19 +50,16 @@ public class AutoTravelToPickupAndStartLoweringIntakeClean extends SequentialCom
     int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
     // First trajectory. All units in meters.
-    Trajectory moveToPosition = TrajectoryGenerator.generateTrajectory(
+    Trajectory moveToThirdPosition = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(0, sign * 0, Rotation2d.fromDegrees(sign * -180)),
+        new Pose2d(1.5, sign * 0, Rotation2d.fromDegrees(sign * 178)),
         // Pass through these two interior waypoints, making an 's' curve path
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(2.5, sign * 0.7)),
+        List.of(new Translation2d(2.5, sign * -0.2)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(4, sign * 0.35, Rotation2d.fromDegrees(sign * 5)),
+        new Pose2d(5, sign * 0.1, Rotation2d.fromDegrees(sign * 178)),
         config);
 
-    m_drive.zeroHeading();
-    m_drive.resetOdometry(moveToPosition.getInitialPose());
-
-    return AutoTrajectoryCommand.command(m_drive, moveToPosition);
+    return AutoTrajectoryCommand.command(m_drive, moveToThirdPosition);
   }
 }

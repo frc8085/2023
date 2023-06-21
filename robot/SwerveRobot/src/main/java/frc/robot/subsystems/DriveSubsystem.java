@@ -110,6 +110,8 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("X Pose", getPose().getX());
       SmartDashboard.putNumber("Y Pose", getPose().getY());
       SmartDashboard.putNumber("Yaw", getYaw());
+      SmartDashboard.putNumber("Pitch", getPitch().getDegrees());
+      SmartDashboard.putNumber("Raw Pitch", m_gyro.getPitch());
 
       SmartDashboard.putNumberArray("XYZ_DPS", pitchYawRollVelocitiesDegreesPerSecond);
     }

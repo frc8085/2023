@@ -274,8 +274,10 @@ public class RobotContainer {
             new InstantCommand(() -> m_intake.holdCargo()),
             new MoveToTravelAfterScoring(m_extension, m_altitude)));
 
-    ejectButton.onTrue(new ScoreBasedOnPosition(m_altitude, m_extension,
-        m_intake));
+    ejectButton.onTrue(
+        new ParallelCommandGroup(
+            new InstantCommand(() -> System.out.println("**Eject button pressed**")),
+            new ScoreBasedOnPosition(m_altitude, m_extension, m_intake)));
 
     initialScoreButton.onTrue(new MoveToInitialScore(m_extension, m_altitude));
 

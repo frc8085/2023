@@ -32,7 +32,7 @@ public final class Constants {
     public static final boolean kAltitudeTuning = false;
     public static final boolean kExtensionTuning = false;
     public static final boolean kIntakeTuning = false;
-    public static final boolean kDriveTuning = false;
+    public static final boolean kDriveTuning = true;
     public static final boolean kLimelightTuning = false;
     public static boolean kBalanceTuning;
   }
@@ -137,6 +137,7 @@ public final class Constants {
     public static double kAltitudeLowerSpeed = 0.2;
     public static double kAltitudeRampRate = 1;
     public static double kAltitudePositionTolerance = 20;
+    public static double kAltitudeMidPositionTolerance = 30;
     public static double kAutoAltitudePositionTolerance = 2;
 
     public static final double kMaxAltitudeSpeedMetersPerSecond = .05;
@@ -173,6 +174,7 @@ public final class Constants {
     public static double kAltitudeIntakePositionDegrees = 60;
     // Altitude at Intake Position for Autos
     public static double kAltitudeAutoIntakePositionDegrees = 60;
+    public static double kAltitudeAutoHMIntakePositionDegrees = 65;
     // Altitude at Shelf Position
     public static double kAltitudeDoubleSubstationPositionDegrees = 36.2;
     public static double kAltitudeSingleSubstationPositionDegrees = 9.;

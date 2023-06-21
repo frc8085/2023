@@ -9,6 +9,8 @@ import frc.robot.commands.AutoDriveToBalance;
 import frc.robot.commands.AutoFinalBalance;
 import frc.robot.commands.ResetPositionToStart;
 import frc.robot.commands.Autos.DynamicDuo.AutoDynamicDuoNew;
+import frc.robot.commands.Autos.HailMary.AutoHailMary;
+import frc.robot.commands.Autos.HailMary.AutoHailMaryNew;
 import frc.robot.commands.Autos.Henchman.AutoHenchman;
 import frc.robot.commands.Autos.Henchman.AutoHenchmanCone;
 import frc.robot.commands.Autos.MainCharacter.AutoMainCharacterOld;
@@ -42,6 +44,7 @@ public final class Autos {
     SIDEKICK,
     SUPERHERO,
     DYNAMIC_DUO,
+    HAIL_MARY,
     HENCHMAN,
     SIDEKICK_CONE,
     HENCHMAN_CONE,
@@ -78,6 +81,9 @@ public final class Autos {
       case DYNAMIC_DUO:
         name = "(23pt) DYNAMIC DUO: 2x Score High, Leave, Dock - INTAKE MOVES DURING TRAVEL";
         break;
+      case HAIL_MARY:
+        name = "HAIL MARY: Score High, PickUp Cubes - INTAKE MOVES DURING TRAVEL";
+        break;
       case HENCHMAN:
         name = "(15pt) HENCHMAN: 2x Score High, Leave - DIRTY SIDE";
         break;
@@ -108,11 +114,11 @@ public final class Autos {
         break;
       case WATERBURY:
         autoCommand = new AutoScoreBalance(m_drive, m_altitude, m_extension, m_intake,
-            new SequentialCommandGroup(
-                new AutoDriveToReachStationWaterbury(m_drive),
-                new AutoDriveToBalanceWaterbury(m_drive),
-                new AutoFinalBalanceWaterbury(m_drive),
-                new RunCommand(m_drive::lock, m_drive)));
+            // new SequentialCommandGroup(
+            // new AutoDriveToReachStationWaterbury(m_drive),
+            // new AutoDriveToBalanceWaterbury(m_drive),
+            // new AutoFinalBalanceWaterbury(m_drive),
+            new RunCommand(m_drive::lock, m_drive));
         break;
 
       case CHIDI:
@@ -128,6 +134,9 @@ public final class Autos {
         break;
       case DYNAMIC_DUO:
         autoCommand = new AutoDynamicDuoNew(m_drive, m_altitude, m_extension, m_intake);
+        break;
+      case HAIL_MARY:
+        autoCommand = new AutoHailMaryNew(m_drive, m_altitude, m_extension, m_intake);
         break;
 
       case HENCHMAN:

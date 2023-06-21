@@ -9,7 +9,7 @@ import frc.robot.subsystems.DriveSubsystem;
 /**
  * Final balance for main character auto
  */
-public class AutoDecreasingSpeedBalance extends CommandBase {
+public class AutoLock extends CommandBase {
   private final DriveSubsystem m_drive;
 
   private double maxSpeed = 0.11;
@@ -32,7 +32,7 @@ public class AutoDecreasingSpeedBalance extends CommandBase {
   LinearFilter pitchFilter = LinearFilter.movingAverage(10);
   LinearFilter absPitchFilter = LinearFilter.movingAverage(10);
 
-  public AutoDecreasingSpeedBalance(DriveSubsystem drive) {
+  public AutoLock(DriveSubsystem drive) {
     m_drive = drive;
     addRequirements(m_drive);
   }

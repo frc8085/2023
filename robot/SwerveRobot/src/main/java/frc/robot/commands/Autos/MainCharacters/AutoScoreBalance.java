@@ -44,7 +44,7 @@ public class AutoScoreBalance extends SequentialCommandGroup {
         // 2. Move to leave community
 
         new InstantCommand(() -> System.out.println(Robot.getElapsedTime() + " AutoDriveBackwardMeters")),
-        new AutoDriveBackwardsMeters(m_drive, 3.1, 0.4),
+        new AutoDriveBackwardsMeters(m_drive, 2.3, 0.4),
         // new WaitCommand(.25),
 
         // new InstantCommand(() -> System.out.println(Robot.getElapsedTime() + "
