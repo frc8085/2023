@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Autos.Shared.Move.AutoTravelToPickupAndStartLoweringIntakeClean;
 import frc.robot.commands.Autos.Shared.Move.AutoTravelToPickupClean;
+import frc.robot.commands.Autos.HailMary.AutoHailMaryReturnToScore;
+import frc.robot.commands.Autos.HailMary.AutoHailMarySecondScore;
+import frc.robot.commands.Autos.Shared.Move.AutoHMTravelAndPickupCubeClean;
 import frc.robot.commands.Autos.Shared.Move.AutoTravelAndPickupCubeClean;
 import frc.robot.commands.Autos.Shared.ScoreHigh.AutoScoreHighCone;
 import frc.robot.subsystems.Altitude;
@@ -33,11 +36,11 @@ public class AutoDynamicDuoNew extends SequentialCommandGroup {
             // 2. Move to pickup cargo position
             new AutoTravelToPickupAndStartLoweringIntakeClean(m_drive, m_altitude, m_extension),
             // 3. Intake down and pickup cargo
-            new AutoTravelAndPickupCubeClean(m_drive, m_altitude, m_extension, m_intake),
+            new AutoHMTravelAndPickupCubeClean(m_drive, m_altitude, m_extension, m_intake),
             // 4. Intake up and move back to grid
-            new AutoDynamicDuoReturnToScore(m_drive, m_altitude, m_extension, m_intake),
+            new AutoHailMaryReturnToScore(m_drive, m_altitude, m_extension, m_intake),
             // 5. Shoot cube
-            new AutoDynamicDuoSecondScore(m_altitude, m_extension, m_intake),
+            new AutoHailMarySecondScore(m_altitude, m_extension, m_intake),
             // 6. Move to Charge Station
             new AutoDynamicDuoMoveToThenOnChargeStation(m_drive),
             new RunCommand(m_drive::lock, m_drive))

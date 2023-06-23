@@ -27,35 +27,35 @@ import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoHailMaryReturnToScore extends SequentialCommandGroup {
-    public AutoHailMaryReturnToScore(
-            DriveSubsystem m_drive,
-            Altitude m_altitude,
-            Extension m_extension,
-            Intake m_intake) {
-        addCommands(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> m_intake.holdCargo()),
-                        new MoveToTravelAfterIntake(m_extension, m_altitude)),
-                returnToScore(m_drive));
-    }
+  public AutoHailMaryReturnToScore(
+      DriveSubsystem m_drive,
+      Altitude m_altitude,
+      Extension m_extension,
+      Intake m_intake) {
+    addCommands(
+        new ParallelCommandGroup(
+            new InstantCommand(() -> m_intake.holdCargo()),
+            new MoveToTravelAfterIntake(m_extension, m_altitude)),
+        returnToScore(m_drive));
+  }
 
-    public Command returnToScore(DriveSubsystem m_drive) {
-        // Create config for trajectory
-        TrajectoryConfig config = AutoTrajectoryCommand.config(true);
-        int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
+  public Command returnToScore(DriveSubsystem m_drive) {
+    // Create config for trajectory
+    TrajectoryConfig config = AutoTrajectoryCommand.config(true);
+    int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
-        // An example trajectory to follow. All units in meters.
-        // Should the points be negative or positive? Does it decide based on the
-        // reversed being true?
-        Trajectory returnToScoreOne = TrajectoryGenerator.generateTrajectory(
-                // Start at the origin facing the +X direction
-                new Pose2d(5.3, sign * .35, Rotation2d.fromDegrees(sign * 0)),
-                // NOTE: MUST have a waypoint. CANNOT be a straight line.
-                List.of(new Translation2d(2.5, sign * 0.7)),
-                // Drive backwards for a meter
-                new Pose2d(0.3, sign * 0.2, Rotation2d.fromDegrees(sign * 178)),
-                config);
+    // An example trajectory to follow. All units in meters.
+    // Should the points be negative or positive? Does it decide based on the
+    // reversed being true?
+    Trajectory returnToScoreOne = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(5.3, sign * .35, Rotation2d.fromDegrees(sign * 0)),
+        // NOTE: MUST have a waypoint. CANNOT be a straight line.
+        List.of(new Translation2d(2.5, sign * 0.7)),
+        // Drive backwards for a meter
+        new Pose2d(0.3, sign * 0.1, Rotation2d.fromDegrees(sign * 178)),
+        config);
 
-        return AutoTrajectoryCommand.command(m_drive, returnToScoreOne);
-    }
+    return AutoTrajectoryCommand.command(m_drive, returnToScoreOne);
+  }
 }

@@ -38,9 +38,9 @@ public class AutoDynamicDuoMoveToThenOnChargeStation extends SequentialCommandGr
     // reversed being true?
     Trajectory goToChargeStation = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
-        new Pose2d(0.4, sign * .3, Rotation2d.fromDegrees(sign * 178)),
+        new Pose2d(0.3, sign * .1, Rotation2d.fromDegrees(sign * 178)),
         // NOTE: MUST have a waypoint. CANNOT be a straight line.
-        List.of(new Translation2d(0.5, sign * 1.2)),
+        List.of(new Translation2d(1, sign * 1.2)),
         // Drive backwards for a meter
         new Pose2d(4.2, sign * 1.5, Rotation2d.fromDegrees(sign * 30)),
         config);
