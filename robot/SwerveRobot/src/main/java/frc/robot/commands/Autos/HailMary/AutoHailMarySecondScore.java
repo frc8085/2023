@@ -6,6 +6,7 @@ package frc.robot.commands.Autos.HailMary;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.ScoreCube;
+import frc.robot.commands.ScoreHighCube;
 import frc.robot.commands.ScoreMidCube;
 import frc.robot.subsystems.Altitude;
 import frc.robot.subsystems.Extension;
@@ -18,7 +19,7 @@ public class AutoHailMarySecondScore extends SequentialCommandGroup {
       Extension m_extension,
       Intake m_intake) {
     addCommands(
-        new ScoreMidCube(m_altitude, m_extension, m_intake));
+        new ScoreHighCube(m_altitude, m_extension, m_intake));
 
   }
 

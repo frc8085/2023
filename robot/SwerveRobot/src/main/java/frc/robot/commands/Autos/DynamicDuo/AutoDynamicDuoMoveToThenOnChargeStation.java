@@ -30,7 +30,7 @@ public class AutoDynamicDuoMoveToThenOnChargeStation extends SequentialCommandGr
 
   public Command moveToChargeStation(DriveSubsystem m_drive) {
     // Create config for trajectory
-    TrajectoryConfig config = AutoTrajectoryVariableSpeedCommand.config(true, 2);
+    TrajectoryConfig config = AutoTrajectoryVariableSpeedCommand.config(true, 3);
     int sign = Autos.getAlliance() == Alliance.RED ? 1 : -1;
 
     // An example trajectory to follow. All units in meters.
